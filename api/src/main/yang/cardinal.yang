@@ -1,0 +1,9 @@
+module cardinal {
+    yang-version 1;
+    namespace "urn:opendaylight:params:xml:ns:yang:cardinal";
+    prefix "cardinal";
+
+    revision "2015-01-05" {
+        description "Initial revision of cardinal model";
+    }
+}
