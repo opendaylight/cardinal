@@ -12,6 +12,7 @@ import static org.ops4j.pax.exam.CoreOptions.maven;
 import static org.ops4j.pax.exam.karaf.options.KarafDistributionOption.editConfigurationFilePut;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.opendaylight.controller.mdsal.it.base.AbstractMdsalTestBase;
@@ -23,7 +24,7 @@ import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+@Ignore
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerClass.class)
 public class CardinalIT extends AbstractMdsalTestBase {
@@ -62,7 +63,7 @@ public class CardinalIT extends AbstractMdsalTestBase {
         option = composite(option, super.getLoggingOption());
         return option;
     }
-
+    @Ignore
     @Test
     public void testcardinalFeatureLoad() {
         Assert.assertTrue(true);

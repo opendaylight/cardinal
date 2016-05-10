@@ -37,8 +37,8 @@ and is available at http://www.eclipse.org/legal/epl-v10.html INTERNAL
     <module>impl</module>
     <module>karaf</module>
     <module>features</module>
-    <module>artifacts</module>
-    <module>it</module>
+    <module>artifacts</module> 
+    <module>it</module>   
   </modules>
 
   <!-- DO NOT install or deploy the repo root pom as it's only needed to initiate a build -->
@@ -90,6 +90,11 @@ and is available at http://www.eclipse.org/legal/epl-v10.html INTERNAL
             </execution>
             </executions>
           </plugin>
+          <plugin>
+		<groupId>org.codehaus.mojo</groupId>
+		<artifactId>sonar-maven-plugin</artifactId>
+		<version>2.7.1</version>
+    	</plugin>
         </plugins>
       </build>
     </profile>

@@ -21,6 +21,7 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
   <artifactId>cardinal-impl</artifactId>
   <version>0.1.0-SNAPSHOT</version>
   <packaging>bundle</packaging>
+ 
 
   <dependencies>
     <dependency>
@@ -41,5 +42,13 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
       <artifactId>mockito-all</artifactId>
       <scope>test</scope>
     </dependency>
+
+    <dependency>
+	<groupId>org.snmp4j</groupId>
+	<artifactId>snmp4j</artifactId>
+	<version>2.5.0</version>	
+    </dependency> 	
+
+    
   </dependencies>
 </project>
