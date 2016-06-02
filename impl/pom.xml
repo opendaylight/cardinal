@@ -21,7 +21,6 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
   <artifactId>cardinal-impl</artifactId>
   <version>0.1.0-SNAPSHOT</version>
   <packaging>bundle</packaging>
- 
 
   <dependencies>
     <dependency>
@@ -30,43 +29,38 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
       <version>${project.version}</version>
     </dependency>
 
+    <dependency>
+      <groupId>org.snmp4j</groupId>
+      <artifactId>snmp4j</artifactId>
+      <version>2.5.0</version>
+    </dependency>
+    <!-- bean-validator exports com.sun.management.* and com.sun.jdmk.* -->
+    <dependency>
+      <groupId>org.glassfish.extras</groupId>
+      <artifactId>bean-validator</artifactId>
+      <version>4.0.0.Alpha3</version>
+    </dependency>
+    <!-- bean-validator POM does not specify its dependencies, so we list them here -->
+    <dependency>
+      <groupId>javax.mail</groupId>
+      <artifactId>mail</artifactId>
+      <version>1.4</version>
+    </dependency>
+    <dependency>
+      <groupId>org.glassfish</groupId>
+      <artifactId>javax.transaction</artifactId>
+      <version>3.1.1</version>
+    </dependency>
     <!-- Testing Dependencies -->
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <scope>test</scope>
     </dependency>
-
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-all</artifactId>
       <scope>test</scope>
     </dependency>
-
-    <dependency>
-	<groupId>org.snmp4j</groupId>
-	<artifactId>snmp4j</artifactId>
-	<version>2.5.0</version>	
-    </dependency> 	
- 
-    <dependency>
-    <groupId>org.glassfish.extras</groupId>
-    <artifactId>bean-validator</artifactId>
-    <version>4.0.0.Alpha3</version> 
-    </dependency>
-	
-
-
-	
-	<!-- http://mvnrepository.com/artifact/org.glassfish.external/opendmk_jdmkrt_jar -->
-<!-- <dependency>
-    <groupId>org.glassfish.external</groupId>
-    <artifactId>opendmk_jdmkrt_jar</artifactId>
-    <version>1.0-b01-ea</version>
-</dependency> -->
-	
-    
   </dependencies>
-  
-  
 </project>
