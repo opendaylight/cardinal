@@ -48,7 +48,25 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
 	<artifactId>snmp4j</artifactId>
 	<version>2.5.0</version>	
     </dependency> 	
+ 
+    <dependency>
+    <groupId>org.glassfish.extras</groupId>
+    <artifactId>bean-validator</artifactId>
+    <version>4.0.0.Alpha3</version> 
+    </dependency>
+	
 
+
+	
+	<!-- http://mvnrepository.com/artifact/org.glassfish.external/opendmk_jdmkrt_jar -->
+<!-- <dependency>
+    <groupId>org.glassfish.external</groupId>
+    <artifactId>opendmk_jdmkrt_jar</artifactId>
+    <version>1.0-b01-ea</version>
+</dependency> -->
+	
     
   </dependencies>
+  
+  
 </project>

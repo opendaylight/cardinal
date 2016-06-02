@@ -80,6 +80,11 @@ and is available at http://www.eclipse.org/legal/epl-v10.html INTERNAL
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-javadoc-plugin</artifactId>
             <inherited>false</inherited>
+            <configuration>
+            <instructions>
+            <Import-Package>*</Import-Package>
+            </instructions>
+            </configuration>
             <executions>
               <execution>
                 <id>aggregate</id>
@@ -90,6 +95,25 @@ and is available at http://www.eclipse.org/legal/epl-v10.html INTERNAL
             </execution>
             </executions>
           </plugin>
+          <plugin>
+            <groupId>org.apache.felix</groupId>
+            <artifactId>maven-bundle-plugin</artifactId>
+            <version>${bundle.plugin.version}</version>
+            <extensions>true</extensions>
+            <configuration>
+                <instructions>
+                    <Export-Package>
+                       *
+                    </Export-Package>
+                    <Import-Package>*,
+                    com.sun.management.comm,
+	                com.sun.management.snmp,
+	                com.sun.management.snmp.agent,
+                    </Import-Package>
+                   
+                </instructions>
+        </configuration>
+    </plugin>
           <plugin>
 		<groupId>org.codehaus.mojo</groupId>
 		<artifactId>sonar-maven-plugin</artifactId>
