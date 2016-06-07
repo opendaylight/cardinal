@@ -2,8 +2,69 @@ module cardinal {
     yang-version 1;
     namespace "urn:opendaylight:params:xml:ns:yang:cardinal";
     prefix "cardinal";
+    contact
+      "Gaurav Pande <pande.gaurav@tcs.com>";
 
-    revision "2015-01-05" {
+    revision "2016-05-15" {
         description "Initial revision of cardinal model";
     }
+    typedef snmp-cardinal-get-type {
+        type enumeration {
+            enum SystemInfo {
+                value "1";
+            }
+            enum KarafInfo {
+                value "2";
+            }
+            enum OdlInfo {
+                value "3";
+            }
+        }
+    }
+  
+    grouping CardinalSystemInfogrouping{
+    	leaf odlSystemCpuUsage{
+     			type string;
+     			config false;
+        		mandatory true;
+     			}
+     	leaf odlSystemMemUsage{
+     			type string;
+     			config false;
+        		mandatory true;
+     			}
+     	leaf odlSystemHostAddress{
+     			type string;
+     			config false;
+        		mandatory true;
+     			}
+     	leaf odlSystemSysInfo{
+     			type string;
+     			config false;
+      		  	mandatory true;
+     			}
+     	leaf odlSystemOdlUptime{
+     			type string;
+     			config false;
+        		mandatory true;
+     			}
+     	}
+     	
+     container CardinalSystemInfo{
+     			uses CardinalSystemInfogrouping;
+     }		
+     		
+     			
+    rpc CardinalSysInfo{
+         description "Cardinal sys info api";
+         input{
+         leaf snmp-get-type{
+         		type snmp-cardinal-get-type;
+         		}
+         }
+         output {
+         	uses CardinalSystemInfogrouping;
+     	
+         	}
+         }    			
 }

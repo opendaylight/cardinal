@@ -14,16 +14,16 @@ import org.slf4j.LoggerFactory;
 
 public class CardinalProvider implements BindingAwareProvider, AutoCloseable {
 
-    private static final Logger LOG = LoggerFactory.getLogger(CardinalProvider.class);
+	private static final Logger LOG = LoggerFactory.getLogger(CardinalProvider.class);
 
-    @Override
-    public void onSessionInitiated(ProviderContext session) {
-        LOG.info("CardinalProvider Session Initiated");
-    }
+	@Override
+	public void onSessionInitiated(ProviderContext session) {
+		LOG.info("CardinalProvider Session Initiated");
+	}
 
-    @Override
-    public void close() throws Exception {
-        LOG.info("CardinalProvider Closed");
-    }
+	@Override
+	public void close() throws Exception {
+		LOG.info("CardinalProvider Closed");
+	}
 
 }
