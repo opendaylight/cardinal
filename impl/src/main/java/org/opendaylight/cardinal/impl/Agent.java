@@ -18,61 +18,61 @@ import com.sun.management.snmp.SnmpStatusException;
 
 @SuppressWarnings("all")
 public class Agent implements AutoCloseable {
-	private static final Logger LOG = LoggerFactory.getLogger(Agent.class);
-	static SnmpAdaptorServer snmpAdaptor = null;
+  private static final Logger LOG = LoggerFactory.getLogger(Agent.class);
+  static SnmpAdaptorServer snmpAdaptor = null;
 
-	public void startSnmpDaemon() throws SnmpStatusException {
+  public void startSnmpDaemon() throws SnmpStatusException {
 
-		final MBeanServer server;
-		final ObjectName htmlObjName;
-		final ObjectName snmpObjName;
-		final ObjectName mibObjName;
-		int htmlPort = 8082;
-		int snmpPort = 161;
+    final MBeanServer server;
+    final ObjectName htmlObjName;
+    final ObjectName snmpObjName;
+    final ObjectName mibObjName;
+    int htmlPort = 8082;
+    int snmpPort = 161;
 
-		try {
-			server = MBeanServerFactory.createMBeanServer();
-			String domain = server.getDefaultDomain();
+    try {
+      server = MBeanServerFactory.createMBeanServer();
+      String domain = server.getDefaultDomain();
 
-			// Create and start the HTML adaptor.
-			//
-			LOG.info("starting Html adaptor service");
-			htmlObjName = new ObjectName(domain + ":class=HtmlAdaptorServer,protocol=html,port=" + htmlPort);
-			HtmlAdaptorServer htmlAdaptor = new HtmlAdaptorServer(htmlPort);
-			server.registerMBean(htmlAdaptor, htmlObjName);
-			htmlAdaptor.start();
-			LOG.info("started Html adaptor service");
+      // Create and start the HTML adaptor.
+      //
+      LOG.info("starting Html adaptor service");
+      htmlObjName = new ObjectName(domain + ":class=HtmlAdaptorServer,protocol=html,port=" + htmlPort);
+      HtmlAdaptorServer htmlAdaptor = new HtmlAdaptorServer(htmlPort);
+      server.registerMBean(htmlAdaptor, htmlObjName);
+      htmlAdaptor.start();
+      LOG.info("started Html adaptor service");
 
-			// Create and start the SNMP adaptor.
-			//
-			snmpObjName = new ObjectName(domain + ":class=SnmpAdaptorServer,protocol=snmp,port=" + snmpPort);
-			snmpAdaptor = new SnmpAdaptorServer(snmpPort);
-			server.registerMBean(snmpAdaptor, snmpObjName);
-			snmpAdaptor.start();
+      // Create and start the SNMP adaptor.
+      //
+      snmpObjName = new ObjectName(domain + ":class=SnmpAdaptorServer,protocol=snmp,port=" + snmpPort);
+      snmpAdaptor = new SnmpAdaptorServer(snmpPort);
+      server.registerMBean(snmpAdaptor, snmpObjName);
+      snmpAdaptor.start();
 
-			// Create the ODL-CARDINAL-MIB and add it to the MBean server.
-			//
+      // Create the ODL-CARDINAL-MIB and add it to the MBean server.
+      //
 
-			mibObjName = new ObjectName("snmp:class=ODL_CARDINAL_MIB");
-			ODL_CARDINAL_MIB mib2 = new ODL_CARDINAL_MIB();
-			server.registerMBean(mib2, mibObjName);
-			mib2.setSnmpAdaptorName(snmpObjName);
-			snmpAdaptor.addMib(mib2);
+      mibObjName = new ObjectName("snmp:class=ODL_CARDINAL_MIB");
+      ODL_CARDINAL_MIB mib2 = new ODL_CARDINAL_MIB();
+      server.registerMBean(mib2, mibObjName);
+      mib2.setSnmpAdaptorName(snmpObjName);
+      snmpAdaptor.addMib(mib2);
 
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+  }
 
-	// Needed to get a reference on the SNMP adaptor object
-	public static SnmpAdaptorServer getSnmpAdaptor() {
-		return snmpAdaptor;
-	}
+  // Needed to get a reference on the SNMP adaptor object
+  public static SnmpAdaptorServer getSnmpAdaptor() {
+    return snmpAdaptor;
+  }
 
-	@Override
-	public void close() throws Exception {
-		// TODO Auto-generated method stub
-		LOG.info("All Daemons are killed successfully");
-	}
+  @Override
+  public void close() throws Exception {
+    // TODO Auto-generated method stub
+    LOG.info("All Daemons are killed successfully");
+  }
 
 }
