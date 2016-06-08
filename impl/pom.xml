@@ -1,57 +1,73 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- vi: set et smarttab sw=4 tabstop=4: -->
-<!-- Copyright © 2016 Tata Consultancy Services and others. All rights reserved. 
-	This program and the accompanying materials are made available under the 
-	terms of the Eclipse Public License v1.0 which accompanies this distribution, 
-	and is available at http://www.eclipse.org/legal/epl-v10.html -->
+<!-- Copyright © 2016 Tata Consultancy Services and others. All rights reserved.
+  This program and the accompanying materials are made available under the
+  terms of the Eclipse Public License v1.0 which accompanies this distribution,
+  and is available at http://www.eclipse.org/legal/epl-v10.html -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
 
-	<parent>
-		<groupId>org.opendaylight.controller</groupId>
-		<artifactId>config-parent</artifactId>
-		<version>0.5.0-SNAPSHOT</version>
-		<relativePath />
-	</parent>
+  <parent>
+    <groupId>org.opendaylight.controller</groupId>
+    <artifactId>config-parent</artifactId>
+    <version>0.5.0-SNAPSHOT</version>
+    <relativePath />
+  </parent>
 
-	<groupId>org.opendaylight.cardinal</groupId>
-	<artifactId>cardinal-impl</artifactId>
-	<version>0.1.0-SNAPSHOT</version>
-	<packaging>bundle</packaging>
+  <groupId>org.opendaylight.cardinal</groupId>
+  <artifactId>cardinal-impl</artifactId>
+  <version>0.1.0-SNAPSHOT</version>
+  <packaging>bundle</packaging>
 
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>cardinal-artifacts</artifactId>
+        <version>${project.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
-	<dependencies>
+  <dependencies>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>cardinal-api</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>jdmk</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.snmp4j</groupId>
+      <artifactId>snmp4j</artifactId>
+      <version>2.5.0</version>
+    </dependency>
+
+    <!-- Testing Dependencies -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-all</artifactId>
+      <scope>test</scope>
+    </dependency>
+
 		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>cardinal-api</artifactId>
-			<version>${project.version}</version>
+			<groupId>com.jcraft</groupId>
+			<artifactId>jsch</artifactId>
+			<version>0.1.53</version>
 		</dependency>
 
-		<!-- Testing Dependencies -->
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-all</artifactId>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.snmp4j</groupId>
-			<artifactId>snmp4j</artifactId>
-			<version>2.5.0</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.opendmk.cardinal</groupId>
-			<artifactId>jdmkrt</artifactId>
-			<version>0.1.0</version>
-		</dependency>
 
 	</dependencies>
 </project>

@@ -7,8 +7,11 @@
  */
 package org.opendaylight.cardinal.impl;
 
+import javax.management.InstanceAlreadyExistsException;
+import javax.management.MBeanRegistrationException;
 import javax.management.MBeanServer;
 import javax.management.MBeanServerFactory;
+import javax.management.NotCompliantMBeanException;
 import javax.management.ObjectName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,30 +41,71 @@ public class Agent implements AutoCloseable {
 			//
 			LOG.info("starting Html adaptor service");
 			htmlObjName = new ObjectName(domain + ":class=HtmlAdaptorServer,protocol=html,port=" + htmlPort);
-			HtmlAdaptorServer htmlAdaptor = new HtmlAdaptorServer(htmlPort);
-			server.registerMBean(htmlAdaptor, htmlObjName);
-			htmlAdaptor.start();
-			LOG.info("started Html adaptor service");
+			boolean htmlAdaptorStarted = startingHtmlAdaptor(htmlPort, htmlObjName, server);
 
 			// Create and start the SNMP adaptor.
 			//
 			snmpObjName = new ObjectName(domain + ":class=SnmpAdaptorServer,protocol=snmp,port=" + snmpPort);
-			snmpAdaptor = new SnmpAdaptorServer(snmpPort);
-			server.registerMBean(snmpAdaptor, snmpObjName);
-			snmpAdaptor.start();
+			boolean snmpAdaptorStarted = startingSnmpAdaptor(snmpPort, snmpObjName, server);
 
 			// Create the ODL-CARDINAL-MIB and add it to the MBean server.
 			//
-
+			if(snmpAdaptorStarted){
 			mibObjName = new ObjectName("snmp:class=ODL_CARDINAL_MIB");
 			ODL_CARDINAL_MIB mib2 = new ODL_CARDINAL_MIB();
 			server.registerMBean(mib2, mibObjName);
 			mib2.setSnmpAdaptorName(snmpObjName);
 			snmpAdaptor.addMib(mib2);
+			}
 
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	public boolean startingSnmpAdaptor(int snmpPort, ObjectName snmpObjName, MBeanServer server) {
+		// TODO Auto-generated method stub
+		snmpAdaptor = new SnmpAdaptorServer(snmpPort);
+		try {
+			server.registerMBean(snmpAdaptor, snmpObjName);
+		} catch (InstanceAlreadyExistsException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (MBeanRegistrationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NotCompliantMBeanException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		snmpAdaptor.start();
+		if (snmpAdaptor.getStateString().equals("STARTING")) {
+			return true;
+		} else
+			return false;
+	}
+
+	public boolean startingHtmlAdaptor(int htmlPort, ObjectName htmlObjName, MBeanServer server) {
+		// TODO Auto-generated method stub
+		HtmlAdaptorServer htmlAdaptor = new HtmlAdaptorServer(htmlPort);
+		try {
+			server.registerMBean(htmlAdaptor, htmlObjName);
+		} catch (InstanceAlreadyExistsException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (MBeanRegistrationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NotCompliantMBeanException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		htmlAdaptor.start();
+		if (htmlAdaptor.getStateString().equals("STARTING")) {
+			LOG.info("started Html adaptor service");
+			return true;
+		}
+		return false;
 	}
 
 	// Needed to get a reference on the SNMP adaptor object
