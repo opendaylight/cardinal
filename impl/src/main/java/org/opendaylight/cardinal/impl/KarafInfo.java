@@ -1,0 +1,99 @@
+/*
+ * Copyright © 2016 Tata Consultancy Services and others.  All rights reserved.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v1.0 which accompanies this distribution,
+ * and is available at http://www.eclipse.org/legal/epl-v10.html
+ */
+package org.opendaylight.cardinal.impl;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.util.Arrays;
+import java.util.List;
+
+import com.jcraft.jsch.Channel;
+import com.jcraft.jsch.ChannelExec;
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.Session;
+
+/*
+ * Copyright © 2016 Tata Consultancy Services and others.  All rights reserved.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v1.0 which accompanies this distribution,
+ * and is available at http://www.eclipse.org/legal/epl-v10.html
+ */
+public class KarafInfo {
+
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		StringBuffer result = new StringBuffer();
+		String host = "localhost";
+		String user = "karaf";
+		String password = "karaf";
+		String command1 = "shell:info";
+		String Live_thread;
+		String Daemon_Thread;
+		String Peak;
+		String Total_threads;
+		String Current_heap_size;
+		String Maximum_heap_size;
+		try {
+			java.util.Properties config = new java.util.Properties();
+			config.put("StrictHostKeyChecking", "no");
+			JSch jsch = new JSch();
+			Session session = jsch.getSession(user, host, 8101);
+			session.setPassword(password);
+			session.setConfig(config);
+			session.connect();
+			System.out.println("Connected");
+
+			Channel channel = session.openChannel("exec");
+			((ChannelExec) channel).setCommand(command1);
+			channel.setInputStream(null);
+			((ChannelExec) channel).setErrStream(System.err);
+
+			InputStream in = channel.getInputStream();
+			channel.connect();
+			Reader reader = new InputStreamReader(channel.getInputStream());
+			char[] buf = new char[2048];
+
+			int numRead;
+			while ((numRead = reader.read(buf)) != -1) {
+				String readData = String.valueOf(buf, 0, numRead);
+				result.append(readData);
+				buf = new char[2048];
+				// System.out.println(readData);
+				List<String> items = Arrays.asList(readData.split("\\s+"));
+				System.out.println("hereeee" + items);
+				// System.out.println(items.get(68));
+				Live_thread = items.get(61);
+				Daemon_Thread = items.get(65);
+				Peak = items.get(68);
+				Total_threads = items.get(72);
+				System.out.println("Threads:");
+				System.out.println("Live-Threads:" + Live_thread);
+				System.out.println("Daemon-Threads:" + Daemon_Thread);
+				System.out.println("Peak:" + Peak);
+				System.out.println("Total-Threads:" + Total_threads);
+				System.out.println("Memory:");
+				Current_heap_size = items.get(78);
+				Maximum_heap_size = items.get(84);
+				System.out.println("Current-Heap-size:" + Current_heap_size + "KBytes");
+				System.out.println("Maximum-Heap-Size:" + Maximum_heap_size + "KBytes");
+			}
+			channel.disconnect();
+			session.disconnect();
+			System.out.println("DONE");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+}

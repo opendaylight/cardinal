@@ -27,19 +27,19 @@ import com.sun.management.snmp.SnmpOidTableSupport;
 @SuppressWarnings("all")
 public class ODL_CARDINAL_MIBOidTable extends SnmpOidTableSupport implements Serializable {
 
-	/**
-	 * Default constructor. Initialize the Mib tree.
-	 */
-	public ODL_CARDINAL_MIBOidTable() {
-		super("ODL_CARDINAL_MIB");
-		loadMib(varList);
-	}
+  /**
+   * Default constructor. Initialize the Mib tree.
+   */
+  public ODL_CARDINAL_MIBOidTable() {
+    super("ODL_CARDINAL_MIB");
+    loadMib(varList);
+  }
 
-	static SnmpOidRecord varList[] = { new SnmpOidRecord("odlSystemOdlNodeInfo", "1.3.6.1.3.1.1.1.6", "S"),
-			new SnmpOidRecord("odlSystemOdlUptime", "1.3.6.1.3.1.1.1.5", "S"),
-			new SnmpOidRecord("odlSystemSysInfo", "1.3.6.1.3.1.1.1.4", "S"),
-			new SnmpOidRecord("odlSystemHostAddress", "1.3.6.1.3.1.1.1.3", "S"),
-			new SnmpOidRecord("odlSystemMemUsage", "1.3.6.1.3.1.1.1.2", "I"),
-			new SnmpOidRecord("odlSystemCpuUsage", "1.3.6.1.3.1.1.1.1", "I"),
-			new SnmpOidRecord("snmpGroup", "1.3.6.1.3.1.2", "OBG") };
+  static SnmpOidRecord varList[] = { new SnmpOidRecord("odlSystemOdlNodeInfo", "1.3.6.1.3.1.1.1.6", "S"),
+      new SnmpOidRecord("odlSystemOdlUptime", "1.3.6.1.3.1.1.1.5", "S"),
+      new SnmpOidRecord("odlSystemSysInfo", "1.3.6.1.3.1.1.1.4", "S"),
+      new SnmpOidRecord("odlSystemHostAddress", "1.3.6.1.3.1.1.1.3", "S"),
+      new SnmpOidRecord("odlSystemMemUsage", "1.3.6.1.3.1.1.1.2", "I"),
+      new SnmpOidRecord("odlSystemCpuUsage", "1.3.6.1.3.1.1.1.1", "I"),
+      new SnmpOidRecord("snmpGroup", "1.3.6.1.3.1.2", "OBG") };
 }
