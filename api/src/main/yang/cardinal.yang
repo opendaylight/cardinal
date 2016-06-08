@@ -21,50 +21,48 @@ module cardinal {
             }
         }
     }
-  
-    grouping CardinalSystemInfogrouping{
-    	leaf odlSystemCpuUsage{
-     			type string;
-     			config false;
-        		mandatory true;
-     			}
-     	leaf odlSystemMemUsage{
-     			type string;
-     			config false;
-        		mandatory true;
-     			}
-     	leaf odlSystemHostAddress{
-     			type string;
-     			config false;
-        		mandatory true;
-     			}
-     	leaf odlSystemSysInfo{
-     			type string;
-     			config false;
-      		  	mandatory true;
-     			}
-     	leaf odlSystemOdlUptime{
-     			type string;
-     			config false;
-        		mandatory true;
-     			}
-     	}
-     	
-     container CardinalSystemInfo{
-     			uses CardinalSystemInfogrouping;
-     }		
-     		
-     			
-    rpc CardinalSysInfo{
-         description "Cardinal sys info api";
-         input{
-         leaf snmp-get-type{
-         		type snmp-cardinal-get-type;
-         		}
-         }
-         output {
-         	uses CardinalSystemInfogrouping;
-     	
-         	}
-         }    			
+
+    grouping CardinalSystemInfogrouping {
+        leaf odlSystemCpuUsage {
+            type string;
+            config false;
+            mandatory true;
+        }
+        leaf odlSystemMemUsage {
+            type string;
+            config false;
+            mandatory true;
+        }
+        leaf odlSystemHostAddress {
+            type string;
+            config false;
+            mandatory true;
+        }
+        leaf odlSystemSysInfo {
+            type string;
+            config false;
+            mandatory true;
+        }
+        leaf odlSystemOdlUptime {
+            type string;
+            config false;
+            mandatory true;
+        }
+    }
+
+    container CardinalSystemInfo {
+        uses CardinalSystemInfogrouping;
+    }
+
+    rpc CardinalSysInfo {
+        description "Cardinal sys info api";
+        input {
+            leaf snmp-get-type {
+                type snmp-cardinal-get-type;
+            }
+        }
+        output {
+            uses CardinalSystemInfogrouping;
+        }
+    }
 }
