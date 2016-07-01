@@ -1,0 +1,286 @@
+module cardinal-karaf {
+    yang-version 1;
+    namespace "urn:opendaylight:params:xml:ns:yang:cardinal-karaf";
+    prefix "cardinal";
+    contact
+      "Gaurav Pande <pande.gaurav@tcs.com>";
+
+    revision "2016-06-20" {
+        description "Initial revision of cardinal model";
+    }
+    typedef snmp-cardinal-get-type {
+        type enumeration {
+            enum SystemInfo {
+                value "1";
+            }
+            enum KarafInfo {
+                value "2";
+            }
+            enum OdlInfo {
+                value "3";
+            }
+        }
+    }
+
+    grouping CardinalKarafInfogrouping {
+        leaf odlKarafBundleListInstalled1 {
+            type string;
+            config false;
+            mandatory true;
+        }
+        
+        leaf odlKarafBundleListInstalled2 {
+            type string;
+            config false;
+            mandatory true;
+        }
+        
+        leaf odlKarafBundleListInstalled3 {
+            type string;
+            config false;
+            mandatory true;
+        }
+        
+        leaf odlKarafBundleListInstalled4 {
+            type string;
+            config false;
+            mandatory true;
+        }
+        
+        leaf odlKarafBundleListInstalled5 {
+            type string;
+            config false;
+            mandatory true;
+        }
+
+		leaf odlKarafBundleListResolved1 {
+            type string;
+            config false;
+            mandatory true;
+        }
+
+		leaf odlKarafBundleListResolved2 {
+            type string;
+            config false;
+            mandatory true;
+        }
+        
+        leaf odlKarafBundleListResolved3 {
+            type string;
+            config false;
+            mandatory true;
+        }
+        
+        leaf odlKarafBundleListResolved4 {
+            type string;
+            config false;
+            mandatory true;
+        }
+        
+        leaf odlKarafBundleListResolved5 {
+            type string;
+            config false;
+            mandatory true;
+        }
+        
+        leaf odlKarafBundleListActive1 {
+            type string;
+            config false;
+            mandatory true;
+        }
+        
+        leaf odlKarafBundleListActive2 {
+            type string;
+            config false;
+            mandatory true;
+        }
+        
+        leaf odlKarafBundleListActive3 {
+            type string;
+            config false;
+            mandatory true;
+        }
+        
+        leaf odlKarafBundleListActive4 {
+            type string;
+            config false;
+            mandatory true;
+        }
+        
+        leaf odlKarafBundleListActive5 {
+            type string;
+            config false;
+            mandatory true;
+        }
+        
+        leaf odlKarafBundleListActive6 {
+            type string;
+            config false;
+            mandatory true;
+        }
+        
+        leaf odlKarafBundleListActive7 {
+            type string;
+            config false;
+            mandatory true;
+        }
+        
+        leaf odlKarafBundleListActive8 {
+            type string;
+            config false;
+            mandatory true;
+        }
+        
+        leaf odlKarafBundleListActive9 {
+            type string;
+            config false;
+            mandatory true;
+        }
+        
+        leaf odlKarafBundleListActive10 {
+            type string;
+            config false;
+            mandatory true;
+        }
+        
+        leaf odlKarafFeatureListInstalled1 {
+            type string;
+            config false;
+            mandatory true;
+        }
+        
+        leaf odlKarafFeatureListInstalled2 {
+            type string;
+            config false;
+            mandatory true;
+        }
+        
+        leaf odlKarafFeatureListInstalled3 {
+            type string;
+            config false;
+            mandatory true;
+        }
+        
+        leaf odlKarafFeatureListInstalled4 {
+            type string;
+            config false;
+            mandatory true;
+        }
+        
+        leaf odlKarafFeatureListInstalled5 {
+            type string;
+            config false;
+            mandatory true;
+        }
+        
+        leaf odlKarafFeatureListInstalled6 {
+            type string;
+            config false;
+            mandatory true;
+        }
+        
+        leaf odlKarafFeatureListInstalled7 {
+            type string;
+            config false;
+            mandatory true;
+        }
+        
+        leaf odlKarafFeatureListInstalled8 {
+            type string;
+            config false;
+            mandatory true;
+        }
+        
+        leaf odlKarafFeatureListInstalled9 {
+            type string;
+            config false;
+            mandatory true;
+        }
+        
+        leaf odlKarafFeatureListInstalled10 {
+            type string;
+            config false;
+            mandatory true;
+        }
+        
+        leaf odlKarafFeatureListUnInstalled1 {
+            type string;
+            config false;
+            mandatory true;
+        }
+        
+        leaf odlKarafFeatureListUnInstalled2 {
+            type string;
+            config false;
+            mandatory true;
+        }
+        
+        leaf odlKarafFeatureListUnInstalled3 {
+            type string;
+            config false;
+            mandatory true;
+        }
+        
+        leaf odlKarafFeatureListUnInstalled4 {
+            type string;
+            config false;
+            mandatory true;
+        }
+        
+        leaf odlKarafFeatureListUnInstalled5 {
+            type string;
+            config false;
+            mandatory true;
+        }
+        
+        leaf odlKarafFeatureListUnInstalled6 {
+            type string;
+            config false;
+            mandatory true;
+        }
+        
+        leaf odlKarafFeatureListUnInstalled7 {
+            type string;
+            config false;
+            mandatory true;
+        }
+        
+        leaf odlKarafFeatureListUnInstalled8 {
+            type string;
+            config false;
+            mandatory true;
+        }
+        
+        leaf odlKarafFeatureListUnInstalled9 {
+            type string;
+            config false;
+            mandatory true;
+        }
+        
+        leaf odlKarafFeatureListUnInstalled10 {
+            type string;
+            config false;
+            mandatory true;
+        }
+        
+        
+
+        
+    }
+
+    container CardinalKarafInfo {
+        uses CardinalKarafInfogrouping;
+    }
+
+    rpc CardinalKrfInfo {
+        description "Cardinal sys info api";
+        input {
+            leaf snmp-get-type {
+                type snmp-cardinal-get-type;
+            }
+        }
+        output {
+            uses CardinalKarafInfogrouping;
+        }
+    }
+}

@@ -25,136 +25,151 @@ import org.snmp4j.smi.VariableBinding;
 import org.snmp4j.transport.DefaultUdpTransportMapping;
 
 public class SnmpSet {
-  private final static org.slf4j.Logger LOG = LoggerFactory.getLogger(SnmpSet.class);
-  private static String ipAddress = "127.0.0.1";
+    private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(SnmpSet.class);
+    private static String ipAddress = "127.0.0.1";
+    private static String port = "161";
+    private static int snmpVersion = SnmpConstants.version2c;
+    private static String community = "public";
 
-  private static String port = "161";
+    /**
+     * @param mibOid.
+     * @param hostName.
+     * @throws Exception
+     *             whenever a exception occur while setting mib. method to set
+     *             the mib variable of string type to string type.
+     */
+    public void setVariableString(String mibOid, String hostName) throws Exception {
 
-  private static int snmpVersion = SnmpConstants.version2c;
+        // Create TransportMapping and Listen
+        @SuppressWarnings("rawtypes")
+        TransportMapping transport = new DefaultUdpTransportMapping();
+        transport.listen();
 
-  private static String community = "public";
+        // Create Target Address object
+        CommunityTarget comtarget = new CommunityTarget();
+        comtarget.setCommunity(new OctetString(community));
+        comtarget.setVersion(snmpVersion);
+        comtarget.setAddress(new UdpAddress(ipAddress + "/" + port));
+        comtarget.setRetries(2);
+        comtarget.setTimeout(1000);
 
-  public void setVariableString(String mibOid, String hostName) throws Exception {
+        // Create the PDU object
+        PDU pdu = new PDU();
+        // Setting the Oid and Value for odl-cardinal-mib variable
+        OID oid = new OID(mibOid);
+        Variable var = new OctetString(hostName);
+        VariableBinding varBind = new VariableBinding(oid, var);
+        pdu.add(varBind);
+        pdu.setType(PDU.SET);
+        pdu.setRequestID(new Integer32(1));
 
-    // Create TransportMapping and Listen
-    @SuppressWarnings("rawtypes")
-    TransportMapping transport = new DefaultUdpTransportMapping();
-    transport.listen();
+        // Create Snmp object for sending data to Agent
+        Snmp snmp = new Snmp(transport);
 
-    // Create Target Address object
-    CommunityTarget comtarget = new CommunityTarget();
-    comtarget.setCommunity(new OctetString(community));
-    comtarget.setVersion(snmpVersion);
-    comtarget.setAddress(new UdpAddress(ipAddress + "/" + port));
-    comtarget.setRetries(2);
-    comtarget.setTimeout(1000);
+        ResponseEvent response = snmp.set(pdu, comtarget);
 
-    // Create the PDU object
-    PDU pdu = new PDU();
-    // Setting the Oid and Value for odl-cardinal-mib variable
-    OID oid = new OID(mibOid);
-    Variable var = new OctetString(hostName);
-    VariableBinding varBind = new VariableBinding(oid, var);
-    pdu.add(varBind);
-    pdu.setType(PDU.SET);
-    pdu.setRequestID(new Integer32(1));
+        // Process Agent Response
+        if (response != null) {
 
-    // Create Snmp object for sending data to Agent
-    Snmp snmp = new Snmp(transport);
+            PDU responsePDU = response.getResponse();
 
-    ResponseEvent response = snmp.set(pdu, comtarget);
+            if (responsePDU != null) {
+                int errorStatus = responsePDU.getErrorStatus();
+                int errorIndex = responsePDU.getErrorIndex();
+                String errorStatusText = responsePDU.getErrorStatusText();
 
-    // Process Agent Response
-    if (response != null) {
-
-      PDU responsePDU = response.getResponse();
-
-      if (responsePDU != null) {
-        int errorStatus = responsePDU.getErrorStatus();
-        int errorIndex = responsePDU.getErrorIndex();
-        String errorStatusText = responsePDU.getErrorStatusText();
-
-        if (errorStatus == PDU.noError) {
-          LOG.info("Snmp Set Response = " + responsePDU.getVariableBindings());
+                if (errorStatus == PDU.noError) {
+                    LOG.info("Snmp Set Response = " + responsePDU.getVariableBindings());
+                } else {
+                    LOG.info("Error: Request Failed");
+                    LOG.info("Error Status = " + errorStatus);
+                    LOG.info("Error Index = " + errorIndex);
+                    LOG.info("Error Status Text = " + errorStatusText);
+                }
+            } else {
+                LOG.info("Error: Response PDU is null");
+            }
         } else {
-          LOG.info("Error: Request Failed");
-          LOG.info("Error Status = " + errorStatus);
-          LOG.info("Error Index = " + errorIndex);
-          LOG.info("Error Status Text = " + errorStatusText);
+            LOG.info("Error: Agent Timeout... ");
         }
-      } else {
-        LOG.info("Error: Response PDU is null");
-      }
-    } else {
-      LOG.info("Error: Agent Timeout... ");
+        snmp.close();
     }
-    snmp.close();
-  }
 
-  public static Variable stringToVariable(String value, int smiSyntax) {
-    Variable var = AbstractVariable.createFromSyntax(smiSyntax);
-    if (var instanceof AssignableFromString)
-      ((AssignableFromString) var).setValue(value);
-    else
-      throw new IllegalArgumentException("Unsupported conversion from String to " + var.getSyntaxString());
-    return var;
-  }
-
-  public void setVariableInt(String mibOid, int hostName) throws Exception {
-
-    // Create TransportMapping and Listen
-    @SuppressWarnings("rawtypes")
-    TransportMapping transport = new DefaultUdpTransportMapping();
-    transport.listen();
-
-    // Create Target Address object
-    CommunityTarget comtarget = new CommunityTarget();
-    comtarget.setCommunity(new OctetString(community));
-    comtarget.setVersion(snmpVersion);
-    comtarget.setAddress(new UdpAddress(ipAddress + "/" + port));
-    comtarget.setRetries(2);
-    comtarget.setTimeout(1000);
-
-    // Create the PDU object
-    PDU pdu = new PDU();
-    // Setting the Oid and Value for sysContact variable
-    OID oid = new OID(mibOid);
-    Variable var = new Integer32(hostName);
-    VariableBinding varBind = new VariableBinding(oid, var);
-    pdu.add(varBind);
-    pdu.setType(PDU.SET);
-    pdu.setRequestID(new Integer32(1));
-
-    // Create Snmp object for sending data to Agent
-    Snmp snmp = new Snmp(transport);
-
-    ResponseEvent response = snmp.set(pdu, comtarget);
-
-    // Process Agent Response
-    if (response != null) {
-
-      PDU responsePDU = response.getResponse();
-
-      if (responsePDU != null) {
-        int errorStatus = responsePDU.getErrorStatus();
-        int errorIndex = responsePDU.getErrorIndex();
-        String errorStatusText = responsePDU.getErrorStatusText();
-
-        if (errorStatus == PDU.noError) {
-          LOG.info("Snmp Set Response = " + responsePDU.getVariableBindings());
+    /**
+     * @param value.
+     * @param smiSyntax.
+     * @return false or true on the basis of method. method to set the string
+     *         value to mib oid.
+     */
+    public static Variable stringToVariable(String value, int smiSyntax) {
+        Variable var = AbstractVariable.createFromSyntax(smiSyntax);
+        if (var instanceof AssignableFromString) {
+            ((AssignableFromString) var).setValue(value);
         } else {
-          LOG.info("Error: Request Failed");
-          LOG.info("Error Status = " + errorStatus);
-          LOG.info("Error Index = " + errorIndex);
-          LOG.info("Error Status Text = " + errorStatusText);
+            throw new IllegalArgumentException("Unsupported conversion from String to " + var.getSyntaxString());
         }
-      } else {
-        LOG.info("Error: Response PDU is null");
-      }
-    } else {
-      LOG.info("Error: Agent Timeout... ");
+        return var;
     }
-    snmp.close();
-  }
+
+    /**
+     * @param mibOid.
+     * @param hostName.
+     * @throws Exception
+     *             when an exception is thrown at runtime. method to set
+     *             variable of type integer.
+     */
+    public void setVariableInt(String mibOid, int hostName) throws Exception {
+        // Create TransportMapping and Listen
+        @SuppressWarnings("rawtypes")
+        TransportMapping transport = new DefaultUdpTransportMapping();
+        transport.listen();
+        // Create Target Address object
+        CommunityTarget comtarget = new CommunityTarget();
+        comtarget.setCommunity(new OctetString(community));
+        comtarget.setVersion(snmpVersion);
+        comtarget.setAddress(new UdpAddress(ipAddress + "/" + port));
+        comtarget.setRetries(2);
+        comtarget.setTimeout(1000);
+
+        // Create the PDU object
+        PDU pdu = new PDU();
+        // Setting the Oid and Value for sysContact variable
+        OID oid = new OID(mibOid);
+        Variable var = new Integer32(hostName);
+        VariableBinding varBind = new VariableBinding(oid, var);
+        pdu.add(varBind);
+        pdu.setType(PDU.SET);
+        pdu.setRequestID(new Integer32(1));
+        // Create Snmp object for sending data to Agent
+        Snmp snmp = new Snmp(transport);
+
+        ResponseEvent response = snmp.set(pdu, comtarget);
+
+        // Process Agent Response
+        if (response != null) {
+
+            PDU responsePDU = response.getResponse();
+
+            if (responsePDU != null) {
+                int errorStatus = responsePDU.getErrorStatus();
+                int errorIndex = responsePDU.getErrorIndex();
+                String errorStatusText = responsePDU.getErrorStatusText();
+
+                if (errorStatus == PDU.noError) {
+                    LOG.info("Snmp Set Response = " + responsePDU.getVariableBindings());
+                } else {
+                    LOG.info("Error: Request Failed");
+                    LOG.info("Error Status = " + errorStatus);
+                    LOG.info("Error Index = " + errorIndex);
+                    LOG.info("Error Status Text = " + errorStatusText);
+                }
+            } else {
+                LOG.info("Error: Response PDU is null");
+            }
+        } else {
+            LOG.info("Error: Agent Timeout... ");
+        }
+        snmp.close();
+    }
 
 }
