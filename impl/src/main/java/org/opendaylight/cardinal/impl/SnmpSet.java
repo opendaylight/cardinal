@@ -38,7 +38,7 @@ public class SnmpSet {
      *             whenever a exception occur while setting mib. method to set
      *             the mib variable of string type to string type.
      */
-    public void setVariableString(String mibOid, String hostName) throws Exception {
+    public boolean setVariableString(String mibOid, String hostName) throws Exception {
 
         // Create TransportMapping and Listen
         @SuppressWarnings("rawtypes")
@@ -93,6 +93,7 @@ public class SnmpSet {
             LOG.info("Error: Agent Timeout... ");
         }
         snmp.close();
+        return true;
     }
 
     /**
@@ -118,7 +119,7 @@ public class SnmpSet {
      *             when an exception is thrown at runtime. method to set
      *             variable of type integer.
      */
-    public void setVariableInt(String mibOid, int hostName) throws Exception {
+    public boolean setVariableInt(String mibOid, int hostName) throws Exception {
         // Create TransportMapping and Listen
         @SuppressWarnings("rawtypes")
         TransportMapping transport = new DefaultUdpTransportMapping();
@@ -170,6 +171,7 @@ public class SnmpSet {
             LOG.info("Error: Agent Timeout... ");
         }
         snmp.close();
+        return true;
     }
 
 }

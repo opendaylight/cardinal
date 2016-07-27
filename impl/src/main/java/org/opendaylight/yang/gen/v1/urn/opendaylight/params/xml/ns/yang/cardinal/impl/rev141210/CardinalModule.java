@@ -7,6 +7,7 @@
  */
 package org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.cardinal.impl.rev141210;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.opendaylight.cardinal.impl.Agent;
@@ -15,7 +16,11 @@ import org.opendaylight.cardinal.impl.KarafInfo;
 import org.opendaylight.cardinal.impl.OdlCardinalKarafInfoApi;
 import org.opendaylight.cardinal.impl.OdlCardinalSysInfoApis;
 import org.opendaylight.cardinal.impl.OdlCardinalKarafManager;
+import org.opendaylight.cardinal.impl.OdlCardinalPolling;
+import org.opendaylight.cardinal.impl.OdlCardinalSendTrap;
+import org.opendaylight.cardinal.impl.OdlCardinalSetTrapReceiver;
 import org.opendaylight.cardinal.impl.SetCardinalMibValues;
+import org.opendaylight.cardinal.impl.odlCardinalProjectManager;
 import org.slf4j.LoggerFactory;
 
 import com.sun.management.snmp.SnmpStatusException;
@@ -32,6 +37,9 @@ public class CardinalModule extends
     final OdlCardinalSysInfoApis cardinalApi = new OdlCardinalSysInfoApis();
     final OdlCardinalKarafInfoApi cardinalKarafApi = new OdlCardinalKarafInfoApi();
     final KarafInfo manager = new KarafInfo();
+    final OdlCardinalSetTrapReceiver cardinal = new OdlCardinalSetTrapReceiver();
+    final OdlCardinalSendTrap sendTrap = new OdlCardinalSendTrap();
+    final odlCardinalProjectManager pmanager = new odlCardinalProjectManager();
     public CardinalModule(org.opendaylight.controller.config.api.ModuleIdentifier identifier,
             org.opendaylight.controller.config.api.DependencyResolver dependencyResolver) {
         super(identifier, dependencyResolver);
@@ -78,6 +86,7 @@ public class CardinalModule extends
             manager.odlKarafMaxHeapSize();
             manager.odlLiveThreads();
             manager.odlPeakThreads();
+            pmanager.odlMDSALIotDMListofcse();
             cardinalKarafApi.setValues();
         } catch (Exception e) {
             // TODO Auto-generated catch block
@@ -86,4 +95,6 @@ public class CardinalModule extends
         return provider;
 
     }
+    
+  
 }

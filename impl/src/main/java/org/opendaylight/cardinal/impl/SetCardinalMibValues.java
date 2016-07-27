@@ -62,7 +62,7 @@ public class SetCardinalMibValues implements AutoCloseable {
         } catch (UnknownHostException e1) {
             throw new RuntimeException(e1);
         }
-        String hostName = ipAddress.getHostName();
+        String hostName = "Machine Name:"+ipAddress.getHostName();
 
         // setting system name to mib variable
 
@@ -80,7 +80,7 @@ public class SetCardinalMibValues implements AutoCloseable {
     public boolean setOdlNodeName() {
         // setting odl-node name.
         try {
-            set.setVariableString(".1.3.6.1.3.1.1.1.6.0", "Opendaylight Node Information");
+            set.setVariableString(".1.3.6.1.3.1.1.1.6.0", "Opendaylight Node A");
             return true;
         } catch (Exception e) {
             throw new RuntimeException(e);

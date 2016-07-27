@@ -87,8 +87,6 @@ public class OdlCardinalKarafManager {
                        strlist.add(items.get(i - 3));
                    }
                 }
-                System.out.println(strlist);
-                //System.out.println(items);
                 LOG.info("Value retrieved for Threads and Memory");
             }
             channel.disconnect();

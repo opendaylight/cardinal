@@ -88,7 +88,7 @@ public class KarafInfo {
     public boolean odlLiveThreads() {
         ThreadMXBean threads = ManagementFactory.getThreadMXBean();
         try {
-            live_thread = Integer.toString(threads.getThreadCount());
+            live_thread = "Live-threads:"+Integer.toString(threads.getThreadCount());
             set.setVariableString(".1.3.6.1.3.1.1.7.0.0", live_thread);
             return true;
         } catch (Exception e) {
@@ -99,7 +99,7 @@ public class KarafInfo {
     public boolean odlDaemonThreads() {
         ThreadMXBean threads = ManagementFactory.getThreadMXBean();
         try {
-            daemon_Thread = Integer.toString(threads.getDaemonThreadCount());
+            daemon_Thread = "Daemon-threads"+Integer.toString(threads.getDaemonThreadCount());
             set.setVariableString(".1.3.6.1.3.1.1.7.1.0", daemon_Thread);
             return true;
         } catch (Exception e) {
@@ -110,7 +110,7 @@ public class KarafInfo {
     public boolean odlPeakThreads() {
         ThreadMXBean threads = ManagementFactory.getThreadMXBean();
         try {
-            peak = Integer.toString(threads.getPeakThreadCount());
+            peak = "Peak-threads:"+Integer.toString(threads.getPeakThreadCount());
             set.setVariableString(".1.3.6.1.3.1.1.7.2.0", peak);
             return true;
         } catch (Exception e) {
@@ -128,7 +128,7 @@ public class KarafInfo {
     public boolean odlKarafCurrentHeapSize() {
         MemoryMXBean mem = ManagementFactory.getMemoryMXBean();
         try {
-            current_heap_size = Long.toString(mem.getHeapMemoryUsage().getCommitted());
+            current_heap_size = "Current heap-size:"+Long.toString(mem.getHeapMemoryUsage().getCommitted()/1024);
             set.setVariableString(".1.3.6.1.3.1.1.7.3.0", current_heap_size);
             return true;
         } catch (Exception e) {
@@ -139,7 +139,7 @@ public class KarafInfo {
     public boolean odlKarafMaxHeapSize() {
         MemoryMXBean mem = ManagementFactory.getMemoryMXBean();
         try {
-            maximum_heap_size = Long.toString(mem.getHeapMemoryUsage().getMax());
+            maximum_heap_size = "Max Heap-size:"+Long.toString(mem.getHeapMemoryUsage().getMax()/1024);
             set.setVariableString(".1.3.6.1.3.1.1.7.4.0", maximum_heap_size);
             return true;
         } catch (Exception e) {
@@ -216,7 +216,7 @@ public class KarafInfo {
             session.connect();
             LOG.info("Connected");
             Channel channel = session.openChannel("exec");
-            ((ChannelExec) channel).setCommand(command2);
+            ((ChannelExec) channel).setCommand(command1);
             channel.setInputStream(null);
             ((ChannelExec) channel).setErrStream(System.err);
             channel.connect();

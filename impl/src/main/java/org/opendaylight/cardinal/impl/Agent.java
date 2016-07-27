@@ -52,6 +52,13 @@ public class Agent implements AutoCloseable {
             snmpObjName = new ObjectName(domain + ":class=SnmpAdaptorServer,protocol=snmp,port=" + snmpPort);
             boolean snmpAdaptorStarted = startingSnmpAdaptor(snmpPort, snmpObjName, server);
 
+            
+            //Start SnmpTrapport 
+            snmpAdaptor.setTrapPort(new Integer(snmpPort+1));
+            snmpAdaptor.snmpV1Trap(0, 0, null);
+            
+            
+            
             // Create the ODL-CARDINAL-MIB and add it to the MBean server.
             //
             if (snmpAdaptorStarted) {

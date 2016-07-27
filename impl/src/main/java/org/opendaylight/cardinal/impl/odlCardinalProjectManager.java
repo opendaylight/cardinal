@@ -19,11 +19,17 @@ public class odlCardinalProjectManager {
     final String name = "admin";
     final String password = "admin";
     final String authString = name + ":" + password;
+    SnmpSet set = new SnmpSet();
 
     public void odlMDSALIotDMListofcse() throws MalformedURLException {
         URL url = new URL("http://localhost:8181/restconf/operational/onem2m:onem2m-cse-list/");
         odlCardinalProjectManager apis = new odlCardinalProjectManager();
-        apis.odlRestGetApis(url);
+        try {
+            set.setVariableString(".1.3.6.1.3.1.1.8.12.0",apis.odlRestGetApis(url));
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
     public void odlMDSALIotDMlistofAEs() throws MalformedURLException {
@@ -97,7 +103,7 @@ public class odlCardinalProjectManager {
 
     }
 
-    public void odlRestGetApis(URL url) throws MalformedURLException {
+    public String odlRestGetApis(URL url) throws MalformedURLException {
         String encodedAuthStr = Base64.getEncoder().encodeToString(authString.getBytes());
         try {
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -112,6 +118,7 @@ public class odlCardinalProjectManager {
 
             String output;
             while ((output = br.readLine()) != null) {
+                return output;
             }
 
             conn.disconnect();
@@ -125,6 +132,7 @@ public class odlCardinalProjectManager {
             throw new RuntimeException(e);
 
         }
+        return "project-information";
     }
 
 }
