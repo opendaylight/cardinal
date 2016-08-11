@@ -1,0 +1,82 @@
+package org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.cardinal.impl.rev141210;
+
+import static org.junit.Assert.assertEquals;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import java.io.IOException;
+import java.util.List;
+
+import org.opendaylight.cardinal.impl.Agent;
+import org.opendaylight.cardinal.impl.KarafInfo;
+import org.opendaylight.cardinal.impl.SnmpSet;
+
+import com.sun.management.snmp.SnmpStatusException;
+/**
+ * @author Subodh Roy
+ *
+ */
+
+public class KarafInfoTest {
+	KarafInfo karafInfo =new KarafInfo();
+	Agent mockagent = new Agent();
+	
+	@Before
+	public void setUp() throws SnmpStatusException {
+	mockagent.startSnmpDaemon(); 
+	SnmpSet snmpset=new SnmpSet();
+	}
+	@After
+	public void setDown() {
+        }
+	@Test
+	 public void odlLiveThreadsTest(){
+		boolean olt = karafInfo.odlLiveThreads();
+		assertEquals(true, olt);
+	}
+	@Test
+	 public void odlDaemonThreadsTest(){
+		boolean odt = karafInfo.odlDaemonThreads();
+		assertEquals(true, odt);
+	}
+	@Test
+	 public void odlPeakThreadsTest(){
+		boolean opt = karafInfo.odlPeakThreads();
+		assertEquals(true, opt);
+	}
+	@Test
+	 public void odlKarafCurrentHeapSizeTest(){
+		boolean okcht = karafInfo.odlKarafCurrentHeapSize();
+		assertEquals(true, okcht);
+	}
+	@Test
+	 public void odlKarafMaxHeapSizeTest(){
+		boolean okmht = karafInfo.odlKarafMaxHeapSize();
+		assertEquals(true, okmht);
+	}
+   /* @Test
+	 public void odlKarafBundleListActiveTest(){
+		boolean okblat = karafInfo.odlKarafBundleListActive();
+		assertEquals(true, okblat);
+	}
+	@Test
+	 public void odlKarafBundleListInActiveTest(){
+		boolean odt = karafInfo.odlKarafBundleListInActive();
+		assertEquals(true, odt);
+	}
+	@Test
+	 public void odlKarafBundleListResolvedTest(){
+		boolean odt = karafInfo.odlKarafBundleListResolved();
+		assertEquals(true, odt);
+	}
+	@Test
+	 public void odlKarafFeatureInstalledTest(){
+		boolean odt = karafInfo.odlKarafFeatureInstalled();
+		assertEquals(true, odt);
+	}
+	@Test
+	 public void odlKarafFeatureUnInstalledTest(){
+		boolean odt = karafInfo.odlKarafFeatureUnInstalled();
+		assertEquals(true, odt);
+	}*/
+}
