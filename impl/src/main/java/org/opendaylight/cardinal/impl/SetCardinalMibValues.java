@@ -35,6 +35,8 @@ public class SetCardinalMibValues implements AutoCloseable {
     String pid = null;
     String uptime = null;
     String[] s2 = null;
+    static boolean flag = true;
+    static boolean flagKaraf = true;
 
     /**
      * @throws Exception
@@ -44,9 +46,8 @@ public class SetCardinalMibValues implements AutoCloseable {
         SetCardinalMibValues setter = new SetCardinalMibValues();
         setter.setSystemName();
         setter.setSystemIpAddress();
-        setter.setCpuMemUsage();
+        setter.setCpuMemUsage(setter);
         setter.setOdlNodeName();
-        setter.setKarafUptime();
 
     }
 
@@ -130,7 +131,7 @@ public class SetCardinalMibValues implements AutoCloseable {
      * @throws InterruptedException
      *             when Interrupt occur. method to set the cpu and memory usage.
      */
-    public boolean setCpuMemUsage() throws IOException, InterruptedException {
+    public boolean setCpuMemUsage(SetCardinalMibValues setter) throws IOException, InterruptedException {
         // fetching the process id of karaf
         int flag1 = 0;
         int flag2 = 0;
@@ -141,7 +142,8 @@ public class SetCardinalMibValues implements AutoCloseable {
         ArrayList<String> arr = new ArrayList<String>();
         // read the output from the command
 
-        while ((temp = stdInput.readLine()) != null) {
+        while ((temp = stdInput.readLine()) != null && flag) {
+            try{
             if (temp.contains(":8101")) {
                 words = temp.split(" ");
                 for (String each : words) {
@@ -184,7 +186,18 @@ public class SetCardinalMibValues implements AutoCloseable {
                     }
 
                 }
-
+                setter.setKarafUptime();
+            }else{
+                //TO DO LATER
+                flag = false;
+                LOG.info("karaf ssh process not running...");
+            }
+            }
+            catch(ArrayIndexOutOfBoundsException e){
+                e.printStackTrace();
+            }
+            catch(Exception e){
+                   e.printStackTrace();
             }
         }
 
@@ -220,7 +233,8 @@ public class SetCardinalMibValues implements AutoCloseable {
         String topS = "";
 
         while ((topS = stdInput.readLine()) != null) {
-            if (topS.contains(s2[0])) {
+            if (!topS.equals("")) {
+                if(topS.contains(s2[0])) {
                 topS = topS.replaceAll("  ", " ");
                 topS = topS.replaceAll("  ", " ");
                 topS = topS.replaceAll("  ", " ");
@@ -239,6 +253,10 @@ public class SetCardinalMibValues implements AutoCloseable {
                 }
 
             }
+            }
+            else{
+                LOG.info("Issue in getting uptime...");
+            }
         }
         if (uptime != null) {
             return true;
@@ -253,3 +271,4 @@ public class SetCardinalMibValues implements AutoCloseable {
 
     }
 }
+

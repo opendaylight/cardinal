@@ -52,6 +52,7 @@ public class OdlCardinalGet {
             snmp = new Snmp(transport);
             response = snmp.get(pdu, comtarget);
             if (response != null) {
+                if(response.getResponse()!=null){
                 if (response.getResponse().getErrorStatusText().equalsIgnoreCase("Success")) {
                     PDU pduresponse = response.getResponse();
                     strResponse = pduresponse.getVariableBindings().firstElement().toString();
@@ -59,6 +60,10 @@ public class OdlCardinalGet {
                         int len = strResponse.indexOf("=");
                         strResponse = strResponse.substring(len + 1, strResponse.length());
                     }
+                }
+
+                }else{
+                    LOG.info("Getting null in response.getResponse...To handle later ");
                 }
             } else {
                 LOG.info("Looks like a TimeOut occured ");
@@ -70,3 +75,4 @@ public class OdlCardinalGet {
         return strResponse;
     }
 }
+
