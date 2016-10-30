@@ -11,13 +11,13 @@
 	<parent>
 		<groupId>org.opendaylight.controller</groupId>
 		<artifactId>config-parent</artifactId>
-		<version>0.5.1-SNAPSHOT</version>
+		<version>0.5.1-Boron-SR1</version>
 		<relativePath />
 	</parent>
 
 	<groupId>org.opendaylight.cardinal</groupId>
 	<artifactId>cardinal-impl</artifactId>
-	<version>0.1.1-SNAPSHOT</version>
+	<version>0.1.1-Boron-SR1</version>
 	<packaging>bundle</packaging>
 
 	<dependencyManagement>
