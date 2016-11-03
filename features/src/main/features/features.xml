@@ -7,15 +7,10 @@
 <features name="odl-cardinal-${project.version}" xmlns="http://karaf.apache.org/xmlns/features/v1.2.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://karaf.apache.org/xmlns/features/v1.2.0 http://karaf.apache.org/xmlns/features/v1.2.0">
-	<repository>mvn:org.opendaylight.yangtools/features-yangtools/{{VERSION}}/xml/features</repository>
 	<repository>mvn:org.opendaylight.controller/features-mdsal/{{VERSION}}/xml/features</repository>
 	<repository>mvn:org.opendaylight.mdsal.model/features-mdsal-model/{{VERSION}}/xml/features</repository>
 	<repository>mvn:org.opendaylight.netconf/features-restconf/{{VERSION}}/xml/features</repository>
 	<repository>mvn:org.opendaylight.dlux/features-dlux/{{VERSION}}/xml/features</repository>
-	<repository>mvn:org.opendaylight.netconf/features-netconf/{{VERSION}}/xml/features</repository>
-	<repository>mvn:org.opendaylight.iotdm/onem2m-features/{{VERSION}}/xml/features</repository>
-	<repository>mvn:org.opendaylight.groupbasedpolicy/features-groupbasedpolicy/{{VERSION}}/xml/features</repository>
-	<repository>mvn:org.opendaylight.sfc/features-sfc/{{VERSION}}/xml/features</repository>
 	<feature name='odl-cardinal-api' version='${project.version}'
 		description='OpenDaylight :: cardinal :: api'>
 		<feature version='${mdsal.model.version}'>odl-mdsal-models</feature>
