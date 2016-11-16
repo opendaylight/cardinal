@@ -39,15 +39,22 @@ public class SetCardinalMibValues implements AutoCloseable {
     static boolean flagKaraf = true;
 
     /**
+     * @return
      * @throws Exception
      *             when the methods fail. constructor for the class.
      */
-    public void setMibValues() throws Exception {
+    public boolean setMibValues() throws Exception {
         SetCardinalMibValues setter = new SetCardinalMibValues();
-        setter.setSystemName();
+        boolean firstPDUTESTPassed = setter.setSystemName();
+        if (firstPDUTESTPassed){
         setter.setSystemIpAddress();
         setter.setCpuMemUsage(setter);
         setter.setOdlNodeName();
+        return true;
+        }
+        else{
+            return false;
+        }
 
     }
 
@@ -68,8 +75,8 @@ public class SetCardinalMibValues implements AutoCloseable {
         // setting system name to mib variable
 
         try {
-            set.setVariableString(".1.3.6.1.3.1.1.1.4.0", hostName);
-            return true;
+            boolean hostNameSet = set.setVariableString(".1.3.6.1.3.1.1.1.4.0", hostName);
+            return hostNameSet;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

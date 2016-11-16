@@ -24,20 +24,21 @@ public class OdlCardinalPolling implements Runnable {
     final OdlCardinalKarafInfoApi cardinalKarafApi = new OdlCardinalKarafInfoApi();
     final KarafInfo manager = new KarafInfo();
     final odlCardinalProjectManager pmanager = new odlCardinalProjectManager();
-    
-    
+
+
     @Override
-    
+
     public void run() {
         // TODO Auto-generated method stub
         boolean flag = true;
         long threadSleepTime  = (long) 60000;
-        while(flag){   
+        while(flag){
             System.out.println("running thread");
             LOG.info("Fetching system information");
             // Fetching the system values and setting those values to our mib
             try {
-                setSnmpValues.setMibValues();                
+                boolean settingFirstTimePassed = setSnmpValues.setMibValues();
+                if(settingFirstTimePassed){
                 manager.odlDaemonThreads();
                 manager.odlKarafBundleListActive();
                 manager.odlKarafBundleListInActive();
@@ -49,26 +50,34 @@ public class OdlCardinalPolling implements Runnable {
                 manager.odlLiveThreads();
                 manager.odlPeakThreads();
                 pmanager.odlMDSALIotDMListofcse();
-                System.out.println();
+                }
+                else{
+                    break;
+                }
             } catch (Exception e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
-        
-            
+
+
             }
-         
+
             try {
+                if(flag){
                 Thread.sleep(threadSleepTime);
+                }
+                else {
+                    Thread.currentThread().destroy();
+                }
             } catch (InterruptedException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }
-        
+
     }
-    
+
     public void startThread() throws InterruptedException{
-        
+
         OdlCardinalPolling cardinalObj = new OdlCardinalPolling();
         Thread cardinalThread = new Thread(cardinalObj);
             cardinalThread.start();

@@ -74,7 +74,9 @@ public class CardinalModule extends
         LOG.info("Fetching system information");
         // Fetching the system values and setting those values to our mib
         try {
-            setSnmpValues.setMibValues();
+
+            boolean settingFirstTimePassed = setSnmpValues.setMibValues();
+            if(settingFirstTimePassed){
             cardinalApi.setValues();
             manager.odlDaemonThreads();
             manager.odlKarafBundleListActive();
@@ -88,13 +90,17 @@ public class CardinalModule extends
             manager.odlPeakThreads();
             pmanager.odlMDSALIotDMListofcse();
             cardinalKarafApi.setValues();
+            }
+            else{
+                LOG.info("You may be not logged in as root!!!");
+            }
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-        }       
+        }
         return provider;
 
     }
-    
-  
+
+
 }

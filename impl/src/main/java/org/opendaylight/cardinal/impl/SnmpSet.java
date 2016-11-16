@@ -88,6 +88,8 @@ public class SnmpSet {
                 }
             } else {
                 LOG.info("Error: Response PDU is null");
+                snmp.close();
+                return false;
             }
         } else {
             LOG.info("Error: Agent Timeout... ");
