@@ -21,7 +21,6 @@ public class OdlCardinalSysInfoApis implements AutoCloseable {
     public static final InstanceIdentifier<CardinalSystemInfo> Cardinal_IID = InstanceIdentifier
             .builder(CardinalSystemInfo.class).build();
 
-
     public void setDataProvider(final DataBroker salDataProvider) {
         this.dataProvider = salDataProvider;
         LOG.info("set data broker");
@@ -31,6 +30,15 @@ public class OdlCardinalSysInfoApis implements AutoCloseable {
      * setting mib values to the yang variables.
      */
     public void setValues() {
+        CardinalSystemInfo cardinalSystemInfo = getValues();
+        LOG.info("initiating read write transaction");
+        ReadWriteTransaction txn = dataProvider.newReadWriteTransaction();
+        txn.put(LogicalDatastoreType.OPERATIONAL, Cardinal_IID, cardinalSystemInfo);
+        // txn.put(LogicalDatastoreType.CONFIGURATION, PRIMES_IID, p1);
+        txn.submit();
+    }
+
+    public CardinalSystemInfo getValues() {
         OdlCardinalGet get = new OdlCardinalGet();
         String sysInfo = get.snmpGet("localhost", "public", "1.3.6.1.3.1.1.1.6.0");
         String sysHostAddress = get.snmpGet("localhost", "public", "1.3.6.1.3.1.1.1.3.0");
@@ -44,17 +52,11 @@ public class OdlCardinalSysInfoApis implements AutoCloseable {
         builder.setOdlSystemCpuUsage(sysCpuUsage);
         builder.setOdlSystemMemUsage(sysMemUsage);
         builder.setOdlSystemOdlUptime(sysUptime);
-        LOG.info("initiating read write transaction");
-        ReadWriteTransaction txn = dataProvider.newReadWriteTransaction();
-        txn.put(LogicalDatastoreType.OPERATIONAL, Cardinal_IID, builder.build());
-        // txn.put(LogicalDatastoreType.CONFIGURATION, PRIMES_IID, p1);
-        txn.submit();
-
+        CardinalSystemInfo cardinalSystemInfo = builder.build();
+        return cardinalSystemInfo;
     }
 
     @Override
     public void close() throws Exception {
-
     }
-
 }
