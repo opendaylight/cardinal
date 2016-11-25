@@ -1,19 +1,19 @@
 package org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.cardinal.impl.rev141210;
 
-import static org.junit.Assert.assertEquals;
-
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.SocketException;
-import java.net.UnknownHostException;
-
-import org.apache.sshd.SshClient;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.opendaylight.cardinal.impl.Agent;
+import org.opendaylight.cardinal.impl.OdlCardinalSysInfoApis;
 import org.opendaylight.cardinal.impl.SetCardinalMibValues;
 import org.opendaylight.cardinal.impl.SnmpSet;
+import org.opendaylight.controller.md.sal.binding.api.DataBroker;
+import org.opendaylight.controller.md.sal.binding.api.ReadWriteTransaction;
+import org.opendaylight.controller.md.sal.common.api.data.LogicalDatastoreType;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.cardinal.rev160515.CardinalSystemInfo;
+import org.opendaylight.yangtools.yang.binding.InstanceIdentifier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.snmp4j.CommunityTarget;
 import org.snmp4j.PDU;
 import org.snmp4j.Snmp;
@@ -27,28 +27,47 @@ import org.snmp4j.smi.UdpAddress;
 import org.snmp4j.smi.Variable;
 import org.snmp4j.smi.VariableBinding;
 import org.snmp4j.transport.DefaultUdpTransportMapping;
-
 import com.sun.management.snmp.SnmpStatusException;
+import static org.mockito.Mockito.mock;
+import java.io.IOException;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.doReturn;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 /**
  * @author Subodh Roy
  *
  */
-
-public class SetCardinalMibValuesTest {
-
+public class OdlCardinalSysInfoApisTest {
 	PDU responsePDU = null;
-	SetCardinalMibValues setCardinalMibValues = new SetCardinalMibValues();
-	SshClient client = null;
 	Snmp snmp = null;
 	Agent mockagent = new Agent();
-	int htmlPort = 8082;
-	int snmpPort = 161;
 	SnmpSet set = new SnmpSet();
+	SetCardinalMibValues setSnmpValues = new SetCardinalMibValues();
+	OdlCardinalSysInfoApis odlCardinalSysInfoApis = new OdlCardinalSysInfoApis();
+	private static Logger log = LoggerFactory.getLogger(OdlCardinalSysInfoApisTest.class);
+
+	@Mock
+	private DataBroker mockDataBroker;
+	private MockOdlCardinalSysInfoApis myMock = new MockOdlCardinalSysInfoApis();
+	public static final InstanceIdentifier<CardinalSystemInfo> Cardinal_IID_KARAF = InstanceIdentifier
+			.builder(CardinalSystemInfo.class).build();
+
+	private class MockOdlCardinalSysInfoApis extends OdlCardinalSysInfoApis {
+	}
 
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() throws SnmpStatusException {
+		MockitoAnnotations.initMocks(this);
+		myMock.setDataProvider(mockDataBroker);
 		mockagent.startSnmpDaemon();
+		try {
+			setSnmpValues.setMibValues();
+		} catch (Exception e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
 		// final
 		String ipAddress = "127.0.0.1";
 		String port = "161";
@@ -75,16 +94,14 @@ public class SetCardinalMibValuesTest {
 		comtarget.setTimeout(1000);
 		PDU pdu = new PDU();
 		// Setting the Oid and Value for odl-cardinal-mib variable
-		OID oid = new OID(".1.3.6.1.3.1.1.1.4.0");
+		OID oid = new OID(".1.3.6.1.3.1.1.1.11.0");
 		Variable var = new OctetString("hostname");
 		VariableBinding varBind = new VariableBinding(oid, var);
 		pdu.add(varBind);
 		pdu.setType(PDU.SET);
 		pdu.setRequestID(new Integer32(1));
-
 		// Create Snmp object for sending data to Agent
 		snmp = new Snmp(transport);
-
 		ResponseEvent response = null;
 		try {
 			response = snmp.set(pdu, comtarget);
@@ -92,7 +109,6 @@ public class SetCardinalMibValuesTest {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 		// Process Agent Response
 		if (response != null) {
 			responsePDU = response.getResponse();
@@ -103,6 +119,12 @@ public class SetCardinalMibValuesTest {
 	public void setDown() {
 		try {
 			snmp.close();
+			try {
+				myMock.close();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -110,66 +132,30 @@ public class SetCardinalMibValuesTest {
 	}
 
 	@Test
-	public void setSystemNameTest() {
+	public void setValuesTest() {
 		if (responsePDU != null) {
-			boolean setSystemName = setCardinalMibValues.setSystemName();
-			assertEquals(true, setSystemName);
+			CardinalSystemInfo cardinalSystemInfo = odlCardinalSysInfoApis.getValues();
+			ReadWriteTransaction txn = mock(ReadWriteTransaction.class);
+			doReturn(txn).when(mockDataBroker).newReadWriteTransaction();
+			txn.put(LogicalDatastoreType.OPERATIONAL, Cardinal_IID_KARAF, cardinalSystemInfo);
+			txn.submit();
+			assertNotNull(txn);
 		} else {
-			assertEquals(responsePDU, null);
+			assertNull(responsePDU);
+			log.info("PDU Response is null");
 		}
 	}
 
 	@Test
-	public void setOdlNodeNameTest() {
+	public void getValuesTest() {
 		if (responsePDU != null) {
-			boolean setOdlNodeName = setCardinalMibValues.setOdlNodeName();
-			assertEquals(true, setOdlNodeName);
-		} else {
-			assertEquals(responsePDU, null);
-		}
-	}
-
-	@Test
-	public void setSystemIpAddressTest() throws SocketException {
-		boolean setSystemIPAddress = false;
-		if (responsePDU != null) {
-			setSystemIPAddress = setCardinalMibValues.setSystemIpAddress();
-			assertEquals(true, setSystemIPAddress);
-		} else {
-			assertEquals(responsePDU, null);
-		}
-	}
-
-	@Test
-	public void setCpuMemUsageTest() throws IOException, InterruptedException {
-		boolean setCpuMemUsage = false;
-		setCardinalMibValues.setSystemName();
-		setCardinalMibValues.setSystemIpAddress();
-		if (responsePDU != null) {
-			setCpuMemUsage = setCardinalMibValues.setCpuMemUsage(setCardinalMibValues);
-			if (setCpuMemUsage) {
-				assertEquals(true, setCpuMemUsage);
+			CardinalSystemInfo cardinalSystemInfo = odlCardinalSysInfoApis.getValues();
+			if (cardinalSystemInfo != null) {
+				assertEquals(" Opendaylight Node A", cardinalSystemInfo.getOdlSystemSysInfo());
 			}
 		} else {
-			assertEquals(false, setCpuMemUsage);
-		}
-	}
-
-	@Test
-	public void setMibValuesTest() {
-		boolean bool = false;
-		if (responsePDU != null) {
-			try {
-				bool = setCardinalMibValues.setMibValues();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			if (bool = true) {
-				assertEquals(true, bool);
-			}
-		} else {
-			assertEquals(false, bool);
+			assertNull(responsePDU);
+			log.info("PDU Response is null");
 		}
 	}
 }

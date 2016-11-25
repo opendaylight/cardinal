@@ -1,13 +1,14 @@
 package org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.cardinal.impl.rev141210;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import java.io.IOException;
-import org.apache.sshd.SshClient;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.opendaylight.cardinal.impl.Agent;
+import org.opendaylight.cardinal.impl.OdlCardinalSendTrap;
 import org.opendaylight.cardinal.impl.SnmpSet;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.snmp4j.CommunityTarget;
 import org.snmp4j.PDU;
@@ -28,22 +29,22 @@ import com.sun.management.snmp.SnmpStatusException;
  * @author Subodh Roy
  * 
  */
-public class SnmpSetTest {
-	SnmpSet snmpSet = new SnmpSet();
+public class OdlCardinalSendTrapTest {
+	OdlCardinalSendTrap odlCardinalSendTrap = new OdlCardinalSendTrap();
 	PDU responsePDU = null;
-	SshClient client = null;
 	Snmp snmp = null;
 	Agent mockagent = new Agent();
-	int htmlPort = 8082;
-	int snmpPort = 161;
 	SnmpSet set = new SnmpSet();
-	private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(SnmpSetTest.class);
+	private static Logger log = LoggerFactory.getLogger(OdlCardinalSendTrapTest.class);
 
-	// OID oid = new OID(str);
 	@Before
-	public void setUp() throws SnmpStatusException {
-		// SnmpSet set = new SnmpSet();
-		mockagent.startSnmpDaemon();
+	public void setUp() {
+		try {
+			mockagent.startSnmpDaemon();
+		} catch (SnmpStatusException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
 		// final
 		String ipAddress = "127.0.0.1";
 		String port = "161";
@@ -70,7 +71,7 @@ public class SnmpSetTest {
 		comtarget.setTimeout(1000);
 		PDU pdu = new PDU();
 		// Setting the Oid and Value for odl-cardinal-mib variable
-		OID oid = new OID(".1.3.6.1.3.1.1.1.4.0");
+		OID oid = new OID(".1.3.6.1.3.1.1.1.11.0");
 		Variable var = new OctetString("hostname");
 		VariableBinding varBind = new VariableBinding(oid, var);
 		pdu.add(varBind);
@@ -85,7 +86,6 @@ public class SnmpSetTest {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 		// Process Agent Response
 		if (response != null) {
 			responsePDU = response.getResponse();
@@ -93,29 +93,18 @@ public class SnmpSetTest {
 	}
 
 	@After
-	@Test
-	public void setVariableStringTest() throws Exception {
-		String oid = ".1.3.6.1.3.1.1.1.6.0";
-		String str = "localhost";
-		if (responsePDU != null) {
-			boolean req = snmpSet.setVariableString(oid, str);
-			assertEquals(true, req);
-		} else {
-			assertEquals(null, responsePDU);
-			LOG.info("response PDU is Null");
-		}
+	public void setDown() {
+
 	}
 
 	@Test
-	public void setVariableIntTest() throws Exception {
-		String oid = ".1.3.6.1.3.1.1.1.2.0";
-		int hname = 12;
+	public void sendTrapTest() throws IOException {
 		if (responsePDU != null) {
-			boolean req = snmpSet.setVariableInt(oid, hname);
-			assertEquals(true, req);
+			boolean bool = odlCardinalSendTrap.sendTrap();
+			assertEquals(bool, true);
 		} else {
-			assertEquals(null, responsePDU);
-			LOG.info("response PDU is Null");
+			assertEquals(responsePDU, null);
+			log.info("Response PDU is null");
 		}
 	}
 }
