@@ -11,38 +11,46 @@ import static org.junit.Assert.*;
 import org.opendaylight.cardinal.impl.Agent;
 
 public class AgentTest {
-	
-	MBeanServer mockserver;
-	ObjectName mockhtmlObjName;
-	ObjectName mocksnmpObjName;
-	ObjectName mockmibObjName;
-	Agent mockagent= new Agent();
-	int htmlPort =8082;
-	int snmpPort =161;
-		    @Before
-		    public void setUp() throws Exception {
-		    	mockagent.startSnmpDaemon();
-		        mockserver = MBeanServerFactory.createMBeanServer();
-		        String mockdomain = mockserver.getDefaultDomain();
-		        mockhtmlObjName = new ObjectName(mockdomain + ":class=HtmlAdaptorServer,protocol=html,port=" + htmlPort);
-		        mocksnmpObjName = new ObjectName(mockdomain + ":class=SnmpAdaptorServer,protocol=snmp,port=" + snmpPort);      
-		    }
 
-		    @After
-		    public void tearDown() throws Exception {
-		        
-		    }
+    MBeanServer mockserver;
+    ObjectName mockhtmlObjName;
+    ObjectName mocksnmpObjName;
+    ObjectName mockmibObjName;
+    Agent mockagent = new Agent();
+    int htmlPort = 8082;
+    int snmpPort = 161;
 
-		    @Test
-		    public void teststartingHtmlAdaptor() throws MalformedObjectNameException {
-		         //mockagent.startSnmpDaemon();
-		        boolean mockstarted = mockagent.startingHtmlAdaptor(htmlPort, mockhtmlObjName, mockserver);
-		        assertEquals(true, mockstarted);
-		    }
-		    @Test
-		    public void teststartingSnmpAdaptor() throws MalformedObjectNameException {
-		         //mockagent.startSnmpDaemon();
-		        boolean mockstarted = mockagent.startingSnmpAdaptor(snmpPort, mocksnmpObjName, mockserver);
-		        assertEquals(true, mockstarted);
-		    }
+    @Before
+    public void setUp() throws Exception {
+        mockagent.startSnmpDaemon();
+        mockserver = MBeanServerFactory.createMBeanServer();
+        String mockdomain = mockserver.getDefaultDomain();
+        mockhtmlObjName = new ObjectName(mockdomain + ":class=HtmlAdaptorServer,protocol=html,port=" + htmlPort);
+        mocksnmpObjName = new ObjectName(mockdomain + ":class=SnmpAdaptorServer,protocol=snmp,port=" + snmpPort);
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        mockagent.close();
+    }
+
+    @Test
+    public void teststartingHtmlAdaptor() throws MalformedObjectNameException {
+        boolean mockstarted = mockagent.startingHtmlAdaptor(htmlPort, mockhtmlObjName, mockserver);
+        if (mockstarted == true) {
+            assertEquals(true, mockstarted);
+        } else {
+            assertEquals(false, mockstarted);
+        }
+    }
+
+    @Test
+    public void teststartingSnmpAdaptor() throws MalformedObjectNameException {
+        boolean mockstarted = mockagent.startingSnmpAdaptor(snmpPort, mocksnmpObjName, mockserver);
+        if (mockstarted == true) {
+            assertEquals(true, mockstarted);
+        } else {
+            assertEquals(false, mockstarted);
+        }
+    }
 }

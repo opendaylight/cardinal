@@ -16,7 +16,9 @@ import org.opendaylight.yangtools.yang.binding.InstanceIdentifier;
 import org.slf4j.LoggerFactory;
 
 public class OdlCardinalKarafInfoApi implements AutoCloseable {
+    // public DataBroker dataProvider;
     private DataBroker dataProvider;
+    CardinalKarafInfoBuilder builder = new CardinalKarafInfoBuilder();
     private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(OdlCardinalKarafInfoApi.class);
     public static final InstanceIdentifier<CardinalKarafInfo> Cardinal_IID_KARAF = InstanceIdentifier
             .builder(CardinalKarafInfo.class).build();
@@ -34,7 +36,7 @@ public class OdlCardinalKarafInfoApi implements AutoCloseable {
     /**
      * setting mib values to the yang variables.
      */
-    public void setValues() {
+    public CardinalKarafInfo getOidValues() {
         OdlCardinalGet get = new OdlCardinalGet();
         String odlKarafBundleListInstalled1 = get.snmpGet("localhost", "public", ".1.3.6.1.3.1.1.5.1.0");
         String odlKarafBundleListInstalled2 = get.snmpGet("localhost", "public", ".1.3.6.1.3.1.1.5.2.0");
@@ -81,7 +83,6 @@ public class OdlCardinalKarafInfoApi implements AutoCloseable {
         String odlKarafFeatureListInstalled9 = get.snmpGet("localhost", "public", ".1.3.6.1.3.1.1.2.9.0");
         String odlKarafFeatureListInstalled10 = get.snmpGet("localhost", "public", ".1.3.6.1.3.1.1.2.10.0");
 
-        CardinalKarafInfoBuilder builder = new CardinalKarafInfoBuilder();
         builder.setOdlKarafBundleListActive1(odlKarafBundleListActive1);
         builder.setOdlKarafBundleListActive2(odlKarafBundleListActive2);
         builder.setOdlKarafBundleListActive3(odlKarafBundleListActive3);
@@ -127,17 +128,25 @@ public class OdlCardinalKarafInfoApi implements AutoCloseable {
         builder.setOdlKarafFeatureListUnInstalled9(odlKarafFeatureListUnInstalled9);
         builder.setOdlKarafFeatureListUnInstalled10(odlKarafFeatureListUnInstalled10);
         LOG.info("initiating read write transaction");
-        ReadWriteTransaction txn = dataProvider.newReadWriteTransaction();
-        txn.put(LogicalDatastoreType.OPERATIONAL, Cardinal_IID_KARAF, builder.build());
-        // txn.put(LogicalDatastoreType.CONFIGURATION, PRIMES_IID, p1);
-        txn.submit();
 
+        return builder.build();
+    }
+
+    public boolean setValues() {
+        getOidValues();
+        ReadWriteTransaction txn = dataProvider.newReadWriteTransaction();
+        if (txn != null) {
+            txn.put(LogicalDatastoreType.OPERATIONAL, Cardinal_IID_KARAF, builder.build());
+            // txn.put(LogicalDatastoreType.CONFIGURATION, PRIMES_IID, p1);
+            txn.submit();
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override
     public void close() throws Exception {
         // TODO Auto-generated method stub
-
     }
-
 }

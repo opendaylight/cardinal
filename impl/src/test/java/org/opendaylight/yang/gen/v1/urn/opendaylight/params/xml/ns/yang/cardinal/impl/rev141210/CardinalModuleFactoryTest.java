@@ -10,6 +10,7 @@ package org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.cardina
 import org.junit.Test;
 
 public class CardinalModuleFactoryTest {
+
     @Test
     public void testFactoryConstructor() {
         // ensure no exceptions on construction
