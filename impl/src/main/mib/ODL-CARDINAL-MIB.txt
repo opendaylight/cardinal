@@ -1,0 +1,663 @@
+--
+-- Copyright © 2015 TCS and others.  All rights reserved.
+--
+
+----------------------------------------------------------
+-- OPENDAYLIGHT CARDINAL MIB
+----------------------------------------------------------
+
+ODL-CARDINAL-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+    MODULE-IDENTITY, OBJECT-TYPE, NOTIFICATION-TYPE,
+    TimeTicks, Counter32, experimental, IpAddress,
+    Integer32
+        FROM SNMPv2-SMI
+    SnmpAdminString
+        FROM SNMP-FRAMEWORK-MIB
+    MODULE-COMPLIANCE, OBJECT-GROUP, NOTIFICATION-GROUP
+        FROM SNMPv2-CONF;
+
+odlcardinalMIB MODULE-IDENTITY
+    LAST-UPDATED "200303110000Z"
+    ORGANIZATION "Tata consultancy services."
+    CONTACT-INFO "Gaurav pande"
+    DESCRIPTION
+            "Opendaylight Cardinal Mib
+            "
+    ::= { experimental 3 }
+
+odlcardinalmodule   OBJECT IDENTIFIER ::= { odlcardinalMIB 1 }
+odlcardinalkarafmodule   OBJECT IDENTIFIER ::= { odlcardinalMIB 2 }
+odlKarafFeatureListUnInstalled OBJECT IDENTIFIER ::= { odlcardinalMIB 3 }
+odlKarafBundleListActive OBJECT IDENTIFIER ::= { odlcardinalMIB 4 }
+odlKarafBundleListInstalled OBJECT IDENTIFIER ::= { odlcardinalMIB 5 }
+odlKarafBundleListResolved OBJECT IDENTIFIER ::= { odlcardinalMIB 6 }
+odlKarafProject OBJECT IDENTIFIER ::= { odlcardinalMIB 7 }
+
+
+odlSystemSysInfo OBJECT-TYPE
+    SYNTAX SnmpAdminString
+    MAX-ACCESS read-write
+    STATUS current
+    DESCRIPTION
+            "Scalar datatype"
+    ::= { odlcardinalmodule 1 }
+
+odlSystemHostAddress OBJECT-TYPE
+    SYNTAX SnmpAdminString
+    MAX-ACCESS read-write
+    STATUS current
+    DESCRIPTION
+            "odl cardinal"
+    ::= { odlcardinalmodule 2 }
+
+
+
+odlSystemMemUsage OBJECT-TYPE
+    SYNTAX INTEGER
+    MAX-ACCESS read-write
+    STATUS current
+    DESCRIPTION
+            "A conceptual row"
+    ::= { odlcardinalmodule 3}
+
+odlSystemCpuUsage OBJECT-TYPE
+    SYNTAX INTEGER
+    MAX-ACCESS read-write
+    STATUS current
+    DESCRIPTION
+            "odl cardinal"
+    ::= { odlcardinalmodule 4 }
+
+
+odlSystemOdlUptime OBJECT-TYPE
+    SYNTAX SnmpAdminString
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+            "odl cardinal"
+    ::= { odlcardinalmodule 5 }
+
+odlSystemOdlNodeInfo OBJECT-TYPE
+    SYNTAX   SnmpAdminString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+            "OID"
+    ::= { odlcardinalmodule 6 }
+
+odlKarafBundleListResolved OBJECT-TYPE
+    SYNTAX   SnmpAdminString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+            "OID"
+    ::= { odlcardinalmodule 7 }
+
+odlSystemOdlNodeInfo OBJECT-TYPE
+    SYNTAX   SnmpAdminString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+            "OID"
+    ::= { odlcardinalmodule 8 }
+
+odlKarafLiveThreads OBJECT-TYPE
+    SYNTAX   SnmpAdminString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+            "OID"
+    ::= { odlcardinalkarafmodule 1 }
+
+odlKarafDaemonThreads OBJECT-TYPE
+    SYNTAX   SnmpAdminString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+            "OID"
+    ::= { odlcardinalkarafmodule 2 }
+
+odlKarafPeakThreads OBJECT-TYPE
+    SYNTAX   SnmpAdminString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+            "OID"
+    ::= { odlcardinalkarafmodule 3 }
+
+odlKarafCurrentHeapSize OBJECT-TYPE
+    SYNTAX   SnmpAdminString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+            "OID"
+    ::= { odlcardinalkarafmodule 4 }
+
+odlKarafMaxHeapSize OBJECT-TYPE
+    SYNTAX   SnmpAdminString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+            "OID"
+    ::= { odlcardinalkarafmodule 5 }
+
+odlkarafbundlelistresolved OBJECT-TYPE
+    SYNTAX   SnmpAdminString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+            "OID"
+    ::= { odlKarafBundleListResolved 0 }
+
+resolvedBundle1 OBJECT-TYPE
+    SYNTAX   SnmpAdminString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+            "OID"
+    ::= { odlKarafBundleListResolved 1 }
+
+resolvedBundle2 OBJECT-TYPE
+    SYNTAX   SnmpAdminString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+            "OID"
+    ::= { odlKarafBundleListResolved 2 }
+
+resolvedBundle3 OBJECT-TYPE
+    SYNTAX   SnmpAdminString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+            "OID"
+    ::= { odlKarafBundleListResolved 3 }
+
+resolvedBundle4 OBJECT-TYPE
+    SYNTAX   SnmpAdminString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+            "OID"
+    ::= { odlKarafBundleListResolved 4 }
+
+resolvedBundle5 OBJECT-TYPE
+    SYNTAX   SnmpAdminString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+            "OID"
+    ::= { odlKarafBundleListResolved 5 }
+
+
+odlkarafbundlelistinstalled OBJECT-TYPE
+    SYNTAX   SnmpAdminString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+            "OID"
+    ::= { odlKarafBundleListInstalled 0 }
+
+
+installedBundle1 OBJECT-TYPE
+    SYNTAX   SnmpAdminString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+            "OID"
+    ::= { odlKarafBundleListInstalled 1 }
+
+
+installedBundle2 OBJECT-TYPE
+    SYNTAX   SnmpAdminString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+            "OID"
+    ::= { odlKarafBundleListInstalled 2 }
+
+
+installedBundle3 OBJECT-TYPE
+    SYNTAX   SnmpAdminString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+            "OID"
+    ::= { odlKarafBundleListInstalled 3 }
+
+
+installedBundle4 OBJECT-TYPE
+    SYNTAX   SnmpAdminString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+            "OID"
+    ::= { odlKarafBundleListInstalled 4 }
+
+
+installedBundle5 OBJECT-TYPE
+    SYNTAX   SnmpAdminString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+            "OID"
+    ::= { odlKarafBundleListInstalled 5 }
+
+
+odlkarafbundlelistactive OBJECT-TYPE
+    SYNTAX   SnmpAdminString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+            "OID"
+    ::= { odlKarafBundleListActive 0 }
+
+
+activebundle1 OBJECT-TYPE
+    SYNTAX   SnmpAdminString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+            "OID"
+    ::= { odlKarafBundleListActive 1 }
+
+
+activebundle2 OBJECT-TYPE
+    SYNTAX   SnmpAdminString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+            "OID"
+    ::= { odlKarafBundleListActive 2 }
+
+
+activebundle3 OBJECT-TYPE
+    SYNTAX   SnmpAdminString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+            "OID"
+    ::= { odlKarafBundleListActive 3 }
+
+
+activebundle4 OBJECT-TYPE
+    SYNTAX   SnmpAdminString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+            "OID"
+    ::= { odlKarafBundleListActive 4 }
+
+
+activebundle5 OBJECT-TYPE
+    SYNTAX   SnmpAdminString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+            "OID"
+    ::= { odlKarafBundleListActive 5 }
+
+activebundle6 OBJECT-TYPE
+    SYNTAX   SnmpAdminString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+            "OID"
+    ::= { odlKarafBundleListActive 6 }
+
+activebundle7 OBJECT-TYPE
+    SYNTAX   SnmpAdminString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+            "OID"
+    ::= { odlKarafBundleListActive 7 }
+
+activebundle8 OBJECT-TYPE
+    SYNTAX   SnmpAdminString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+            "OID"
+    ::= { odlKarafBundleListActive 8 }
+
+activebundle9 OBJECT-TYPE
+    SYNTAX   SnmpAdminString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+            "OID"
+    ::= { odlKarafBundleListActive 9 }
+
+activebundle10 OBJECT-TYPE
+    SYNTAX   SnmpAdminString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+            "OID"
+    ::= { odlKarafBundleListActive 10 }
+
+
+odlkaraffeaturelistuninstalled OBJECT-TYPE
+    SYNTAX   SnmpAdminString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+            "OID"
+    ::= { odlKarafFeatureListUnInstalled 0 }
+
+featureUnInstalled1 OBJECT-TYPE
+    SYNTAX   SnmpAdminString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+            "OID"
+    ::= { odlKarafFeatureListUnInstalled 1 }
+
+featureUnInstalled2 OBJECT-TYPE
+    SYNTAX   SnmpAdminString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+            "OID"
+    ::= { odlKarafFeatureListUnInstalled 2 }
+
+featureUnInstalled3 OBJECT-TYPE
+    SYNTAX   SnmpAdminString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+            "OID"
+    ::= { odlKarafFeatureListUnInstalled 3 }
+
+featureUnInstalled4 OBJECT-TYPE
+    SYNTAX   SnmpAdminString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+            "OID"
+    ::= { odlKarafFeatureListUnInstalled 4 }
+
+featureUnInstalled5 OBJECT-TYPE
+    SYNTAX   SnmpAdminString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+            "OID"
+    ::= { odlKarafFeatureListUnInstalled 5 }
+
+featureUnInstalled6 OBJECT-TYPE
+    SYNTAX   SnmpAdminString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+            "OID"
+    ::= { odlKarafFeatureListUnInstalled 6 }
+
+featureUnInstalled7 OBJECT-TYPE
+    SYNTAX   SnmpAdminString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+            "OID"
+    ::= { odlKarafFeatureListUnInstalled 7 }
+
+featureUnInstalled8 OBJECT-TYPE
+    SYNTAX   SnmpAdminString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+            "OID"
+    ::= { odlKarafFeatureListUnInstalled 8 }
+
+featureUnInstalled9 OBJECT-TYPE
+    SYNTAX   SnmpAdminString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+            "OID"
+    ::= { odlKarafFeatureListUnInstalled 9 }
+
+featureUnInstalled10 OBJECT-TYPE
+    SYNTAX   SnmpAdminString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+            "OID"
+    ::= { odlKarafFeatureListUnInstalled 10 }
+
+
+odlkaraffeaturelistinstalled OBJECT-TYPE
+    SYNTAX   SnmpAdminString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+            "OID"
+    ::= { odlKarafFeatureListInstalled 0 }
+
+
+featureInstalled1 OBJECT-TYPE
+    SYNTAX   SnmpAdminString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+            "OID"
+    ::= { odlKarafFeatureListInstalled 1 }
+
+featureInstalled2 OBJECT-TYPE
+    SYNTAX   SnmpAdminString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+            "OID"
+    ::= { odlKarafFeatureListInstalled 2 }
+
+featureInstalled3 OBJECT-TYPE
+    SYNTAX   SnmpAdminString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+            "OID"
+    ::= { odlKarafFeatureListInstalled 3 }
+
+featureInstalled4 OBJECT-TYPE
+    SYNTAX   SnmpAdminString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+            "OID"
+    ::= { odlKarafFeatureListInstalled 4 }
+
+featureInstalled5 OBJECT-TYPE
+    SYNTAX   SnmpAdminString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+            "OID"
+    ::= { odlKarafFeatureListInstalled 5 }
+
+featureInstalled6 OBJECT-TYPE
+    SYNTAX   SnmpAdminString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+            "OID"
+    ::= { odlKarafFeatureListInstalled 6 }
+
+featureInstalled7 OBJECT-TYPE
+    SYNTAX   SnmpAdminString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+            "OID"
+    ::= { odlKarafFeatureListInstalled 7 }
+
+featureInstalled8 OBJECT-TYPE
+    SYNTAX   SnmpAdminString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+            "OID"
+    ::= { odlKarafFeatureListInstalled 8 }
+
+featureInstalled9 OBJECT-TYPE
+    SYNTAX   SnmpAdminString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+            "OID"
+    ::= { odlKarafFeatureListInstalled 9 }
+
+featureInstalled10 OBJECT-TYPE
+    SYNTAX   SnmpAdminString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+            "OID"
+    ::= { odlKarafFeatureListInstalled 10 }
+
+
+odlMDSALBGPBMPinfo OBJECT-TYPE
+    SYNTAX   SnmpAdminString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+            "OID"
+    ::= { odlKarafProject 1 }
+
+
+odlMDSALBGPRIBInfo OBJECT-TYPE
+    SYNTAX   SnmpAdminString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+            "OID"
+    ::= { odlKarafProject 2 }
+
+odlMDSALBGPPeerInfo OBJECT-TYPE
+    SYNTAX   SnmpAdminString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+            "OID"
+    ::= { odlKarafProject 3 }
+
+odlMDSALOpenFlowOVSconnectedDevices OBJECT-TYPE
+    SYNTAX   SnmpAdminString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+            "OID"
+    ::= { odlKarafProject 4 }
+
+odlMDSALIotDMlistofNodes OBJECT-TYPE
+    SYNTAX   SnmpAdminString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+            "OID"
+    ::= { odlKarafProject 5 }
+
+
+odlMDSALIotDMlistofAEs OBJECT-TYPE
+    SYNTAX   SnmpAdminString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+            "OID"
+    ::= { odlKarafProject 6 }
+
+
+odlMDSALIotDMListofcse OBJECT-TYPE
+    SYNTAX   SnmpAdminString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+            "OID"
+    ::= { odlKarafProject 7 }
+
+
+odlMDSALGBPPolicytenants OBJECT-TYPE
+    SYNTAX   SnmpAdminString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+            "OID"
+    ::= { odlKarafProject 8 }
+
+odlMDSALGBPFaaslogicalnetwork OBJECT-TYPE
+    SYNTAX   SnmpAdminString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+            "OID"
+    ::= { odlKarafProject 9 }
+
+odlMDSALService OBJECT-TYPE
+    SYNTAX   SnmpAdminString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+            "OID"
+    ::= { odlKarafProject 10 }
+
+odlMDSALServicefunctiontype OBJECT-TYPE
+    SYNTAX   SnmpAdminString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+            "OID"
+    ::= { odlKarafProject 11 }
+
+odlMDSALSfcfunctionAlgorithms OBJECT-TYPE
+    SYNTAX   SnmpAdminString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+            "OID"
+    ::= { odlKarafProject 12 }
+
+
+odlMDSALSfcfunctiongroups OBJECT-TYPE
+    SYNTAX   SnmpAdminString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+            "OID"
+    ::= { odlKarafProject 13 }
+
+odlMDSALSfcfunctionchain OBJECT-TYPE
+    SYNTAX   SnmpAdminString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+            "OID"
+    ::= { odlKarafProject 14 }
+
+odlMDSALSfcfunction OBJECT-TYPE
+    SYNTAX   SnmpAdminString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+            "OID"
+    ::= { odlKarafProject 15 }
+
+odlMDSALNetconfConnectedDevices OBJECT-TYPE
+    SYNTAX   SnmpAdminString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+            "OID"
+    ::= { odlKarafProject 16 }
+
+odlMDSALClustershardsshared OBJECT-TYPE
+    SYNTAX   SnmpAdminString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+            "OID"
+    ::= { odlKarafProject 17 }
+
+END
