@@ -12,7 +12,7 @@
     <repository>mvn:org.opendaylight.netconf/features-restconf/{{VERSION}}/xml/features</repository>
     <repository>mvn:org.opendaylight.netconf/features-netconf/${netconf.version}/xml/features</repository>
     <repository>mvn:org.opendaylight.netconf/features-netconf-connector/${netconf.version}/xml/features</repository>
-    <repository>mvn:org.opendaylight.dlux/features-dlux/${dlux.version}/xml/features</repository>
+    <repository>mvn:org.opendaylight.dluxapps/features-dluxapps/${dluxapps.version}/xml/features</repository>
     <repository>mvn:org.opendaylight.tsdr/features-tsdr/${feature.tsdr.version}/xml/features</repository>
     <feature name='odl-cardinal-api' version='${project.version}'
         description='OpenDaylight :: cardinal :: api'>
@@ -44,7 +44,7 @@
     <feature name='odl-cardinal-ui' version='${project.version}'
         description='OpenDaylight :: cardinal :: UI'>
         <feature version="${restconf.version}">odl-mdsal-apidocs</feature>
-        <feature version="${dlux.version}">odl-dlux-yangui</feature>
+        <feature version="${dluxapps.version}">odl-dluxapps-yangman</feature>
     </feature>
 </features>
 
