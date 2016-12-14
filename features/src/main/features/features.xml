@@ -12,7 +12,7 @@
     <repository>mvn:org.opendaylight.netconf/features-restconf/{{VERSION}}/xml/features</repository>
     <repository>mvn:org.opendaylight.netconf/features-netconf/${netconf.version}/xml/features</repository>
     <repository>mvn:org.opendaylight.netconf/features-netconf-connector/${netconf.version}/xml/features</repository>
-    <repository>mvn:org.opendaylight.dlux/features-dlux/${dlux.version}/xml/features</repository>
+    <repository>mvn:org.opendaylight.dluxapps/features-dluxapps/${dluxapps.version}/xml/features</repository>
     <repository>mvn:org.opendaylight.tsdr/features-tsdr/${feature.tsdr.version}/xml/features</repository>
     <feature name='odl-cardinal-api' version='${project.version}'
         description='OpenDaylight :: cardinal :: api'>
@@ -31,8 +31,7 @@
         <bundle>wrap:mvn:org.snmp4j/snmp4j-agent/{{VERSION}}</bundle>
         <bundle>wrap:mvn:com.jcraft/jsch/{{VERSION}}</bundle>
         <bundle>wrap:mvn:org.opendaylight.cardinal/jdmk/{{VERSION}}</bundle>
-        <bundle>mvn:org.opendaylight.cardinal/cardinal-impl/{{VERSION}}
-        </bundle>
+        <bundle>mvn:org.opendaylight.cardinal/cardinal-impl/{{VERSION}}</bundle>
         <configfile    finalname="${configfile.directory}/cardinal.xml">mvn:org.opendaylight.cardinal/cardinal-impl/{{VERSION}}/xml/config
         </configfile>
     </feature>
@@ -44,7 +43,7 @@
     <feature name='odl-cardinal-ui' version='${project.version}'
         description='OpenDaylight :: cardinal :: UI'>
         <feature version="${restconf.version}">odl-mdsal-apidocs</feature>
-        <feature version="${dlux.version}">odl-dlux-yangui</feature>
+        <feature version="${dluxapps.version}">odl-dluxapps-yangman</feature>
     </feature>
 </features>
 
