@@ -10,11 +10,11 @@
     <repository>mvn:org.opendaylight.controller/features-mdsal/{{VERSION}}/xml/features</repository>
     <repository>mvn:org.opendaylight.mdsal.model/features-mdsal-model/{{VERSION}}/xml/features</repository>
     <repository>mvn:org.opendaylight.netconf/features-restconf/{{VERSION}}/xml/features</repository>
-    <repository>mvn:org.opendaylight.netconf/features-netconf/1.2.0-SNAPSHOT/xml/features</repository>
-    <repository>mvn:org.opendaylight.netconf/features-netconf-connector/1.2.0-SNAPSHOT/xml/features</repository>
-    <repository>mvn:org.opendaylight.dlux/features-dlux/{{VERSION}}/xml/features</repository>
+    <repository>mvn:org.opendaylight.netconf/features-netconf/${netconf.version}/xml/features</repository>
+    <repository>mvn:org.opendaylight.netconf/features-netconf-connector/${netconf.version}/xml/features</repository>
+    <repository>mvn:org.opendaylight.dluxapps/features-dluxapps/{{VERSION}}/xml/features</repository>
     <repository>mvn:org.opendaylight.l2switch/features-l2switch/0.5.0-SNAPSHOT/xml/features</repository>
-    <repository>mvn:org.opendaylight.openflowplugin/features-openflowplugin/${openflowplugin.version}/xml/features</repository>    
+    <repository>mvn:org.opendaylight.openflowplugin/features-openflowplugin/${openflowplugin.version}/xml/features</repository>
     <feature name='odl-cardinal-api' version='${project.version}'
         description='OpenDaylight :: cardinal :: api'>
         <feature version='${mdsal.model.version}'>odl-mdsal-models</feature>
@@ -44,7 +44,7 @@
     <feature name='odl-cardinal-ui' version='${project.version}'
         description='OpenDaylight :: cardinal :: UI'>
         <feature version="${restconf.version}">odl-mdsal-apidocs</feature>
-        <feature version="${dlux.version}">odl-dlux-yangui</feature>
+        <feature version="${dluxapps.version}">odl-dluxapps-yangman</feature>
     </feature>
 </features>
 
