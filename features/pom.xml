@@ -10,7 +10,7 @@
     <groupId>org.opendaylight.odlparent</groupId>
     <artifactId>features-parent</artifactId>
     <version>1.8.0-SNAPSHOT</version>
-    <relativePath    />
+    <relativePath />
 </parent>
     <groupId>org.opendaylight.cardinal</groupId>
     <artifactId>cardinal-features</artifactId>
@@ -27,7 +27,7 @@
     <restconf.version>1.5.0-SNAPSHOT</restconf.version>
     <netconf.version>1.2.0-SNAPSHOT</netconf.version>
     <yangtools.version>1.1.0-SNAPSHOT</yangtools.version>
-    <dlux.version>0.5.0-SNAPSHOT</dlux.version>
+    <dluxapps.version>0.5.0-SNAPSHOT</dluxapps.version>
     <configfile.directory>etc/opendaylight/karaf</configfile.directory>
     <openflowplugin.version>0.4.0-SNAPSHOT</openflowplugin.version>
     <feature.test.version>1.8.0-SNAPSHOT</feature.test.version>
@@ -118,16 +118,15 @@
         <dependency>
             <groupId>org.opendaylight.netconf</groupId>
             <artifactId>features-netconf-connector</artifactId>
-            <version>1.2.0-SNAPSHOT</version>
+            <version>${netconf.version}</version>
             <classifier>features</classifier>
             <type>xml</type>
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>org.opendaylight.dlux</groupId>
-            <artifactId>features-dlux</artifactId>
-            <classifier>features</classifier>
-            <version>${dlux.version}</version>
+            <groupId>org.opendaylight.dluxapps</groupId>
+            <classifier>features-dluxapps</classifier>
+            <version>${dluxapps.version}</version>
             <type>xml</type>
             <scope>runtime</scope>
         </dependency>
