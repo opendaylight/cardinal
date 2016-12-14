@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Copyright © 2016 Tata Consultancy Services and others. All rights reserved. 
-	This program and the accompanying materials are made available under the 
-	terms of the Eclipse Public License v1.0 which accompanies this distribution, 
+<!-- Copyright © 2016 Tata Consultancy Services and others. All rights reserved.
+	This program and the accompanying materials are made available under the
+	terms of the Eclipse Public License v1.0 which accompanies this distribution,
 	and is available at http://www.eclipse.org/legal/epl-v10.html INTERNAL -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -28,7 +28,7 @@
 		<mdsal.version>1.5.0-SNAPSHOT</mdsal.version>
 		<restconf.version>1.5.0-SNAPSHOT</restconf.version>
 		<yangtools.version>1.1.0-SNAPSHOT</yangtools.version>
-		<dlux.version>0.5.0-SNAPSHOT</dlux.version>
+		<dluxapps.version>0.5.0-SNAPSHOT</dluxapps.version>
 		<netconf.version>1.2.0-SNAPSHOT</netconf.version>
 		<iotdm.version>0.3.0-SNAPSHOT</iotdm.version>
 		<gbp.version>0.5.0-SNAPSHOT</gbp.version>
@@ -93,10 +93,10 @@
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.opendaylight.dlux</groupId>
-			<artifactId>features-dlux</artifactId>
+			<groupId>org.opendaylight.dluxapps</groupId>
+			<artifactId>features-dluxapps</artifactId>
 			<classifier>features</classifier>
-			<version>${dlux.version}</version>
+			<version>${dluxapps.version}</version>
 			<type>xml</type>
 			<scope>runtime</scope>
 		</dependency>
