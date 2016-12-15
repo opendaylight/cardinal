@@ -10,13 +10,13 @@
 	<parent>
 		<groupId>org.opendaylight.odlparent</groupId>
 		<artifactId>features-parent</artifactId>
-		<version>1.7.2-SNAPSHOT</version>
+		<version>1.7.2-Boron-SR2</version>
 		<relativePath />
 	</parent>
 
 	<groupId>org.opendaylight.cardinal</groupId>
 	<artifactId>cardinal-features</artifactId>
-	<version>0.1.2-SNAPSHOT</version>
+	<version>0.1.2-Boron-SR2</version>
 	<name>${project.artifactId}</name>
 
 	<prerequisites>
@@ -24,14 +24,14 @@
 	</prerequisites>
 
 	<properties>
-		<mdsal.model.version>0.9.2-SNAPSHOT</mdsal.model.version>
-		<mdsal.version>1.4.2-SNAPSHOT</mdsal.version>
-		<restconf.version>1.4.2-SNAPSHOT</restconf.version>
-		<yangtools.version>1.0.2-SNAPSHOT</yangtools.version>
-		<dlux.version>0.4.2-SNAPSHOT</dlux.version>
-		<netconf.version>1.1.2-SNAPSHOT</netconf.version>
-		<iotdm.version>0.2.2-SNAPSHOT</iotdm.version>
-		<gbp.version>0.4.2-SNAPSHOT</gbp.version>
+		<mdsal.model.version>0.9.2-Boron-SR2</mdsal.model.version>
+		<mdsal.version>1.4.2-Boron-SR2</mdsal.version>
+		<restconf.version>1.4.2-Boron-SR2</restconf.version>
+		<yangtools.version>1.0.2-Boron-SR2</yangtools.version>
+		<dlux.version>0.4.2-Boron-SR2</dlux.version>
+		<netconf.version>1.1.2-Boron-SR2</netconf.version>
+		<iotdm.version>0.2.2-Boron-SR2</iotdm.version>
+		<gbp.version>0.4.2-Boron-SR2</gbp.version>
 		<configfile.directory>etc/opendaylight/karaf</configfile.directory>
 	</properties>
 
@@ -152,7 +152,7 @@
 		<dependency>
 			<groupId>org.opendaylight.sfc</groupId>
 			<artifactId>features-sfc</artifactId>
-			<version>0.3.2-SNAPSHOT</version>
+			<version>0.3.2-Boron-SR2</version>
 			<scope>runtime</scope>
 		</dependency>
 	</dependencies>
