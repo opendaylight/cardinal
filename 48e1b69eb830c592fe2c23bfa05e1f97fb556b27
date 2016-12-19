@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a622d24_76f7fcf5",
+        "filename": "impl/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 2759
+      },
+      "writtenOn": "2016-12-19T14:26:00Z",
+      "side": 1,
+      "message": "Why are so many properties are being introduced that are not used in this file?",
+      "revId": "48e1b69eb830c592fe2c23bfa05e1f97fb556b27",
+      "serverId": "7fc14799-209e-464c-9743-7a06c2c21a81",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a622d24_d6dd3072",
+        "filename": "impl/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 2759
+      },
+      "writtenOn": "2016-12-19T14:26:00Z",
+      "side": 1,
+      "message": "Please fix indenting.",
+      "revId": "48e1b69eb830c592fe2c23bfa05e1f97fb556b27",
+      "serverId": "7fc14799-209e-464c-9743-7a06c2c21a81",
+      "unresolved": false
+    }
+  ]
+}
