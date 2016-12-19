@@ -46,24 +46,25 @@ import com.sun.management.snmp.EnumRowStatus;
 import com.sun.management.snmp.SnmpDefinitions;
 
 /**
- * The class is used for representing SNMP metadata for the "OdlCardinalBundleResolvedModule" group.
- * The group is defined with the following oid: 1.3.6.1.3.1.1.6.
+ * The class is used for representing SNMP metadata for the "OdlOpenFlowStats" group.
+ * The group is defined with the following oid: 1.3.6.1.3.1.1.11.
  */
-public class OdlCardinalBundleResolvedModuleMeta extends SnmpMibGroup
+public class OdlOpenFlowStatsMeta extends SnmpMibGroup
      implements Serializable, SnmpStandardMetaServer {
 
     /**
-     * Constructor for the metadata associated to "OdlCardinalBundleResolvedModule".
+     * Constructor for the metadata associated to "OdlOpenFlowStats".
      */
-    public OdlCardinalBundleResolvedModuleMeta(SnmpMib myMib, SnmpStandardObjectServer objserv) {
+    public OdlOpenFlowStatsMeta(SnmpMib myMib, SnmpStandardObjectServer objserv) {
         objectserver = objserv;
         try {
+            registerObject(6);
             registerObject(5);
             registerObject(4);
             registerObject(3);
             registerObject(2);
             registerObject(1);
-            registerObject(0);
+            registerObject(7);
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e.getMessage());
         }
@@ -75,23 +76,26 @@ public class OdlCardinalBundleResolvedModuleMeta extends SnmpMibGroup
     public SnmpValue get(long var, Object data)
         throws SnmpStatusException {
         switch((int)var) {
+            case 6:
+                return new SnmpString(node.getOdlOpenflowFlowstats());
+
             case 5:
-                return new SnmpString(node.getResolvedBundle5());
+                return new SnmpString(node.getOdlOpenflowStatus());
 
             case 4:
-                return new SnmpString(node.getResolvedBundle4());
+                return new SnmpString(node.getOdlOpenflowManufacturer());
 
             case 3:
-                return new SnmpString(node.getResolvedBundle3());
+                return new SnmpString(node.getOdlOpenflowMacAddress());
 
             case 2:
-                return new SnmpString(node.getResolvedBundle2());
+                return new SnmpString(node.getOdlOpenflowInterface());
 
             case 1:
-                return new SnmpString(node.getResolvedBundle1());
+                return new SnmpString(node.getOdlOpenflowNode());
 
-            case 0:
-                return new SnmpString(node.getOdlKarafBundleListResolved());
+            case 7:
+                return new SnmpString(node.getOdlOpenflowMeterstats());
 
             default:
                 break;
@@ -105,50 +109,58 @@ public class OdlCardinalBundleResolvedModuleMeta extends SnmpMibGroup
     public SnmpValue set(SnmpValue x, long var, Object data)
         throws SnmpStatusException {
         switch((int)var) {
+            case 6:
+                if (x instanceof SnmpString) {
+                    node.setOdlOpenflowFlowstats(((SnmpString)x).toString());
+                    return new SnmpString(node.getOdlOpenflowFlowstats());
+                } else {
+                    throw new SnmpStatusException(SnmpStatusException.snmpRspWrongType);
+                }
+
             case 5:
                 if (x instanceof SnmpString) {
-                    node.setResolvedBundle5(((SnmpString)x).toString());
-                    return new SnmpString(node.getResolvedBundle5());
+                    node.setOdlOpenflowStatus(((SnmpString)x).toString());
+                    return new SnmpString(node.getOdlOpenflowStatus());
                 } else {
                     throw new SnmpStatusException(SnmpStatusException.snmpRspWrongType);
                 }
 
             case 4:
                 if (x instanceof SnmpString) {
-                    node.setResolvedBundle4(((SnmpString)x).toString());
-                    return new SnmpString(node.getResolvedBundle4());
+                    node.setOdlOpenflowManufacturer(((SnmpString)x).toString());
+                    return new SnmpString(node.getOdlOpenflowManufacturer());
                 } else {
                     throw new SnmpStatusException(SnmpStatusException.snmpRspWrongType);
                 }
 
             case 3:
                 if (x instanceof SnmpString) {
-                    node.setResolvedBundle3(((SnmpString)x).toString());
-                    return new SnmpString(node.getResolvedBundle3());
+                    node.setOdlOpenflowMacAddress(((SnmpString)x).toString());
+                    return new SnmpString(node.getOdlOpenflowMacAddress());
                 } else {
                     throw new SnmpStatusException(SnmpStatusException.snmpRspWrongType);
                 }
 
             case 2:
                 if (x instanceof SnmpString) {
-                    node.setResolvedBundle2(((SnmpString)x).toString());
-                    return new SnmpString(node.getResolvedBundle2());
+                    node.setOdlOpenflowInterface(((SnmpString)x).toString());
+                    return new SnmpString(node.getOdlOpenflowInterface());
                 } else {
                     throw new SnmpStatusException(SnmpStatusException.snmpRspWrongType);
                 }
 
             case 1:
                 if (x instanceof SnmpString) {
-                    node.setResolvedBundle1(((SnmpString)x).toString());
-                    return new SnmpString(node.getResolvedBundle1());
+                    node.setOdlOpenflowNode(((SnmpString)x).toString());
+                    return new SnmpString(node.getOdlOpenflowNode());
                 } else {
                     throw new SnmpStatusException(SnmpStatusException.snmpRspWrongType);
                 }
 
-            case 0:
+            case 7:
                 if (x instanceof SnmpString) {
-                    node.setOdlKarafBundleListResolved(((SnmpString)x).toString());
-                    return new SnmpString(node.getOdlKarafBundleListResolved());
+                    node.setOdlOpenflowMeterstats(((SnmpString)x).toString());
+                    return new SnmpString(node.getOdlOpenflowMeterstats());
                 } else {
                     throw new SnmpStatusException(SnmpStatusException.snmpRspWrongType);
                 }
@@ -165,9 +177,17 @@ public class OdlCardinalBundleResolvedModuleMeta extends SnmpMibGroup
     public void check(SnmpValue x, long var, Object data)
         throws SnmpStatusException {
         switch((int) var) {
+            case 6:
+                if (x instanceof SnmpString) {
+                    node.checkOdlOpenflowFlowstats(((SnmpString)x).toString());
+                } else {
+                    throw new SnmpStatusException(SnmpStatusException.snmpRspWrongType);
+                }
+                break;
+
             case 5:
                 if (x instanceof SnmpString) {
-                    node.checkResolvedBundle5(((SnmpString)x).toString());
+                    node.checkOdlOpenflowStatus(((SnmpString)x).toString());
                 } else {
                     throw new SnmpStatusException(SnmpStatusException.snmpRspWrongType);
                 }
@@ -175,7 +195,7 @@ public class OdlCardinalBundleResolvedModuleMeta extends SnmpMibGroup
 
             case 4:
                 if (x instanceof SnmpString) {
-                    node.checkResolvedBundle4(((SnmpString)x).toString());
+                    node.checkOdlOpenflowManufacturer(((SnmpString)x).toString());
                 } else {
                     throw new SnmpStatusException(SnmpStatusException.snmpRspWrongType);
                 }
@@ -183,7 +203,7 @@ public class OdlCardinalBundleResolvedModuleMeta extends SnmpMibGroup
 
             case 3:
                 if (x instanceof SnmpString) {
-                    node.checkResolvedBundle3(((SnmpString)x).toString());
+                    node.checkOdlOpenflowMacAddress(((SnmpString)x).toString());
                 } else {
                     throw new SnmpStatusException(SnmpStatusException.snmpRspWrongType);
                 }
@@ -191,7 +211,7 @@ public class OdlCardinalBundleResolvedModuleMeta extends SnmpMibGroup
 
             case 2:
                 if (x instanceof SnmpString) {
-                    node.checkResolvedBundle2(((SnmpString)x).toString());
+                    node.checkOdlOpenflowInterface(((SnmpString)x).toString());
                 } else {
                     throw new SnmpStatusException(SnmpStatusException.snmpRspWrongType);
                 }
@@ -199,15 +219,15 @@ public class OdlCardinalBundleResolvedModuleMeta extends SnmpMibGroup
 
             case 1:
                 if (x instanceof SnmpString) {
-                    node.checkResolvedBundle1(((SnmpString)x).toString());
+                    node.checkOdlOpenflowNode(((SnmpString)x).toString());
                 } else {
                     throw new SnmpStatusException(SnmpStatusException.snmpRspWrongType);
                 }
                 break;
 
-            case 0:
+            case 7:
                 if (x instanceof SnmpString) {
-                    node.checkOdlKarafBundleListResolved(((SnmpString)x).toString());
+                    node.checkOdlOpenflowMeterstats(((SnmpString)x).toString());
                 } else {
                     throw new SnmpStatusException(SnmpStatusException.snmpRspWrongType);
                 }
@@ -221,7 +241,7 @@ public class OdlCardinalBundleResolvedModuleMeta extends SnmpMibGroup
     /**
      * Allow to bind the metadata description to a specific object.
      */
-    protected void setInstance(OdlCardinalBundleResolvedModuleMBean var) {
+    protected void setInstance(OdlOpenFlowStatsMBean var) {
         node = var;
     }
 
@@ -270,12 +290,13 @@ public class OdlCardinalBundleResolvedModuleMeta extends SnmpMibGroup
     public boolean isVariable(long arc) {
 
         switch((int)arc) {
+            case 6:
             case 5:
             case 4:
             case 3:
             case 2:
             case 1:
-            case 0:
+            case 7:
                 return true;
             default:
                 break;
@@ -289,12 +310,13 @@ public class OdlCardinalBundleResolvedModuleMeta extends SnmpMibGroup
     public boolean isReadable(long arc) {
 
         switch((int)arc) {
+            case 6:
             case 5:
             case 4:
             case 3:
             case 2:
             case 1:
-            case 0:
+            case 7:
                 return true;
             default:
                 break;
@@ -320,23 +342,26 @@ public class OdlCardinalBundleResolvedModuleMeta extends SnmpMibGroup
     public String getAttributeName(long id)
         throws SnmpStatusException {
         switch((int)id) {
+            case 6:
+                return "OdlOpenflowFlowstats";
+
             case 5:
-                return "ResolvedBundle5";
+                return "OdlOpenflowStatus";
 
             case 4:
-                return "ResolvedBundle4";
+                return "OdlOpenflowManufacturer";
 
             case 3:
-                return "ResolvedBundle3";
+                return "OdlOpenflowMacAddress";
 
             case 2:
-                return "ResolvedBundle2";
+                return "OdlOpenflowInterface";
 
             case 1:
-                return "ResolvedBundle1";
+                return "OdlOpenflowNode";
 
-            case 0:
-                return "OdlKarafBundleListResolved";
+            case 7:
+                return "OdlOpenflowMeterstats";
 
             default:
                 break;
@@ -369,6 +394,6 @@ public class OdlCardinalBundleResolvedModuleMeta extends SnmpMibGroup
     public void registerTableNodes(SnmpMib mib, MBeanServer server) {
     }
 
-    protected OdlCardinalBundleResolvedModuleMBean node;
+    protected OdlOpenFlowStatsMBean node;
     protected SnmpStandardObjectServer objectserver = null;
 }

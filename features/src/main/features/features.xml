@@ -11,6 +11,7 @@
 	<repository>mvn:org.opendaylight.mdsal.model/features-mdsal-model/{{VERSION}}/xml/features</repository>
 	<repository>mvn:org.opendaylight.netconf/features-restconf/{{VERSION}}/xml/features</repository>
 	<repository>mvn:org.opendaylight.dlux/features-dlux/{{VERSION}}/xml/features</repository>
+	<repository>mvn:org.opendaylight.l2switch/features-l2switch/0.5.0-SNAPSHOT/xml/features</repository>
 	<feature name='odl-cardinal-api' version='${project.version}'
 		description='OpenDaylight :: cardinal :: api'>
 		<feature version='${mdsal.model.version}'>odl-mdsal-models</feature>
@@ -23,6 +24,10 @@
 		<bundle>wrap:mvn:org.snmp4j/snmp4j/{{VERSION}}</bundle>
 		<bundle>wrap:mvn:com.jcraft/jsch/{{VERSION}}</bundle>
 		<bundle>wrap:mvn:org.opendaylight.cardinal/jdmk/{{VERSION}}</bundle>
+		<bundle>mvn:org.opendaylight.openflowplugin.model/model-flow-base/${openflowplugin.version}</bundle>
+		<bundle>mvn:org.opendaylight.openflowplugin.model/model-flow-service/${openflowplugin.version}</bundle>
+		<bundle>mvn:org.opendaylight.openflowplugin.model/model-flow-statistics/${openflowplugin.version}</bundle>
+		<bundle>mvn:org.opendaylight.controller.model/model-inventory/${mdsal.version}</bundle>
 		<bundle>mvn:org.opendaylight.cardinal/cardinal-impl/{{VERSION}}</bundle>
 		<configfile finalname="${configfile.directory}/cardinal.xml">mvn:org.opendaylight.cardinal/cardinal-impl/{{VERSION}}/xml/config</configfile>
 	</feature>

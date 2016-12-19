@@ -18,11 +18,9 @@
 	<artifactId>cardinal-features</artifactId>
 	<version>0.2.0-SNAPSHOT</version>
 	<name>${project.artifactId}</name>
-
 	<prerequisites>
 		<maven>3.1.1</maven>
 	</prerequisites>
-
 	<properties>
 		<mdsal.model.version>0.10.0-SNAPSHOT</mdsal.model.version>
 		<mdsal.version>1.5.0-SNAPSHOT</mdsal.version>
@@ -33,20 +31,19 @@
 		<iotdm.version>0.3.0-SNAPSHOT</iotdm.version>
 		<gbp.version>0.5.0-SNAPSHOT</gbp.version>
 		<configfile.directory>etc/opendaylight/karaf</configfile.directory>
-		 <openflowplugin.version>0.4.0-SNAPSHOT</openflowplugin.version>
+		<openflowplugin.version>0.4.0-SNAPSHOT</openflowplugin.version>
 		<openflowjava.version>0.9.0-SNAPSHOT</openflowjava.version>
-		 <feature.test.version>1.8.0-SNAPSHOT</feature.test.version>
+		<feature.test.version>1.8.0-SNAPSHOT</feature.test.version>
 	</properties>
-
 	<dependencyManagement>
 		<dependencies>
-		 <!-- Internal ODL Dependencies -->
-<dependency>
-<groupId>org.opendaylight.odlparent</groupId>
-<artifactId>features-test</artifactId>
-<version>${feature.test.version}</version>
-<scope>test</scope>
-</dependency>
+			<!-- Internal ODL Dependencies -->
+			<dependency>
+				<groupId>org.opendaylight.odlparent</groupId>
+				<artifactId>features-test</artifactId>
+				<version>${feature.test.version}</version>
+				<scope>test</scope>
+			</dependency>
 			<dependency>
 				<groupId>${project.groupId}</groupId>
 				<artifactId>cardinal-artifacts</artifactId>
@@ -129,38 +126,38 @@
 			<classifier>config</classifier>
 		</dependency>
 		<dependency>
-     <groupId>org.opendaylight.l2switch</groupId>
-      <artifactId>features-l2switch</artifactId>
-      <version>0.5.0-SNAPSHOT</version>
-      <classifier>features</classifier>
-      <type>xml</type>
-      <scope>runtime</scope>
-    </dependency>
-		 <!-- bundle dependencies -->
-<dependency>
-<groupId>org.opendaylight.openflowplugin.model</groupId>
-<artifactId>model-flow-base</artifactId>
-<version>${openflowplugin.version}</version>
-</dependency>
-<dependency>
-<groupId>org.opendaylight.openflowplugin.model</groupId>
-<artifactId>model-flow-service</artifactId>
-<version>${openflowplugin.version}</version>
-</dependency>
-<dependency>
-<groupId>org.opendaylight.openflowplugin.model</groupId>
-<artifactId>model-flow-statistics</artifactId>
-<version>${openflowplugin.version}</version>
-</dependency>
-<dependency>
-<groupId>org.opendaylight.controller.model</groupId>
-<artifactId>model-inventory</artifactId>
-<version>${mdsal.version}</version>
-</dependency>
- <!-- External Dependencies -->
-<dependency>
-<groupId>com.google.guava</groupId>
-<artifactId>guava</artifactId>
-</dependency>
+			<groupId>org.opendaylight.l2switch</groupId>
+			<artifactId>features-l2switch</artifactId>
+			<version>0.5.0-SNAPSHOT</version>
+			<classifier>features</classifier>
+			<type>xml</type>
+			<scope>runtime</scope>
+		</dependency>
+		<!-- bundle dependencies -->
+		<dependency>
+			<groupId>org.opendaylight.openflowplugin.model</groupId>
+			<artifactId>model-flow-base</artifactId>
+			<version>${openflowplugin.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.opendaylight.openflowplugin.model</groupId>
+			<artifactId>model-flow-service</artifactId>
+			<version>${openflowplugin.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.opendaylight.openflowplugin.model</groupId>
+			<artifactId>model-flow-statistics</artifactId>
+			<version>${openflowplugin.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.opendaylight.controller.model</groupId>
+			<artifactId>model-inventory</artifactId>
+			<version>${mdsal.version}</version>
+		</dependency>
+		<!-- External Dependencies -->
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+		</dependency>
 	</dependencies>
 </project>
