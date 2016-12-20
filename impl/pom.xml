@@ -20,18 +20,14 @@
 	<version>0.2.0-SNAPSHOT</version>
 	<packaging>bundle</packaging>
 
-	<properties>
+    <properties>
 		<mdsal.model.version>0.10.0-SNAPSHOT</mdsal.model.version>
 		<mdsal.version>1.5.0-SNAPSHOT</mdsal.version>
 		<restconf.version>1.5.0-SNAPSHOT</restconf.version>
 		<yangtools.version>1.1.0-SNAPSHOT</yangtools.version>
 		<dlux.version>0.5.0-SNAPSHOT</dlux.version>
-		<netconf.version>1.2.0-SNAPSHOT</netconf.version>
-		<iotdm.version>0.3.0-SNAPSHOT</iotdm.version>
-		<gbp.version>0.5.0-SNAPSHOT</gbp.version>
 		<configfile.directory>etc/opendaylight/karaf</configfile.directory>
 		<openflowplugin.version>0.4.0-SNAPSHOT</openflowplugin.version>
-		<openflowjava.version>0.9.0-SNAPSHOT</openflowjava.version>
 		<feature.test.version>1.8.0-SNAPSHOT</feature.test.version>
 	</properties>
 
@@ -52,32 +48,26 @@
 			<groupId>${project.groupId}</groupId>
 			<artifactId>cardinal-api</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>jdmk</artifactId>
 		</dependency>
-
-
 		<dependency>
 			<groupId>org.snmp4j</groupId>
 			<artifactId>snmp4j</artifactId>
 			<version>2.5.0</version>
 		</dependency>
-
 		<dependency>
 			<groupId>com.jcraft</groupId>
 			<artifactId>jsch</artifactId>
 			<version>0.1.53</version>
 		</dependency>
-
 		<!-- Testing Dependencies -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<scope>test</scope>
 		</dependency>
-
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-all</artifactId>
@@ -114,6 +104,5 @@
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 		</dependency>
-
 	</dependencies>
 </project>
