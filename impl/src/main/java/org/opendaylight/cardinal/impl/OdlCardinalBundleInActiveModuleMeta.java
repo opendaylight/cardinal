@@ -1,5 +1,5 @@
 /*
- * Copyright © 2015 TCS and others.  All rights reserved.
+ * Copyright © 2016 TCS and others.  All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v1.0 which accompanies this distribution,
@@ -7,8 +7,6 @@
  */
 package org.opendaylight.cardinal.impl;
 
-// java imports
-//
 import java.io.Serializable;
 
 // jmx imports
@@ -62,12 +60,12 @@ public class OdlCardinalBundleInActiveModuleMeta extends SnmpMibGroup implements
             registerObject(1);
             registerObject(0);
         } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(e.getMessage());
         }
     }
 
     /**
-     * Get the value of a scalar variable.
+     * Get the value of a scalar variable
      */
     public SnmpValue get(long var, Object data) throws SnmpStatusException {
         switch ((int) var) {
@@ -96,7 +94,7 @@ public class OdlCardinalBundleInActiveModuleMeta extends SnmpMibGroup implements
     }
 
     /**
-     * Set the value of a scalar variable.
+     * Set the value of a scalar variable
      */
     public SnmpValue set(SnmpValue x, long var, Object data) throws SnmpStatusException {
         switch ((int) var) {
@@ -155,7 +153,7 @@ public class OdlCardinalBundleInActiveModuleMeta extends SnmpMibGroup implements
     }
 
     /**
-     * Check the value of a scalar variable.
+     * Check the value of a scalar variable
      */
     public void check(SnmpValue x, long var, Object data) throws SnmpStatusException {
         switch ((int) var) {

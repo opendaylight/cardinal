@@ -51,7 +51,8 @@ public class OdlCardinalGetTest {
         String mockString = "";
         if (cardinalString != null) {
             if (cardinalString.contains(" Opendaylight Node Information")
-                    || cardinalString.contains(" Opendaylight Node A") || cardinalString.contains(" localhost"))
+                    || cardinalString.contains(" Opendaylight Node A") || cardinalString.contains(" localhost")
+                    || cardinalString.contains("JDMK 5.1"))
                 mockString = cardinalString;
             if (mockString != null) {
                 assertEquals(mockString, cardinalString);

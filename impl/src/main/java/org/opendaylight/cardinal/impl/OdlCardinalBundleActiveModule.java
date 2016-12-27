@@ -1,5 +1,5 @@
 /*
- * Copyright © 2015 TCS and others.  All rights reserved.
+ * Copyright © 2016 TCS and others.  All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v1.0 which accompanies this distribution,
@@ -7,8 +7,6 @@
  */
 package org.opendaylight.cardinal.impl;
 
-// java imports
-//
 import java.io.Serializable;
 
 // jmx imports
@@ -30,101 +28,68 @@ public class OdlCardinalBundleActiveModule implements OdlCardinalBundleActiveMod
     /**
      * Variable for storing the value of "Activebundle9". The variable is
      * identified by: "1.3.6.1.3.1.1.4.9".
-     *
-     * "To be done"
-     *
      */
-    protected String Activebundle9 = new String("Opendaylight Node Information");
+    protected String Activebundle9 = new String("JDMK 5.1");
 
     /**
      * Variable for storing the value of "Activebundle8". The variable is
      * identified by: "1.3.6.1.3.1.1.4.8".
-     *
-     * "To be done"
-     *
      */
-    protected String Activebundle8 = new String("Opendaylight Node Information");
+    protected String Activebundle8 = new String("JDMK 5.1");
 
     /**
      * Variable for storing the value of "Activebundle7". The variable is
      * identified by: "1.3.6.1.3.1.1.4.7".
-     *
-     * "To be done"
-     *
      */
-    protected String Activebundle7 = new String("Opendaylight Node Information");
+    protected String Activebundle7 = new String("JDMK 5.1");
 
     /**
      * Variable for storing the value of "Activebundle6". The variable is
      * identified by: "1.3.6.1.3.1.1.4.6".
-     *
-     * "To be done"
-     *
      */
-    protected String Activebundle6 = new String("Opendaylight Node Information");
+    protected String Activebundle6 = new String("JDMK 5.1");
 
     /**
      * Variable for storing the value of "Activebundle5". The variable is
      * identified by: "1.3.6.1.3.1.1.4.5".
-     *
-     * "To be done"
-     *
      */
-    protected String Activebundle5 = new String("Opendaylight Node Information");
+    protected String Activebundle5 = new String("JDMK 5.1");
 
     /**
      * Variable for storing the value of "Activebundle4". The variable is
      * identified by: "1.3.6.1.3.1.1.4.4".
-     *
-     * "To be done"
-     *
      */
-    protected String Activebundle4 = new String("Opendaylight Node Information");
+    protected String Activebundle4 = new String("JDMK 5.1");
 
     /**
      * Variable for storing the value of "Activebundle3". The variable is
      * identified by: "1.3.6.1.3.1.1.4.3".
-     *
-     * "To be done"
-     *
      */
-    protected String Activebundle3 = new String("Opendaylight Node Information");
+    protected String Activebundle3 = new String("JDMK 5.1");
 
     /**
      * Variable for storing the value of "Activebundle2". The variable is
      * identified by: "1.3.6.1.3.1.1.4.2".
-     *
-     * "To be done"
-     *
      */
-    protected String Activebundle2 = new String("Opendaylight Node Information");
+    protected String Activebundle2 = new String("JDMK 5.1");
 
     /**
      * Variable for storing the value of "Activebundle10". The variable is
      * identified by: "1.3.6.1.3.1.1.4.10".
-     *
-     * "To be done"
-     *
      */
-    protected String Activebundle10 = new String("Opendaylight Node Information");
+    protected String Activebundle10 = new String("JDMK 5.1");
 
     /**
      * Variable for storing the value of "Activebundle1". The variable is
      * identified by: "1.3.6.1.3.1.1.4.1".
-     *
-     * "To be done"
-     *
      */
-    protected String Activebundle1 = new String("Opendaylight Node Information");
+    protected String Activebundle1 = new String("JDMK 5.1");
 
     /**
-     * Variable for storing the value of "OdlKarafBundleListActive". The
-     * variable is identified by: "1.3.6.1.3.1.1.4.0".
-     *
-     * "To be done"
-     *
+     * Variable for storing the value of "OdKarafBundleListActive". The variable
+     * is identified by: "1.3.6.1.3.1.1.4.0".
      */
-    protected String OdlKarafBundleListActive = new String("Opendaylight Node Information");
+    protected String OdKarafBundleListActive = new String("JDMK 5.1");
 
     /**
      * Constructor for the "OdlCardinalBundleActiveModule" group. If the group
@@ -373,23 +338,23 @@ public class OdlCardinalBundleActiveModule implements OdlCardinalBundleActiveMod
     }
 
     /**
-     * Getter for the "OdlKarafBundleListActive" variable.
+     * Getter for the "OdKarafBundleListActive" variable.
      */
-    public String getOdlKarafBundleListActive() throws SnmpStatusException {
-        return OdlKarafBundleListActive;
+    public String getOdKarafBundleListActive() throws SnmpStatusException {
+        return OdKarafBundleListActive;
     }
 
     /**
-     * Setter for the "OdlKarafBundleListActive" variable.
+     * Setter for the "OdKarafBundleListActive" variable.
      */
-    public void setOdlKarafBundleListActive(String x) throws SnmpStatusException {
-        OdlKarafBundleListActive = x;
+    public void setOdKarafBundleListActive(String x) throws SnmpStatusException {
+        OdKarafBundleListActive = x;
     }
 
     /**
-     * Checker for the "OdlKarafBundleListActive" variable.
+     * Checker for the "OdKarafBundleListActive" variable.
      */
-    public void checkOdlKarafBundleListActive(String x) throws SnmpStatusException {
+    public void checkOdKarafBundleListActive(String x) throws SnmpStatusException {
         //
         // Add your own checking policy.
         //

@@ -10,7 +10,7 @@ import com.sun.management.snmp.SnmpStatusException;
 import com.sun.management.snmp.agent.SnmpMib;
 
 public class OdlCardinalMainModuleTest {
-    SnmpMib myMib;
+SnmpMib myMib;
     MBeanServer server;
 
     org.opendaylight.cardinal.impl.OdlCardinalMainModule OdlCardinalMainModule = new org.opendaylight.cardinal.impl.OdlCardinalMainModule(
@@ -29,18 +29,6 @@ public class OdlCardinalMainModuleTest {
         String x = "localhost";
         OdlCardinalMainModule.setOdlSystemOdlNodeInfo(x);
         String y = OdlCardinalMainModule.getOdlSystemOdlNodeInfo();
-        if (y != null) {
-            assertEquals(x, y);
-        } else {
-            assertNotEquals(x, y);
-        }
-    }
-
-    @Test
-    public void getOdlSystemOdlUptimeTest() throws SnmpStatusException {
-        String x = "localhost";
-        OdlCardinalMainModule.setOdlSystemOdlUptime(x);
-        String y = OdlCardinalMainModule.getOdlSystemOdlUptime();
         if (y != null) {
             assertEquals(x, y);
         } else {
@@ -85,18 +73,6 @@ public class OdlCardinalMainModuleTest {
     }
 
     @Test
-    public void getOdlMDSALGBPResolvedpoliciesTest() throws SnmpStatusException {
-        String x = "localhost";
-        OdlCardinalMainModule.setOdlMDSALGBPResolvedpolicies(x);
-        String y = OdlCardinalMainModule.getOdlMDSALGBPResolvedpolicies();
-        if (y != null) {
-            assertEquals(x, y);
-        } else {
-            assertNotEquals(x, y);
-        }
-    }
-
-    @Test
     public void getOdlSystemCpuUsageTest() throws SnmpStatusException {
         Integer x = 1024;
         OdlCardinalMainModule.setOdlSystemCpuUsage(x);
@@ -133,20 +109,8 @@ public class OdlCardinalMainModuleTest {
     }
 
     @Test
-    public void checkOdlSystemOdlUptimeTest() throws SnmpStatusException {
-        String x = "Uptime";
-        OdlCardinalMainModule.checkOdlSystemOdlUptime(x);
-    }
-
-    @Test
     public void checkOdlSystemSysInfoTest() throws SnmpStatusException {
         String x = "Opendaylight";
         OdlCardinalMainModule.checkOdlSystemSysInfo(x);
-    }
-
-    @Test
-    public void checkOdlMDSALGBPResolvedpoliciesTest() throws SnmpStatusException {
-        String x = "Opendaylight";
-        OdlCardinalMainModule.checkOdlMDSALGBPResolvedpolicies(x);
     }
 }

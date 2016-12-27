@@ -145,18 +145,6 @@ public class OdlCardinalBundleActiveModuleTest {
     }
 
     @Test
-    public void getOdlKarafBundleListInstalledTest() throws SnmpStatusException {
-        String x = "Activebundle";
-        odlCardinalBundleActiveModule.setOdlKarafBundleListActive(x);
-        String y = odlCardinalBundleActiveModule.getOdlKarafBundleListActive();
-        if (y != null) {
-            assertEquals(x, y);
-        } else {
-            assertNotEquals(x, y);
-        }
-    }
-
-    @Test
     public void checkActivebundle1Test() throws SnmpStatusException {
         String x = "Activebundle";
         odlCardinalBundleActiveModule.checkActivebundle1(x);
@@ -208,17 +196,5 @@ public class OdlCardinalBundleActiveModuleTest {
     public void checkActivebundle9Test() throws SnmpStatusException {
         String x = "Activebundle";
         odlCardinalBundleActiveModule.checkActivebundle9(x);
-    }
-
-    @Test
-    public void checkActivebundle10Test() throws SnmpStatusException {
-        String x = "Activebundle";
-        odlCardinalBundleActiveModule.checkActivebundle10(x);
-    }
-
-    @Test
-    public void checkOdlKarafBundleListActiveTest() throws SnmpStatusException {
-        String x = "Activebundle";
-        odlCardinalBundleActiveModule.checkOdlKarafBundleListActive(x);
     }
 }

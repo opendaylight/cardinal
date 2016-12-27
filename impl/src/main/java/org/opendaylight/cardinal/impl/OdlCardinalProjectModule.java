@@ -1,5 +1,5 @@
 /*
- * Copyright © 2015 TCS and others.  All rights reserved.
+ * Copyright © 2016 TCS and others.  All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v1.0 which accompanies this distribution,
@@ -7,8 +7,6 @@
  */
 package org.opendaylight.cardinal.impl;
 
-// java imports
-//
 import java.io.Serializable;
 
 // jmx imports
@@ -29,165 +27,111 @@ public class OdlCardinalProjectModule implements OdlCardinalProjectModuleMBean, 
 
     /**
      * Variable for storing the value of "OdlMDSALBGPBMPinfo". The variable is
-     * identified by: "1.3.6.1.3.1.1.8.18".
-     *
-     * "To be done"
-     *
+     * identified by: "1.3.6.1.3.1.1.8.17".
      */
-    protected String OdlMDSALBGPBMPinfo = new String("Opendaylight Node Information");
+    protected String OdlMDSALBGPBMPinfo = new String("JDMK 5.1");
 
     /**
      * Variable for storing the value of "OdlMDSALBGPRIBInfo". The variable is
-     * identified by: "1.3.6.1.3.1.1.8.17".
-     *
-     * "To be done"
-     *
+     * identified by: "1.3.6.1.3.1.1.8.16".
      */
-    protected String OdlMDSALBGPRIBInfo = new String("Opendaylight Node Information");
+    protected String OdlMDSALBGPRIBInfo = new String("JDMK 5.1");
 
     /**
      * Variable for storing the value of "OdlMDSALBGPPeerInfo". The variable is
-     * identified by: "1.3.6.1.3.1.1.8.16".
-     *
-     * "To be done"
-     *
+     * identified by: "1.3.6.1.3.1.1.8.15".
      */
-    protected String OdlMDSALBGPPeerInfo = new String("Opendaylight Node Information");
+    protected String OdlMDSALBGPPeerInfo = new String("JDMK 5.1");
 
     /**
      * Variable for storing the value of "OdlMDSALOpenFlowOVSconnectedDevices".
-     * The variable is identified by: "1.3.6.1.3.1.1.8.15".
-     *
-     * "To be done"
-     *
+     * The variable is identified by: "1.3.6.1.3.1.1.8.14".
      */
-    protected String OdlMDSALOpenFlowOVSconnectedDevices = new String("Opendaylight Node Information");
+    protected String OdlMDSALOpenFlowOVSconnectedDevices = new String("JDMK 5.1");
 
     /**
      * Variable for storing the value of "OdlMDSALIotDMlistofNodes". The
-     * variable is identified by: "1.3.6.1.3.1.1.8.14".
-     *
-     * "To be done"
-     *
+     * variable is identified by: "1.3.6.1.3.1.1.8.13".
      */
-    protected String OdlMDSALIotDMlistofNodes = new String("Opendaylight Node Information");
+    protected String OdlMDSALIotDMlistofNodes = new String("JDMK 5.1");
 
     /**
      * Variable for storing the value of "OdlMDSALIotDMlistofAEs". The variable
-     * is identified by: "1.3.6.1.3.1.1.8.13".
-     *
-     * "To be done"
-     *
+     * is identified by: "1.3.6.1.3.1.1.8.12".
      */
-    protected String OdlMDSALIotDMlistofAEs = new String("Opendaylight Node Information");
+    protected String OdlMDSALIotDMlistofAEs = new String("JDMK 5.1");
 
     /**
      * Variable for storing the value of "OdlMDSALIotDMListofcse". The variable
-     * is identified by: "1.3.6.1.3.1.1.8.12".
-     *
-     * "To be done"
-     *
+     * is identified by: "1.3.6.1.3.1.1.8.11".
      */
-    protected String OdlMDSALIotDMListofcse = new String("Opendaylight Node Information");
+    protected String OdlMDSALIotDMListofcse = new String("JDMK 5.1");
 
     /**
      * Variable for storing the value of "OdlMDSALGBPPolicytenants". The
      * variable is identified by: "1.3.6.1.3.1.1.8.10".
-     *
-     * "To be done"
-     *
      */
-    protected String OdlMDSALGBPPolicytenants = new String("Opendaylight Node Information");
+    protected String OdlMDSALGBPPolicytenants = new String("JDMK 5.1");
 
     /**
      * Variable for storing the value of "OdlMDSALGBPFaaslogicalnetwork". The
      * variable is identified by: "1.3.6.1.3.1.1.8.9".
-     *
-     * "To be done"
-     *
      */
-    protected String OdlMDSALGBPFaaslogicalnetwork = new String("Opendaylight Node Information");
+    protected String OdlMDSALGBPFaaslogicalnetwork = new String("JDMK 5.1");
 
     /**
      * Variable for storing the value of "OdlMDSALService". The variable is
      * identified by: "1.3.6.1.3.1.1.8.8".
-     *
-     * "To be done"
-     *
      */
-    protected String OdlMDSALService = new String("Opendaylight Node Information");
+    protected String OdlMDSALService = new String("JDMK 5.1");
 
     /**
      * Variable for storing the value of "OdlMDSALServicefunctiontype". The
      * variable is identified by: "1.3.6.1.3.1.1.8.7".
-     *
-     * "To be done"
-     *
      */
-    protected String OdlMDSALServicefunctiontype = new String("Opendaylight Node Information");
+    protected String OdlMDSALServicefunctiontype = new String("JDMK 5.1");
 
     /**
      * Variable for storing the value of "OdlMDSALSfcfunctionAlgorithms". The
      * variable is identified by: "1.3.6.1.3.1.1.8.6".
-     *
-     * "To be done"
-     *
      */
-    protected String OdlMDSALSfcfunctionAlgorithms = new String("Opendaylight Node Information");
+    protected String OdlMDSALSfcfunctionAlgorithms = new String("JDMK 5.1");
 
     /**
      * Variable for storing the value of "OdlMDSALSfcfunctiongroups". The
      * variable is identified by: "1.3.6.1.3.1.1.8.5".
-     *
-     * "To be done"
-     *
      */
-    protected String OdlMDSALSfcfunctiongroups = new String("Opendaylight Node Information");
+    protected String OdlMDSALSfcfunctiongroups = new String("JDMK 5.1");
 
     /**
      * Variable for storing the value of "OdlMDSALSfcfunctionchain". The
      * variable is identified by: "1.3.6.1.3.1.1.8.4".
-     *
-     * "To be done"
-     *
      */
-    protected String OdlMDSALSfcfunctionchain = new String("Opendaylight Node Information");
+    protected String OdlMDSALSfcfunctionchain = new String("JDMK 5.1");
 
     /**
      * Variable for storing the value of "OdlMDSALSfcfunction". The variable is
      * identified by: "1.3.6.1.3.1.1.8.3".
-     *
-     * "To be done"
-     *
      */
-    protected String OdlMDSALSfcfunction = new String("Opendaylight Node Information");
+    protected String OdlMDSALSfcfunction = new String("JDMK 5.1");
 
     /**
      * Variable for storing the value of "OdlMDSALNetconfConnectedDevices". The
      * variable is identified by: "1.3.6.1.3.1.1.8.2".
-     *
-     * "To be done"
-     *
      */
-    protected String OdlMDSALNetconfConnectedDevices = new String("Opendaylight Node Information");
+    protected String OdlMDSALNetconfConnectedDevices = new String("JDMK 5.1");
 
     /**
      * Variable for storing the value of "OdlMDSALClustershardsshared". The
      * variable is identified by: "1.3.6.1.3.1.1.8.1".
-     *
-     * "To be done"
-     *
      */
-    protected String OdlMDSALClustershardsshared = new String("Opendaylight Node Information");
+    protected String OdlMDSALClustershardsshared = new String("JDMK 5.1");
 
     /**
      * Variable for storing the value of "OdlMDSALClusterControllerRole". The
      * variable is identified by: "1.3.6.1.3.1.1.8.0".
-     *
-     * "To be done"
-     *
      */
-    protected String OdlMDSALClusterControllerRole = new String("Opendaylight Node Information");
+    protected String OdlMDSALClusterControllerRole = new String("JDMK 5.1");
 
     /**
      * Constructor for the "OdlCardinalProjectModule" group. If the group
