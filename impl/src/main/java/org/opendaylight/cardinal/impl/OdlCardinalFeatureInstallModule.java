@@ -1,5 +1,5 @@
 /*
- * Copyright © 2015 TCS and others.  All rights reserved.
+ * Copyright © 2016 TCS and others.  All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v1.0 which accompanies this distribution,
@@ -7,8 +7,6 @@
  */
 package org.opendaylight.cardinal.impl;
 
-// java imports
-//
 import java.io.Serializable;
 
 // jmx imports
@@ -30,101 +28,68 @@ public class OdlCardinalFeatureInstallModule implements OdlCardinalFeatureInstal
     /**
      * Variable for storing the value of "FeatureInstalled9". The variable is
      * identified by: "1.3.6.1.3.1.1.2.9".
-     *
-     * "To be done"
-     *
      */
-    protected String FeatureInstalled9 = new String("Opendaylight Node Information");
+    protected String FeatureInstalled9 = new String("JDMK 5.1");
 
     /**
      * Variable for storing the value of "FeatureInstalled8". The variable is
      * identified by: "1.3.6.1.3.1.1.2.8".
-     *
-     * "To be done"
-     *
      */
-    protected String FeatureInstalled8 = new String("Opendaylight Node Information");
+    protected String FeatureInstalled8 = new String("JDMK 5.1");
 
     /**
      * Variable for storing the value of "FeatureInstalled7". The variable is
      * identified by: "1.3.6.1.3.1.1.2.7".
-     *
-     * "To be done"
-     *
      */
-    protected String FeatureInstalled7 = new String("Opendaylight Node Information");
+    protected String FeatureInstalled7 = new String("JDMK 5.1");
 
     /**
      * Variable for storing the value of "FeatureInstalled6". The variable is
      * identified by: "1.3.6.1.3.1.1.2.6".
-     *
-     * "To be done"
-     *
      */
-    protected String FeatureInstalled6 = new String("Opendaylight Node Information");
+    protected String FeatureInstalled6 = new String("JDMK 5.1");
 
     /**
      * Variable for storing the value of "FeatureInstalled5". The variable is
      * identified by: "1.3.6.1.3.1.1.2.5".
-     *
-     * "To be done"
-     *
      */
-    protected String FeatureInstalled5 = new String("Opendaylight Node Information");
+    protected String FeatureInstalled5 = new String("JDMK 5.1");
 
     /**
      * Variable for storing the value of "FeatureInstalled4". The variable is
      * identified by: "1.3.6.1.3.1.1.2.4".
-     *
-     * "To be done"
-     *
      */
-    protected String FeatureInstalled4 = new String("Opendaylight Node Information");
+    protected String FeatureInstalled4 = new String("JDMK 5.1");
 
     /**
      * Variable for storing the value of "FeatureInstalled3". The variable is
      * identified by: "1.3.6.1.3.1.1.2.3".
-     *
-     * "To be done"
-     *
      */
-    protected String FeatureInstalled3 = new String("Opendaylight Node Information");
+    protected String FeatureInstalled3 = new String("JDMK 5.1");
 
     /**
      * Variable for storing the value of "FeatureInstalled2". The variable is
      * identified by: "1.3.6.1.3.1.1.2.2".
-     *
-     * "To be done"
-     *
      */
-    protected String FeatureInstalled2 = new String("Opendaylight Node Information");
+    protected String FeatureInstalled2 = new String("JDMK 5.1");
 
     /**
      * Variable for storing the value of "FeatureInstalled1". The variable is
      * identified by: "1.3.6.1.3.1.1.2.1".
-     *
-     * "To be done"
-     *
      */
-    protected String FeatureInstalled1 = new String("Opendaylight Node Information");
+    protected String FeatureInstalled1 = new String("JDMK 5.1");
 
     /**
      * Variable for storing the value of "FeatureInstalled10". The variable is
      * identified by: "1.3.6.1.3.1.1.2.10".
-     *
-     * "To be done"
-     *
      */
-    protected String FeatureInstalled10 = new String("Opendaylight Node Information");
+    protected String FeatureInstalled10 = new String("JDMK 5.1");
 
     /**
      * Variable for storing the value of "OdlKarafFeatureListInstalled". The
      * variable is identified by: "1.3.6.1.3.1.1.2.0".
-     *
-     * "To be done"
-     *
      */
-    protected String OdlKarafFeatureListInstalled = new String("Opendaylight Node Information");
+    protected String OdlKarafFeatureListInstalled = new String("JDMK 5.1");
 
     /**
      * Constructor for the "OdlCardinalFeatureInstallModule" group. If the group

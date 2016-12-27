@@ -1,5 +1,5 @@
 /*
- * Copyright © 2015 TCS and others.  All rights reserved.
+ * Copyright © 2016 TCS and others.  All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v1.0 which accompanies this distribution,
@@ -7,16 +7,25 @@
  */
 package org.opendaylight.cardinal.impl;
 
-// java imports
-//
 import java.io.Serializable;
 
 // jmx imports
 //
 import javax.management.MBeanServer;
+import com.sun.management.snmp.SnmpCounter;
+import com.sun.management.snmp.SnmpCounter64;
+import com.sun.management.snmp.SnmpGauge;
 import com.sun.management.snmp.SnmpInt;
+import com.sun.management.snmp.SnmpUnsignedInt;
+import com.sun.management.snmp.SnmpIpAddress;
+import com.sun.management.snmp.SnmpTimeticks;
+import com.sun.management.snmp.SnmpOpaque;
 import com.sun.management.snmp.SnmpString;
+import com.sun.management.snmp.SnmpStringFixed;
+import com.sun.management.snmp.SnmpOid;
+import com.sun.management.snmp.SnmpNull;
 import com.sun.management.snmp.SnmpValue;
+import com.sun.management.snmp.SnmpVarBind;
 import com.sun.management.snmp.SnmpStatusException;
 
 // jdmk imports
@@ -27,6 +36,8 @@ import com.sun.management.snmp.agent.SnmpStandardObjectServer;
 import com.sun.management.snmp.agent.SnmpStandardMetaServer;
 import com.sun.management.snmp.agent.SnmpMibSubRequest;
 import com.sun.management.snmp.agent.SnmpMibTable;
+import com.sun.management.snmp.EnumRowStatus;
+import com.sun.management.snmp.SnmpDefinitions;
 
 /**
  * The class is used for representing SNMP metadata for the
@@ -46,10 +57,9 @@ public class OdlCardinalMainModuleMeta extends SnmpMibGroup implements Serializa
             registerObject(4);
             registerObject(3);
             registerObject(2);
-            registerObject(11);
             registerObject(1);
         } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -70,13 +80,8 @@ public class OdlCardinalMainModuleMeta extends SnmpMibGroup implements Serializa
         case 3:
             return new SnmpString(node.getOdlSystemHostAddress());
 
-        case 36:
-            throw new SnmpStatusException(SnmpStatusException.noSuchInstance);
         case 2:
             return new SnmpInt(node.getOdlSystemMemUsage());
-
-        case 11:
-            return new SnmpString(node.getOdlMDSALGBPResolvedpolicies());
 
         case 1:
             return new SnmpInt(node.getOdlSystemCpuUsage());
@@ -101,12 +106,7 @@ public class OdlCardinalMainModuleMeta extends SnmpMibGroup implements Serializa
             }
 
         case 5:
-            if (x instanceof SnmpString) {
-                node.setOdlSystemOdlUptime(((SnmpString) x).toString());
-                return new SnmpString(node.getOdlSystemOdlUptime());
-            } else {
-                throw new SnmpStatusException(SnmpStatusException.snmpRspWrongType);
-            }
+            throw new SnmpStatusException(SnmpStatusException.snmpRspNotWritable);
 
         case 4:
             if (x instanceof SnmpString) {
@@ -124,21 +124,10 @@ public class OdlCardinalMainModuleMeta extends SnmpMibGroup implements Serializa
                 throw new SnmpStatusException(SnmpStatusException.snmpRspWrongType);
             }
 
-        case 36:
-            throw new SnmpStatusException(SnmpStatusException.snmpRspNotWritable);
-
         case 2:
             if (x instanceof SnmpInt) {
                 node.setOdlSystemMemUsage(((SnmpInt) x).toInteger());
                 return new SnmpInt(node.getOdlSystemMemUsage());
-            } else {
-                throw new SnmpStatusException(SnmpStatusException.snmpRspWrongType);
-            }
-
-        case 11:
-            if (x instanceof SnmpString) {
-                node.setOdlMDSALGBPResolvedpolicies(((SnmpString) x).toString());
-                return new SnmpString(node.getOdlMDSALGBPResolvedpolicies());
             } else {
                 throw new SnmpStatusException(SnmpStatusException.snmpRspWrongType);
             }
@@ -171,12 +160,7 @@ public class OdlCardinalMainModuleMeta extends SnmpMibGroup implements Serializa
             break;
 
         case 5:
-            if (x instanceof SnmpString) {
-                node.checkOdlSystemOdlUptime(((SnmpString) x).toString());
-            } else {
-                throw new SnmpStatusException(SnmpStatusException.snmpRspWrongType);
-            }
-            break;
+            throw new SnmpStatusException(SnmpStatusException.snmpRspNotWritable);
 
         case 4:
             if (x instanceof SnmpString) {
@@ -194,20 +178,9 @@ public class OdlCardinalMainModuleMeta extends SnmpMibGroup implements Serializa
             }
             break;
 
-        case 36:
-            throw new SnmpStatusException(SnmpStatusException.snmpRspNotWritable);
-
         case 2:
             if (x instanceof SnmpInt) {
                 node.checkOdlSystemMemUsage(((SnmpInt) x).toInteger());
-            } else {
-                throw new SnmpStatusException(SnmpStatusException.snmpRspWrongType);
-            }
-            break;
-
-        case 11:
-            if (x instanceof SnmpString) {
-                node.checkOdlMDSALGBPResolvedpolicies(((SnmpString) x).toString());
             } else {
                 throw new SnmpStatusException(SnmpStatusException.snmpRspWrongType);
             }
@@ -276,9 +249,7 @@ public class OdlCardinalMainModuleMeta extends SnmpMibGroup implements Serializa
         case 5:
         case 4:
         case 3:
-        case 36:
         case 2:
-        case 11:
         case 1:
             return true;
         default:
@@ -298,7 +269,6 @@ public class OdlCardinalMainModuleMeta extends SnmpMibGroup implements Serializa
         case 4:
         case 3:
         case 2:
-        case 11:
         case 1:
             return true;
         default:
@@ -315,12 +285,6 @@ public class OdlCardinalMainModuleMeta extends SnmpMibGroup implements Serializa
     // ------------------------------------------------------------
 
     public boolean skipVariable(long var, Object data, int pduVersion) {
-        switch ((int) var) {
-        case 36:
-            return true;
-        default:
-            break;
-        }
         return false;
     }
 
@@ -342,14 +306,8 @@ public class OdlCardinalMainModuleMeta extends SnmpMibGroup implements Serializa
         case 3:
             return "OdlSystemHostAddress";
 
-        case 36:
-            return "OdlSystemHostAddressTrap";
-
         case 2:
             return "OdlSystemMemUsage";
-
-        case 11:
-            return "OdlMDSALGBPResolvedpolicies";
 
         case 1:
             return "OdlSystemCpuUsage";

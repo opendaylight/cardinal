@@ -9,12 +9,12 @@ package org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.cardina
 
 import java.io.IOException;
 import java.util.List;
-
 import org.opendaylight.cardinal.impl.Agent;
 import org.opendaylight.cardinal.impl.CardinalProvider;
 import org.opendaylight.cardinal.impl.KarafInfo;
 import org.opendaylight.cardinal.impl.OdlCardinalKarafInfoApi;
 import org.opendaylight.cardinal.impl.OdlCardinalSysInfoApis;
+import org.opendaylight.cardinal.impl.OpenflowDeviceManager;
 import org.opendaylight.cardinal.impl.OdlCardinalKarafManager;
 import org.opendaylight.cardinal.impl.OdlCardinalPolling;
 import org.opendaylight.cardinal.impl.OdlCardinalSendTrap;
@@ -22,10 +22,7 @@ import org.opendaylight.cardinal.impl.OdlCardinalSetTrapReceiver;
 import org.opendaylight.cardinal.impl.SetCardinalMibValues;
 import org.opendaylight.cardinal.impl.odlCardinalProjectManager;
 import org.slf4j.LoggerFactory;
-
 import com.sun.management.snmp.SnmpStatusException;
-
-;
 
 /*import com.sun.management.snmp.SnmpStatusException;*/
 
@@ -90,6 +87,8 @@ public class CardinalModule extends
             manager.odlPeakThreads();
             pmanager.odlMDSALIotDMListofcse();
             cardinalKarafApi.setValues();
+            new OpenflowDeviceManager(getDataBrokerDependency(), getRpcRegistryDependency());
+			//Thread.sleep(5000);
             }
             else{
                 LOG.info("You may be not logged in as root!!!");

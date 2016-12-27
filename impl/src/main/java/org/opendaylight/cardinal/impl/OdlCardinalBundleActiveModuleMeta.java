@@ -1,22 +1,31 @@
 /*
- * Copyright © 2015 TCS and others.  All rights reserved.
+ * Copyright © 2016 TCS and others.  All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v1.0 which accompanies this distribution,
  * and is available at http://www.eclipse.org/legal/epl-v10.html
  */
-
 package org.opendaylight.cardinal.impl;
 
-// java imports
-//
 import java.io.Serializable;
 
 // jmx imports
 //
 import javax.management.MBeanServer;
+import com.sun.management.snmp.SnmpCounter;
+import com.sun.management.snmp.SnmpCounter64;
+import com.sun.management.snmp.SnmpGauge;
+import com.sun.management.snmp.SnmpInt;
+import com.sun.management.snmp.SnmpUnsignedInt;
+import com.sun.management.snmp.SnmpIpAddress;
+import com.sun.management.snmp.SnmpTimeticks;
+import com.sun.management.snmp.SnmpOpaque;
 import com.sun.management.snmp.SnmpString;
+import com.sun.management.snmp.SnmpStringFixed;
+import com.sun.management.snmp.SnmpOid;
+import com.sun.management.snmp.SnmpNull;
 import com.sun.management.snmp.SnmpValue;
+import com.sun.management.snmp.SnmpVarBind;
 import com.sun.management.snmp.SnmpStatusException;
 
 // jdmk imports
@@ -27,6 +36,8 @@ import com.sun.management.snmp.agent.SnmpStandardObjectServer;
 import com.sun.management.snmp.agent.SnmpStandardMetaServer;
 import com.sun.management.snmp.agent.SnmpMibSubRequest;
 import com.sun.management.snmp.agent.SnmpMibTable;
+import com.sun.management.snmp.EnumRowStatus;
+import com.sun.management.snmp.SnmpDefinitions;
 
 /**
  * The class is used for representing SNMP metadata for the
@@ -54,7 +65,7 @@ public class OdlCardinalBundleActiveModuleMeta extends SnmpMibGroup implements S
             registerObject(1);
             registerObject(0);
         } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -94,7 +105,7 @@ public class OdlCardinalBundleActiveModuleMeta extends SnmpMibGroup implements S
             return new SnmpString(node.getActivebundle1());
 
         case 0:
-            return new SnmpString(node.getOdlKarafBundleListActive());
+            return new SnmpString(node.getOdKarafBundleListActive());
 
         default:
             break;
@@ -189,8 +200,8 @@ public class OdlCardinalBundleActiveModuleMeta extends SnmpMibGroup implements S
 
         case 0:
             if (x instanceof SnmpString) {
-                node.setOdlKarafBundleListActive(((SnmpString) x).toString());
-                return new SnmpString(node.getOdlKarafBundleListActive());
+                node.setOdKarafBundleListActive(((SnmpString) x).toString());
+                return new SnmpString(node.getOdKarafBundleListActive());
             } else {
                 throw new SnmpStatusException(SnmpStatusException.snmpRspWrongType);
             }
@@ -288,7 +299,7 @@ public class OdlCardinalBundleActiveModuleMeta extends SnmpMibGroup implements S
 
         case 0:
             if (x instanceof SnmpString) {
-                node.checkOdlKarafBundleListActive(((SnmpString) x).toString());
+                node.checkOdKarafBundleListActive(((SnmpString) x).toString());
             } else {
                 throw new SnmpStatusException(SnmpStatusException.snmpRspWrongType);
             }
@@ -435,7 +446,7 @@ public class OdlCardinalBundleActiveModuleMeta extends SnmpMibGroup implements S
             return "Activebundle1";
 
         case 0:
-            return "OdlKarafBundleListActive";
+            return "OdKarafBundleListActive";
 
         default:
             break;

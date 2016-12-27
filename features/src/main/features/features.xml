@@ -25,6 +25,9 @@
         <bundle>wrap:mvn:org.snmp4j/snmp4j/{{VERSION}}</bundle>
         <bundle>wrap:mvn:com.jcraft/jsch/{{VERSION}}</bundle>
         <bundle>wrap:mvn:org.opendaylight.cardinal/jdmk/{{VERSION}}</bundle>
+        <bundle>mvn:org.opendaylight.openflowplugin.model/model-flow-base/${openflowplugin.version}</bundle>
+        <bundle>mvn:org.opendaylight.openflowplugin.model/model-flow-service/${openflowplugin.version}</bundle>
+        <bundle>mvn:org.opendaylight.openflowplugin.model/model-flow-statistics/${openflowplugin.version}</bundle>
         <bundle>mvn:org.opendaylight.controller.model/model-inventory/${mdsal.version}</bundle>
         <bundle>mvn:org.opendaylight.cardinal/cardinal-impl/{{VERSION}}
         </bundle>

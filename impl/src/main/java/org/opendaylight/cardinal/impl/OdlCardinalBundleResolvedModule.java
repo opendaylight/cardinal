@@ -1,20 +1,18 @@
 /*
- * Copyright © 2015 TCS and others.  All rights reserved.
+ * Copyright © 2016 TCS and others.  All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v1.0 which accompanies this distribution,
  * and is available at http://www.eclipse.org/legal/epl-v10.html
  */
-
 package org.opendaylight.cardinal.impl;
 
-// java imports
-//
 import java.io.Serializable;
 
 // jmx imports
 //
 import javax.management.MBeanServer;
+import com.sun.management.snmp.SnmpString;
 import com.sun.management.snmp.SnmpStatusException;
 
 // jdmk imports
@@ -30,56 +28,38 @@ public class OdlCardinalBundleResolvedModule implements OdlCardinalBundleResolve
     /**
      * Variable for storing the value of "ResolvedBundle5". The variable is
      * identified by: "1.3.6.1.3.1.1.6.5".
-     *
-     * "To be done"
-     *
      */
-    protected String ResolvedBundle5 = new String("Opendaylight Node Information");
+    protected String ResolvedBundle5 = new String("JDMK 5.1");
 
     /**
      * Variable for storing the value of "ResolvedBundle4". The variable is
      * identified by: "1.3.6.1.3.1.1.6.4".
-     *
-     * "To be done"
-     *
      */
-    protected String ResolvedBundle4 = new String("Opendaylight Node Information");
+    protected String ResolvedBundle4 = new String("JDMK 5.1");
 
     /**
      * Variable for storing the value of "ResolvedBundle3". The variable is
      * identified by: "1.3.6.1.3.1.1.6.3".
-     *
-     * "To be done"
-     *
      */
-    protected String ResolvedBundle3 = new String("Opendaylight Node Information");
+    protected String ResolvedBundle3 = new String("JDMK 5.1");
 
     /**
      * Variable for storing the value of "ResolvedBundle2". The variable is
      * identified by: "1.3.6.1.3.1.1.6.2".
-     *
-     * "To be done"
-     *
      */
-    protected String ResolvedBundle2 = new String("Opendaylight Node Information");
+    protected String ResolvedBundle2 = new String("JDMK 5.1");
 
     /**
      * Variable for storing the value of "ResolvedBundle1". The variable is
      * identified by: "1.3.6.1.3.1.1.6.1".
-     *
-     * "To be done"
-     *
      */
-    protected String ResolvedBundle1 = new String("Opendaylight Node Information");
+    protected String ResolvedBundle1 = new String("JDMK 5.1");
 
     /**
      * Variable for storing the value of "OdlKarafBundleListResolved". The
      * variable is identified by: "1.3.6.1.3.1.1.6.0".
-     *
-     * "To be done"
-     *
      */
-    protected String OdlKarafBundleListResolved = new String("Opendaylight Node Information");
+    protected String OdlKarafBundleListResolved = new String("JDMK 5.1");
 
     /**
      * Constructor for the "OdlCardinalBundleResolvedModule" group. If the group
