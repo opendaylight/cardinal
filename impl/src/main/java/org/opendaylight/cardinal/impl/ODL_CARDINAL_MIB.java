@@ -1,5 +1,5 @@
 /*
- * Copyright © 2015 TCS and others.  All rights reserved.
+ * Copyright © 2016 TCS and others.  All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v1.0 which accompanies this distribution,
@@ -7,8 +7,6 @@
  */
 package org.opendaylight.cardinal.impl;
 
-// java imports
-//
 import java.io.Serializable;
 import java.util.Hashtable;
 
@@ -55,7 +53,7 @@ public class ODL_CARDINAL_MIB extends SnmpMib implements Serializable {
         } catch (RuntimeException x) {
             throw x;
         } catch (Exception x) {
-            throw new RuntimeException(x);
+            throw new Error(x.getMessage());
         }
 
         isInitialized = true;
@@ -94,6 +92,20 @@ public class ODL_CARDINAL_MIB extends SnmpMib implements Serializable {
         if (objectserver == null)
             objectserver = new SnmpStandardObjectServer();
 
+        // Initialization of the "OdlCardinalProjectModule" group.
+        // To disable support of this group, redefine the
+        // "createOdlCardinalProjectModuleMetaNode()" factory method, and make
+        // it return "null"
+        //
+        initOdlCardinalProjectModule(server);
+
+        // Initialization of the "OdlCardinalKarafShellModule" group.
+        // To disable support of this group, redefine the
+        // "createOdlCardinalKarafShellModuleMetaNode()" factory method, and
+        // make it return "null"
+        //
+        initOdlCardinalKarafShellModule(server);
+
         // Initialization of the "OdlCardinalBundleResolvedModule" group.
         // To disable support of this group, redefine the
         // "createOdlCardinalBundleResolvedModuleMetaNode()" factory method, and
@@ -129,6 +141,13 @@ public class ODL_CARDINAL_MIB extends SnmpMib implements Serializable {
         //
         initOdlCardinalFeatureInstallModule(server);
 
+        // Initialization of the "OdlOpenFlowStats" group.
+        // To disable support of this group, redefine the
+        // "createOdlOpenFlowStatsMetaNode()" factory method, and make it return
+        // "null"
+        //
+        initOdlOpenFlowStats(server);
+
         // Initialization of the "OdlCardinalMainModule" group.
         // To disable support of this group, redefine the
         // "createOdlCardinalMainModuleMetaNode()" factory method, and make it
@@ -136,21 +155,207 @@ public class ODL_CARDINAL_MIB extends SnmpMib implements Serializable {
         //
         initOdlCardinalMainModule(server);
 
-        // Initialization of the "OdlCardinalProjectModule" group.
-        // To disable support of this group, redefine the
-        // "createOdlCardinalProjectModuleMetaNode()" factory method, and make
-        // it return "null"
-        //
-        initOdlCardinalProjectModule(server);
-
-        // Initialization of the "OdlCardinalKarafShellModule" group.
-        // To disable support of this group, redefine the
-        // "createOdlCardinalKarafShellModuleMetaNode()" factory method, and
-        // make it return "null"
-        //
-        initOdlCardinalKarafShellModule(server);
-
         isInitialized = true;
+    }
+
+    // ------------------------------------------------------------
+    //
+    // Initialization of the "OdlCardinalProjectModule" group.
+    //
+    // ------------------------------------------------------------
+
+    /**
+     * Initialization of the "OdlCardinalProjectModule" group.
+     * 
+     * To disable support of this group, redefine the
+     * "createOdlCardinalProjectModuleMetaNode()" factory method, and make it
+     * return "null"
+     * 
+     * @param server
+     *            MBeanServer for this group (may be null)
+     * 
+     **/
+    protected void initOdlCardinalProjectModule(MBeanServer server) throws Exception {
+        final String oid = getGroupOid("OdlCardinalProjectModule", "1.3.6.1.3.1.1.8");
+        ObjectName objname = null;
+        if (server != null) {
+            objname = getGroupObjectName("OdlCardinalProjectModule", oid, mibName + ":name=OdlCardinalProjectModule");
+        }
+        final OdlCardinalProjectModuleMeta meta = createOdlCardinalProjectModuleMetaNode("OdlCardinalProjectModule",
+                oid, objname, server);
+        if (meta != null) {
+            meta.registerTableNodes(this, server);
+
+            // Note that when using standard metadata,
+            // the returned object must implement the
+            // "OdlCardinalProjectModuleMBean"
+            // interface.
+            //
+            final OdlCardinalProjectModuleMBean group = (OdlCardinalProjectModuleMBean) createOdlCardinalProjectModuleMBean(
+                    "OdlCardinalProjectModule", oid, objname, server);
+            meta.setInstance(group);
+            registerGroupNode("OdlCardinalProjectModule", oid, objname, meta, group, server);
+        }
+    }
+
+    /**
+     * Factory method for "OdlCardinalProjectModule" group metadata class.
+     * 
+     * You can redefine this method if you need to replace the default generated
+     * metadata class with your own customized class.
+     * 
+     * @param groupName
+     *            Name of the group ("OdlCardinalProjectModule")
+     * @param groupOid
+     *            OID of this group
+     * @param groupObjname
+     *            ObjectName for this group (may be null)
+     * @param server
+     *            MBeanServer for this group (may be null)
+     * 
+     * @return An instance of the metadata class generated for the
+     *         "OdlCardinalProjectModule" group (OdlCardinalProjectModuleMeta)
+     * 
+     **/
+    protected OdlCardinalProjectModuleMeta createOdlCardinalProjectModuleMetaNode(String groupName, String groupOid,
+            ObjectName groupObjname, MBeanServer server) {
+        return new OdlCardinalProjectModuleMeta(this, objectserver);
+    }
+
+    /**
+     * Factory method for "OdlCardinalProjectModule" group MBean.
+     * 
+     * You can redefine this method if you need to replace the default generated
+     * MBean class with your own customized class.
+     * 
+     * @param groupName
+     *            Name of the group ("OdlCardinalProjectModule")
+     * @param groupOid
+     *            OID of this group
+     * @param groupObjname
+     *            ObjectName for this group (may be null)
+     * @param server
+     *            MBeanServer for this group (may be null)
+     * 
+     * @return An instance of the MBean class generated for the
+     *         "OdlCardinalProjectModule" group (OdlCardinalProjectModule)
+     * 
+     *         Note that when using standard metadata, the returned object must
+     *         implement the "OdlCardinalProjectModuleMBean" interface.
+     **/
+    protected Object createOdlCardinalProjectModuleMBean(String groupName, String groupOid, ObjectName groupObjname,
+            MBeanServer server) {
+
+        // Note that when using standard metadata,
+        // the returned object must implement the
+        // "OdlCardinalProjectModuleMBean"
+        // interface.
+        //
+        if (server != null)
+            return new OdlCardinalProjectModule(this, server);
+        else
+            return new OdlCardinalProjectModule(this);
+    }
+
+    // ------------------------------------------------------------
+    //
+    // Initialization of the "OdlCardinalKarafShellModule" group.
+    //
+    // ------------------------------------------------------------
+
+    /**
+     * Initialization of the "OdlCardinalKarafShellModule" group.
+     * 
+     * To disable support of this group, redefine the
+     * "createOdlCardinalKarafShellModuleMetaNode()" factory method, and make it
+     * return "null"
+     * 
+     * @param server
+     *            MBeanServer for this group (may be null)
+     * 
+     **/
+    protected void initOdlCardinalKarafShellModule(MBeanServer server) throws Exception {
+        final String oid = getGroupOid("OdlCardinalKarafShellModule", "1.3.6.1.3.1.1.7");
+        ObjectName objname = null;
+        if (server != null) {
+            objname = getGroupObjectName("OdlCardinalKarafShellModule", oid,
+                    mibName + ":name=OdlCardinalKarafShellModule");
+        }
+        final OdlCardinalKarafShellModuleMeta meta = createOdlCardinalKarafShellModuleMetaNode(
+                "OdlCardinalKarafShellModule", oid, objname, server);
+        if (meta != null) {
+            meta.registerTableNodes(this, server);
+
+            // Note that when using standard metadata,
+            // the returned object must implement the
+            // "OdlCardinalKarafShellModuleMBean"
+            // interface.
+            //
+            final OdlCardinalKarafShellModuleMBean group = (OdlCardinalKarafShellModuleMBean) createOdlCardinalKarafShellModuleMBean(
+                    "OdlCardinalKarafShellModule", oid, objname, server);
+            meta.setInstance(group);
+            registerGroupNode("OdlCardinalKarafShellModule", oid, objname, meta, group, server);
+        }
+    }
+
+    /**
+     * Factory method for "OdlCardinalKarafShellModule" group metadata class.
+     * 
+     * You can redefine this method if you need to replace the default generated
+     * metadata class with your own customized class.
+     * 
+     * @param groupName
+     *            Name of the group ("OdlCardinalKarafShellModule")
+     * @param groupOid
+     *            OID of this group
+     * @param groupObjname
+     *            ObjectName for this group (may be null)
+     * @param server
+     *            MBeanServer for this group (may be null)
+     * 
+     * @return An instance of the metadata class generated for the
+     *         "OdlCardinalKarafShellModule" group
+     *         (OdlCardinalKarafShellModuleMeta)
+     * 
+     **/
+    protected OdlCardinalKarafShellModuleMeta createOdlCardinalKarafShellModuleMetaNode(String groupName,
+            String groupOid, ObjectName groupObjname, MBeanServer server) {
+        return new OdlCardinalKarafShellModuleMeta(this, objectserver);
+    }
+
+    /**
+     * Factory method for "OdlCardinalKarafShellModule" group MBean.
+     * 
+     * You can redefine this method if you need to replace the default generated
+     * MBean class with your own customized class.
+     * 
+     * @param groupName
+     *            Name of the group ("OdlCardinalKarafShellModule")
+     * @param groupOid
+     *            OID of this group
+     * @param groupObjname
+     *            ObjectName for this group (may be null)
+     * @param server
+     *            MBeanServer for this group (may be null)
+     * 
+     * @return An instance of the MBean class generated for the
+     *         "OdlCardinalKarafShellModule" group (OdlCardinalKarafShellModule)
+     * 
+     *         Note that when using standard metadata, the returned object must
+     *         implement the "OdlCardinalKarafShellModuleMBean" interface.
+     **/
+    protected Object createOdlCardinalKarafShellModuleMBean(String groupName, String groupOid, ObjectName groupObjname,
+            MBeanServer server) {
+
+        // Note that when using standard metadata,
+        // the returned object must implement the
+        // "OdlCardinalKarafShellModuleMBean"
+        // interface.
+        //
+        if (server != null)
+            return new OdlCardinalKarafShellModule(this, server);
+        else
+            return new OdlCardinalKarafShellModule(this);
     }
 
     // ------------------------------------------------------------
@@ -669,6 +874,102 @@ public class ODL_CARDINAL_MIB extends SnmpMib implements Serializable {
 
     // ------------------------------------------------------------
     //
+    // Initialization of the "OdlOpenFlowStats" group.
+    //
+    // ------------------------------------------------------------
+
+    /**
+     * Initialization of the "OdlOpenFlowStats" group.
+     * 
+     * To disable support of this group, redefine the
+     * "createOdlOpenFlowStatsMetaNode()" factory method, and make it return
+     * "null"
+     * 
+     * @param server
+     *            MBeanServer for this group (may be null)
+     * 
+     **/
+    protected void initOdlOpenFlowStats(MBeanServer server) throws Exception {
+        final String oid = getGroupOid("OdlOpenFlowStats", "1.3.6.1.3.1.1.11");
+        ObjectName objname = null;
+        if (server != null) {
+            objname = getGroupObjectName("OdlOpenFlowStats", oid, mibName + ":name=OdlOpenFlowStats");
+        }
+        final OdlOpenFlowStatsMeta meta = createOdlOpenFlowStatsMetaNode("OdlOpenFlowStats", oid, objname, server);
+        if (meta != null) {
+            meta.registerTableNodes(this, server);
+
+            // Note that when using standard metadata,
+            // the returned object must implement the "OdlOpenFlowStatsMBean"
+            // interface.
+            //
+            final OdlOpenFlowStatsMBean group = (OdlOpenFlowStatsMBean) createOdlOpenFlowStatsMBean("OdlOpenFlowStats",
+                    oid, objname, server);
+            meta.setInstance(group);
+            registerGroupNode("OdlOpenFlowStats", oid, objname, meta, group, server);
+        }
+    }
+
+    /**
+     * Factory method for "OdlOpenFlowStats" group metadata class.
+     * 
+     * You can redefine this method if you need to replace the default generated
+     * metadata class with your own customized class.
+     * 
+     * @param groupName
+     *            Name of the group ("OdlOpenFlowStats")
+     * @param groupOid
+     *            OID of this group
+     * @param groupObjname
+     *            ObjectName for this group (may be null)
+     * @param server
+     *            MBeanServer for this group (may be null)
+     * 
+     * @return An instance of the metadata class generated for the
+     *         "OdlOpenFlowStats" group (OdlOpenFlowStatsMeta)
+     * 
+     **/
+    protected OdlOpenFlowStatsMeta createOdlOpenFlowStatsMetaNode(String groupName, String groupOid,
+            ObjectName groupObjname, MBeanServer server) {
+        return new OdlOpenFlowStatsMeta(this, objectserver);
+    }
+
+    /**
+     * Factory method for "OdlOpenFlowStats" group MBean.
+     * 
+     * You can redefine this method if you need to replace the default generated
+     * MBean class with your own customized class.
+     * 
+     * @param groupName
+     *            Name of the group ("OdlOpenFlowStats")
+     * @param groupOid
+     *            OID of this group
+     * @param groupObjname
+     *            ObjectName for this group (may be null)
+     * @param server
+     *            MBeanServer for this group (may be null)
+     * 
+     * @return An instance of the MBean class generated for the
+     *         "OdlOpenFlowStats" group (OdlOpenFlowStats)
+     * 
+     *         Note that when using standard metadata, the returned object must
+     *         implement the "OdlOpenFlowStatsMBean" interface.
+     **/
+    protected Object createOdlOpenFlowStatsMBean(String groupName, String groupOid, ObjectName groupObjname,
+            MBeanServer server) {
+
+        // Note that when using standard metadata,
+        // the returned object must implement the "OdlOpenFlowStatsMBean"
+        // interface.
+        //
+        if (server != null)
+            return new OdlOpenFlowStats(this, server);
+        else
+            return new OdlOpenFlowStats(this);
+    }
+
+    // ------------------------------------------------------------
+    //
     // Initialization of the "OdlCardinalMainModule" group.
     //
     // ------------------------------------------------------------
@@ -763,206 +1064,6 @@ public class ODL_CARDINAL_MIB extends SnmpMib implements Serializable {
             return new OdlCardinalMainModule(this, server);
         else
             return new OdlCardinalMainModule(this);
-    }
-
-    // ------------------------------------------------------------
-    //
-    // Initialization of the "OdlCardinalProjectModule" group.
-    //
-    // ------------------------------------------------------------
-
-    /**
-     * Initialization of the "OdlCardinalProjectModule" group.
-     * 
-     * To disable support of this group, redefine the
-     * "createOdlCardinalProjectModuleMetaNode()" factory method, and make it
-     * return "null"
-     * 
-     * @param server
-     *            MBeanServer for this group (may be null)
-     * 
-     **/
-    protected void initOdlCardinalProjectModule(MBeanServer server) throws Exception {
-        final String oid = getGroupOid("OdlCardinalProjectModule", "1.3.6.1.3.1.1.8");
-        ObjectName objname = null;
-        if (server != null) {
-            objname = getGroupObjectName("OdlCardinalProjectModule", oid, mibName + ":name=OdlCardinalProjectModule");
-        }
-        final OdlCardinalProjectModuleMeta meta = createOdlCardinalProjectModuleMetaNode("OdlCardinalProjectModule",
-                oid, objname, server);
-        if (meta != null) {
-            meta.registerTableNodes(this, server);
-
-            // Note that when using standard metadata,
-            // the returned object must implement the
-            // "OdlCardinalProjectModuleMBean"
-            // interface.
-            //
-            final OdlCardinalProjectModuleMBean group = (OdlCardinalProjectModuleMBean) createOdlCardinalProjectModuleMBean(
-                    "OdlCardinalProjectModule", oid, objname, server);
-            meta.setInstance(group);
-            registerGroupNode("OdlCardinalProjectModule", oid, objname, meta, group, server);
-        }
-    }
-
-    /**
-     * Factory method for "OdlCardinalProjectModule" group metadata class.
-     * 
-     * You can redefine this method if you need to replace the default generated
-     * metadata class with your own customized class.
-     * 
-     * @param groupName
-     *            Name of the group ("OdlCardinalProjectModule")
-     * @param groupOid
-     *            OID of this group
-     * @param groupObjname
-     *            ObjectName for this group (may be null)
-     * @param server
-     *            MBeanServer for this group (may be null)
-     * 
-     * @return An instance of the metadata class generated for the
-     *         "OdlCardinalProjectModule" group (OdlCardinalProjectModuleMeta)
-     * 
-     **/
-    protected OdlCardinalProjectModuleMeta createOdlCardinalProjectModuleMetaNode(String groupName, String groupOid,
-            ObjectName groupObjname, MBeanServer server) {
-        return new OdlCardinalProjectModuleMeta(this, objectserver);
-    }
-
-    /**
-     * Factory method for "OdlCardinalProjectModule" group MBean.
-     * 
-     * You can redefine this method if you need to replace the default generated
-     * MBean class with your own customized class.
-     * 
-     * @param groupName
-     *            Name of the group ("OdlCardinalProjectModule")
-     * @param groupOid
-     *            OID of this group
-     * @param groupObjname
-     *            ObjectName for this group (may be null)
-     * @param server
-     *            MBeanServer for this group (may be null)
-     * 
-     * @return An instance of the MBean class generated for the
-     *         "OdlCardinalProjectModule" group (OdlCardinalProjectModule)
-     * 
-     *         Note that when using standard metadata, the returned object must
-     *         implement the "OdlCardinalProjectModuleMBean" interface.
-     **/
-    protected Object createOdlCardinalProjectModuleMBean(String groupName, String groupOid, ObjectName groupObjname,
-            MBeanServer server) {
-
-        // Note that when using standard metadata,
-        // the returned object must implement the
-        // "OdlCardinalProjectModuleMBean"
-        // interface.
-        //
-        if (server != null)
-            return new OdlCardinalProjectModule(this, server);
-        else
-            return new OdlCardinalProjectModule(this);
-    }
-
-    // ------------------------------------------------------------
-    //
-    // Initialization of the "OdlCardinalKarafShellModule" group.
-    //
-    // ------------------------------------------------------------
-
-    /**
-     * Initialization of the "OdlCardinalKarafShellModule" group.
-     * 
-     * To disable support of this group, redefine the
-     * "createOdlCardinalKarafShellModuleMetaNode()" factory method, and make it
-     * return "null"
-     * 
-     * @param server
-     *            MBeanServer for this group (may be null)
-     * 
-     **/
-    protected void initOdlCardinalKarafShellModule(MBeanServer server) throws Exception {
-        final String oid = getGroupOid("OdlCardinalKarafShellModule", "1.3.6.1.3.1.1.7");
-        ObjectName objname = null;
-        if (server != null) {
-            objname = getGroupObjectName("OdlCardinalKarafShellModule", oid,
-                    mibName + ":name=OdlCardinalKarafShellModule");
-        }
-        final OdlCardinalKarafShellModuleMeta meta = createOdlCardinalKarafShellModuleMetaNode(
-                "OdlCardinalKarafShellModule", oid, objname, server);
-        if (meta != null) {
-            meta.registerTableNodes(this, server);
-
-            // Note that when using standard metadata,
-            // the returned object must implement the
-            // "OdlCardinalKarafShellModuleMBean"
-            // interface.
-            //
-            final OdlCardinalKarafShellModuleMBean group = (OdlCardinalKarafShellModuleMBean) createOdlCardinalKarafShellModuleMBean(
-                    "OdlCardinalKarafShellModule", oid, objname, server);
-            meta.setInstance(group);
-            registerGroupNode("OdlCardinalKarafShellModule", oid, objname, meta, group, server);
-        }
-    }
-
-    /**
-     * Factory method for "OdlCardinalKarafShellModule" group metadata class.
-     * 
-     * You can redefine this method if you need to replace the default generated
-     * metadata class with your own customized class.
-     * 
-     * @param groupName
-     *            Name of the group ("OdlCardinalKarafShellModule")
-     * @param groupOid
-     *            OID of this group
-     * @param groupObjname
-     *            ObjectName for this group (may be null)
-     * @param server
-     *            MBeanServer for this group (may be null)
-     * 
-     * @return An instance of the metadata class generated for the
-     *         "OdlCardinalKarafShellModule" group
-     *         (OdlCardinalKarafShellModuleMeta)
-     * 
-     **/
-    protected OdlCardinalKarafShellModuleMeta createOdlCardinalKarafShellModuleMetaNode(String groupName,
-            String groupOid, ObjectName groupObjname, MBeanServer server) {
-        return new OdlCardinalKarafShellModuleMeta(this, objectserver);
-    }
-
-    /**
-     * Factory method for "OdlCardinalKarafShellModule" group MBean.
-     * 
-     * You can redefine this method if you need to replace the default generated
-     * MBean class with your own customized class.
-     * 
-     * @param groupName
-     *            Name of the group ("OdlCardinalKarafShellModule")
-     * @param groupOid
-     *            OID of this group
-     * @param groupObjname
-     *            ObjectName for this group (may be null)
-     * @param server
-     *            MBeanServer for this group (may be null)
-     * 
-     * @return An instance of the MBean class generated for the
-     *         "OdlCardinalKarafShellModule" group (OdlCardinalKarafShellModule)
-     * 
-     *         Note that when using standard metadata, the returned object must
-     *         implement the "OdlCardinalKarafShellModuleMBean" interface.
-     **/
-    protected Object createOdlCardinalKarafShellModuleMBean(String groupName, String groupOid, ObjectName groupObjname,
-            MBeanServer server) {
-
-        // Note that when using standard metadata,
-        // the returned object must implement the
-        // "OdlCardinalKarafShellModuleMBean"
-        // interface.
-        //
-        if (server != null)
-            return new OdlCardinalKarafShellModule(this, server);
-        else
-            return new OdlCardinalKarafShellModule(this);
     }
 
     // ------------------------------------------------------------

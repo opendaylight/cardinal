@@ -66,7 +66,7 @@ public class OdlCardinalMainModuleMetaTest {
 
     @Test
     public void getAttributeNameTest() throws Exception {
-        long arc[] = { 1, 2, 3, 4, 5, 6, 11, 36 };
+        long arc[] = { 1, 2, 3, 4, 5, 6 };
         for (long i : arc) {
             String ocpm = odlCardinalMainModuleMeta.getAttributeName(i);
             assertTrue(ocpm.contains("OdlSystemOdlNodeInfo") | ocpm.contains("OdlSystemOdlUptime")
@@ -100,10 +100,7 @@ public class OdlCardinalMainModuleMetaTest {
         Object data = null;
         int pduVersion = 2;
         for (long i : arc) {
-            if (i == 36) {
-                boolean ocpm = odlCardinalMainModuleMeta.skipVariable(i, data, pduVersion);
-                assertEquals(true, ocpm);
-            } else {
+            if (i == 1) {
                 boolean ocpm = odlCardinalMainModuleMeta.skipVariable(i, data, pduVersion);
                 assertEquals(false, ocpm);
             }

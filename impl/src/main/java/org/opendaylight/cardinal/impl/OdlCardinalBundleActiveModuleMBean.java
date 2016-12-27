@@ -1,5 +1,5 @@
 /*
- * Copyright © 2015 TCS and others.  All rights reserved.
+ * Copyright © 2016 TCS and others.  All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v1.0 which accompanies this distribution,
@@ -7,8 +7,6 @@
  */
 package org.opendaylight.cardinal.impl;
 
-// jmx imports
-//
 import com.sun.management.snmp.SnmpStatusException;
 
 /**
@@ -168,18 +166,18 @@ public interface OdlCardinalBundleActiveModuleMBean {
     public void checkActivebundle1(String x) throws SnmpStatusException;
 
     /**
-     * Getter for the "OdlKarafBundleListActive" variable.
+     * Getter for the "OdKarafBundleListActive" variable.
      */
-    public String getOdlKarafBundleListActive() throws SnmpStatusException;
+    public String getOdKarafBundleListActive() throws SnmpStatusException;
 
     /**
-     * Setter for the "OdlKarafBundleListActive" variable.
+     * Setter for the "OdKarafBundleListActive" variable.
      */
-    public void setOdlKarafBundleListActive(String x) throws SnmpStatusException;
+    public void setOdKarafBundleListActive(String x) throws SnmpStatusException;
 
     /**
-     * Checker for the "OdlKarafBundleListActive" variable.
+     * Checker for the "OdKarafBundleListActive" variable.
      */
-    public void checkOdlKarafBundleListActive(String x) throws SnmpStatusException;
+    public void checkOdKarafBundleListActive(String x) throws SnmpStatusException;
 
 }

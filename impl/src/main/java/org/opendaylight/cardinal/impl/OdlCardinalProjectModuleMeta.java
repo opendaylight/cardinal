@@ -1,5 +1,5 @@
 /*
- * Copyright © 2015 TCS and others.  All rights reserved.
+ * Copyright © 2016 TCS and others.  All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v1.0 which accompanies this distribution,
@@ -7,15 +7,25 @@
  */
 package org.opendaylight.cardinal.impl;
 
-// java imports
-//
 import java.io.Serializable;
 
 // jmx imports
 //
 import javax.management.MBeanServer;
+import com.sun.management.snmp.SnmpCounter;
+import com.sun.management.snmp.SnmpCounter64;
+import com.sun.management.snmp.SnmpGauge;
+import com.sun.management.snmp.SnmpInt;
+import com.sun.management.snmp.SnmpUnsignedInt;
+import com.sun.management.snmp.SnmpIpAddress;
+import com.sun.management.snmp.SnmpTimeticks;
+import com.sun.management.snmp.SnmpOpaque;
 import com.sun.management.snmp.SnmpString;
+import com.sun.management.snmp.SnmpStringFixed;
+import com.sun.management.snmp.SnmpOid;
+import com.sun.management.snmp.SnmpNull;
 import com.sun.management.snmp.SnmpValue;
+import com.sun.management.snmp.SnmpVarBind;
 import com.sun.management.snmp.SnmpStatusException;
 
 // jdmk imports
@@ -26,6 +36,8 @@ import com.sun.management.snmp.agent.SnmpStandardObjectServer;
 import com.sun.management.snmp.agent.SnmpStandardMetaServer;
 import com.sun.management.snmp.agent.SnmpMibSubRequest;
 import com.sun.management.snmp.agent.SnmpMibTable;
+import com.sun.management.snmp.EnumRowStatus;
+import com.sun.management.snmp.SnmpDefinitions;
 
 /**
  * The class is used for representing SNMP metadata for the
@@ -40,13 +52,13 @@ public class OdlCardinalProjectModuleMeta extends SnmpMibGroup implements Serial
     public OdlCardinalProjectModuleMeta(SnmpMib myMib, SnmpStandardObjectServer objserv) {
         objectserver = objserv;
         try {
-            registerObject(18);
             registerObject(17);
             registerObject(16);
             registerObject(15);
             registerObject(14);
             registerObject(13);
             registerObject(12);
+            registerObject(11);
             registerObject(10);
             registerObject(9);
             registerObject(8);
@@ -59,7 +71,7 @@ public class OdlCardinalProjectModuleMeta extends SnmpMibGroup implements Serial
             registerObject(1);
             registerObject(0);
         } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -68,25 +80,25 @@ public class OdlCardinalProjectModuleMeta extends SnmpMibGroup implements Serial
      */
     public SnmpValue get(long var, Object data) throws SnmpStatusException {
         switch ((int) var) {
-        case 18:
+        case 17:
             return new SnmpString(node.getOdlMDSALBGPBMPinfo());
 
-        case 17:
+        case 16:
             return new SnmpString(node.getOdlMDSALBGPRIBInfo());
 
-        case 16:
+        case 15:
             return new SnmpString(node.getOdlMDSALBGPPeerInfo());
 
-        case 15:
+        case 14:
             return new SnmpString(node.getOdlMDSALOpenFlowOVSconnectedDevices());
 
-        case 14:
+        case 13:
             return new SnmpString(node.getOdlMDSALIotDMlistofNodes());
 
-        case 13:
+        case 12:
             return new SnmpString(node.getOdlMDSALIotDMlistofAEs());
 
-        case 12:
+        case 11:
             return new SnmpString(node.getOdlMDSALIotDMListofcse());
 
         case 10:
@@ -133,7 +145,7 @@ public class OdlCardinalProjectModuleMeta extends SnmpMibGroup implements Serial
      */
     public SnmpValue set(SnmpValue x, long var, Object data) throws SnmpStatusException {
         switch ((int) var) {
-        case 18:
+        case 17:
             if (x instanceof SnmpString) {
                 node.setOdlMDSALBGPBMPinfo(((SnmpString) x).toString());
                 return new SnmpString(node.getOdlMDSALBGPBMPinfo());
@@ -141,7 +153,7 @@ public class OdlCardinalProjectModuleMeta extends SnmpMibGroup implements Serial
                 throw new SnmpStatusException(SnmpStatusException.snmpRspWrongType);
             }
 
-        case 17:
+        case 16:
             if (x instanceof SnmpString) {
                 node.setOdlMDSALBGPRIBInfo(((SnmpString) x).toString());
                 return new SnmpString(node.getOdlMDSALBGPRIBInfo());
@@ -149,7 +161,7 @@ public class OdlCardinalProjectModuleMeta extends SnmpMibGroup implements Serial
                 throw new SnmpStatusException(SnmpStatusException.snmpRspWrongType);
             }
 
-        case 16:
+        case 15:
             if (x instanceof SnmpString) {
                 node.setOdlMDSALBGPPeerInfo(((SnmpString) x).toString());
                 return new SnmpString(node.getOdlMDSALBGPPeerInfo());
@@ -157,7 +169,7 @@ public class OdlCardinalProjectModuleMeta extends SnmpMibGroup implements Serial
                 throw new SnmpStatusException(SnmpStatusException.snmpRspWrongType);
             }
 
-        case 15:
+        case 14:
             if (x instanceof SnmpString) {
                 node.setOdlMDSALOpenFlowOVSconnectedDevices(((SnmpString) x).toString());
                 return new SnmpString(node.getOdlMDSALOpenFlowOVSconnectedDevices());
@@ -165,7 +177,7 @@ public class OdlCardinalProjectModuleMeta extends SnmpMibGroup implements Serial
                 throw new SnmpStatusException(SnmpStatusException.snmpRspWrongType);
             }
 
-        case 14:
+        case 13:
             if (x instanceof SnmpString) {
                 node.setOdlMDSALIotDMlistofNodes(((SnmpString) x).toString());
                 return new SnmpString(node.getOdlMDSALIotDMlistofNodes());
@@ -173,7 +185,7 @@ public class OdlCardinalProjectModuleMeta extends SnmpMibGroup implements Serial
                 throw new SnmpStatusException(SnmpStatusException.snmpRspWrongType);
             }
 
-        case 13:
+        case 12:
             if (x instanceof SnmpString) {
                 node.setOdlMDSALIotDMlistofAEs(((SnmpString) x).toString());
                 return new SnmpString(node.getOdlMDSALIotDMlistofAEs());
@@ -181,7 +193,7 @@ public class OdlCardinalProjectModuleMeta extends SnmpMibGroup implements Serial
                 throw new SnmpStatusException(SnmpStatusException.snmpRspWrongType);
             }
 
-        case 12:
+        case 11:
             if (x instanceof SnmpString) {
                 node.setOdlMDSALIotDMListofcse(((SnmpString) x).toString());
                 return new SnmpString(node.getOdlMDSALIotDMListofcse());
@@ -288,7 +300,7 @@ public class OdlCardinalProjectModuleMeta extends SnmpMibGroup implements Serial
      */
     public void check(SnmpValue x, long var, Object data) throws SnmpStatusException {
         switch ((int) var) {
-        case 18:
+        case 17:
             if (x instanceof SnmpString) {
                 node.checkOdlMDSALBGPBMPinfo(((SnmpString) x).toString());
             } else {
@@ -296,7 +308,7 @@ public class OdlCardinalProjectModuleMeta extends SnmpMibGroup implements Serial
             }
             break;
 
-        case 17:
+        case 16:
             if (x instanceof SnmpString) {
                 node.checkOdlMDSALBGPRIBInfo(((SnmpString) x).toString());
             } else {
@@ -304,7 +316,7 @@ public class OdlCardinalProjectModuleMeta extends SnmpMibGroup implements Serial
             }
             break;
 
-        case 16:
+        case 15:
             if (x instanceof SnmpString) {
                 node.checkOdlMDSALBGPPeerInfo(((SnmpString) x).toString());
             } else {
@@ -312,7 +324,7 @@ public class OdlCardinalProjectModuleMeta extends SnmpMibGroup implements Serial
             }
             break;
 
-        case 15:
+        case 14:
             if (x instanceof SnmpString) {
                 node.checkOdlMDSALOpenFlowOVSconnectedDevices(((SnmpString) x).toString());
             } else {
@@ -320,7 +332,7 @@ public class OdlCardinalProjectModuleMeta extends SnmpMibGroup implements Serial
             }
             break;
 
-        case 14:
+        case 13:
             if (x instanceof SnmpString) {
                 node.checkOdlMDSALIotDMlistofNodes(((SnmpString) x).toString());
             } else {
@@ -328,7 +340,7 @@ public class OdlCardinalProjectModuleMeta extends SnmpMibGroup implements Serial
             }
             break;
 
-        case 13:
+        case 12:
             if (x instanceof SnmpString) {
                 node.checkOdlMDSALIotDMlistofAEs(((SnmpString) x).toString());
             } else {
@@ -336,7 +348,7 @@ public class OdlCardinalProjectModuleMeta extends SnmpMibGroup implements Serial
             }
             break;
 
-        case 12:
+        case 11:
             if (x instanceof SnmpString) {
                 node.checkOdlMDSALIotDMListofcse(((SnmpString) x).toString());
             } else {
@@ -483,13 +495,13 @@ public class OdlCardinalProjectModuleMeta extends SnmpMibGroup implements Serial
     public boolean isVariable(long arc) {
 
         switch ((int) arc) {
-        case 18:
         case 17:
         case 16:
         case 15:
         case 14:
         case 13:
         case 12:
+        case 11:
         case 10:
         case 9:
         case 8:
@@ -514,13 +526,13 @@ public class OdlCardinalProjectModuleMeta extends SnmpMibGroup implements Serial
     public boolean isReadable(long arc) {
 
         switch ((int) arc) {
-        case 18:
         case 17:
         case 16:
         case 15:
         case 14:
         case 13:
         case 12:
+        case 11:
         case 10:
         case 9:
         case 8:
@@ -556,25 +568,25 @@ public class OdlCardinalProjectModuleMeta extends SnmpMibGroup implements Serial
      */
     public String getAttributeName(long id) throws SnmpStatusException {
         switch ((int) id) {
-        case 18:
+        case 17:
             return "OdlMDSALBGPBMPinfo";
 
-        case 17:
+        case 16:
             return "OdlMDSALBGPRIBInfo";
 
-        case 16:
+        case 15:
             return "OdlMDSALBGPPeerInfo";
 
-        case 15:
+        case 14:
             return "OdlMDSALOpenFlowOVSconnectedDevices";
 
-        case 14:
+        case 13:
             return "OdlMDSALIotDMlistofNodes";
 
-        case 13:
+        case 12:
             return "OdlMDSALIotDMlistofAEs";
 
-        case 12:
+        case 11:
             return "OdlMDSALIotDMListofcse";
 
         case 10:

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2015 TCS and others.  All rights reserved.
+ * Copyright © 2016 TCS and others.  All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v1.0 which accompanies this distribution,
@@ -7,8 +7,6 @@
  */
 package org.opendaylight.cardinal.impl;
 
-// java imports
-//
 import java.io.Serializable;
 
 // jmx imports
@@ -30,47 +28,32 @@ public class OdlCardinalKarafShellModule implements OdlCardinalKarafShellModuleM
     /**
      * Variable for storing the value of "OdlKarafMaxHeapSize". The variable is
      * identified by: "1.3.6.1.3.1.1.7.4".
-     *
-     * "To be done"
-     *
      */
-    protected String OdlKarafMaxHeapSize = new String("Opendaylight Node Information");
+    protected String OdlKarafMaxHeapSize = new String("JDMK 5.1");
 
     /**
      * Variable for storing the value of "OdlKarafCurrentHeapSize". The variable
      * is identified by: "1.3.6.1.3.1.1.7.3".
-     *
-     * "To be done"
-     *
      */
-    protected String OdlKarafCurrentHeapSize = new String("Opendaylight Node Information");
+    protected String OdlKarafCurrentHeapSize = new String("JDMK 5.1");
 
     /**
      * Variable for storing the value of "OdlKarafPeakThreads". The variable is
      * identified by: "1.3.6.1.3.1.1.7.2".
-     *
-     * "To be done"
-     *
      */
-    protected String OdlKarafPeakThreads = new String("Opendaylight Node Information");
+    protected String OdlKarafPeakThreads = new String("JDMK 5.1");
 
     /**
      * Variable for storing the value of "OdlKarafDaemonThreads". The variable
      * is identified by: "1.3.6.1.3.1.1.7.1".
-     *
-     * "To be done"
-     *
      */
-    protected String OdlKarafDaemonThreads = new String("Opendaylight Node Information");
+    protected String OdlKarafDaemonThreads = new String("JDMK 5.1");
 
     /**
      * Variable for storing the value of "OdlKarafLiveThreads". The variable is
      * identified by: "1.3.6.1.3.1.1.7.0".
-     *
-     * "To be done"
-     *
      */
-    protected String OdlKarafLiveThreads = new String("Opendaylight Node Information");
+    protected String OdlKarafLiveThreads = new String("JDMK 5.1");
 
     /**
      * Constructor for the "OdlCardinalKarafShellModule" group. If the group

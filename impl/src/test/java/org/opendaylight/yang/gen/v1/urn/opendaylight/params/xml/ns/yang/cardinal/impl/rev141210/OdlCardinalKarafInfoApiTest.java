@@ -134,7 +134,8 @@ public class OdlCardinalKarafInfoApiTest {
         if (responsePDU != null) {
             CardinalKarafInfo cardinalKarafInfo = infoapi.getOidValues();
             if (cardinalKarafInfo != null) {
-                assertEquals(" Opendaylight Node Information", cardinalKarafInfo.getOdlKarafFeatureListInstalled1());
+
+                assertEquals(" JDMK 5.1", cardinalKarafInfo.getOdlKarafFeatureListInstalled1());
             }
         } else {
             assertNull(responsePDU);

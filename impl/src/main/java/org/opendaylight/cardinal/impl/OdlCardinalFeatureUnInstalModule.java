@@ -1,22 +1,17 @@
 /*
- * Copyright © 2015 TCS and others.  All rights reserved.
+ * Copyright © 2016 TCS and others.  All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v1.0 which accompanies this distribution,
  * and is available at http://www.eclipse.org/legal/epl-v10.html
  */
 package org.opendaylight.cardinal.impl;
-//
-
-//
-
-// java imports
-//
 import java.io.Serializable;
 
 // jmx imports
 //
 import javax.management.MBeanServer;
+import com.sun.management.snmp.SnmpString;
 import com.sun.management.snmp.SnmpStatusException;
 
 // jdmk imports
@@ -24,122 +19,89 @@ import com.sun.management.snmp.SnmpStatusException;
 import com.sun.management.snmp.agent.SnmpMib;
 
 /**
- * The class is used for implementing the "OdlCardinalFeatureUnInstalModule"
- * group. The group is defined with the following oid: 1.3.6.1.3.1.1.3.
+ * The class is used for implementing the "OdlCardinalFeatureUnInstalModule" group.
+ * The group is defined with the following oid: 1.3.6.1.3.1.1.3.
  */
 public class OdlCardinalFeatureUnInstalModule implements OdlCardinalFeatureUnInstalModuleMBean, Serializable {
 
     /**
-     * Variable for storing the value of "FeatureUnInstalled9". The variable is
-     * identified by: "1.3.6.1.3.1.1.3.9".
-     *
-     * "To be done"
-     *
+     * Variable for storing the value of "FeatureUnInstalled9".
+     * The variable is identified by: "1.3.6.1.3.1.1.3.9".
      */
-    protected String FeatureUnInstalled9 = new String("Opendaylight Node Information");
+    protected String FeatureUnInstalled9 = new String("JDMK 5.1");
 
     /**
-     * Variable for storing the value of "FeatureUnInstalled8". The variable is
-     * identified by: "1.3.6.1.3.1.1.3.8".
-     *
-     * "To be done"
-     *
+     * Variable for storing the value of "FeatureUnInstalled8".
+     * The variable is identified by: "1.3.6.1.3.1.1.3.8".
      */
-    protected String FeatureUnInstalled8 = new String("Opendaylight Node Information");
+    protected String FeatureUnInstalled8 = new String("JDMK 5.1");
 
     /**
-     * Variable for storing the value of "FeatureUnInstalled7". The variable is
-     * identified by: "1.3.6.1.3.1.1.3.7".
-     *
-     * "To be done"
-     *
+     * Variable for storing the value of "FeatureUnInstalled7".
+     * The variable is identified by: "1.3.6.1.3.1.1.3.7".
      */
-    protected String FeatureUnInstalled7 = new String("Opendaylight Node Information");
+    protected String FeatureUnInstalled7 = new String("JDMK 5.1");
 
     /**
-     * Variable for storing the value of "FeatureUnInstalled6". The variable is
-     * identified by: "1.3.6.1.3.1.1.3.6".
-     *
-     * "To be done"
-     *
+     * Variable for storing the value of "FeatureUnInstalled6".
+     * The variable is identified by: "1.3.6.1.3.1.1.3.6".
      */
-    protected String FeatureUnInstalled6 = new String("Opendaylight Node Information");
+    protected String FeatureUnInstalled6 = new String("JDMK 5.1");
 
     /**
-     * Variable for storing the value of "FeatureUnInstalled5". The variable is
-     * identified by: "1.3.6.1.3.1.1.3.5".
-     *
-     * "To be done"
-     *
+     * Variable for storing the value of "FeatureUnInstalled5".
+     * The variable is identified by: "1.3.6.1.3.1.1.3.5".
      */
-    protected String FeatureUnInstalled5 = new String("Opendaylight Node Information");
+    protected String FeatureUnInstalled5 = new String("JDMK 5.1");
 
     /**
-     * Variable for storing the value of "FeatureUnInstalled4". The variable is
-     * identified by: "1.3.6.1.3.1.1.3.4".
-     *
-     * "To be done"
-     *
+     * Variable for storing the value of "FeatureUnInstalled4".
+     * The variable is identified by: "1.3.6.1.3.1.1.3.4".
      */
-    protected String FeatureUnInstalled4 = new String("Opendaylight Node Information");
+    protected String FeatureUnInstalled4 = new String("JDMK 5.1");
 
     /**
-     * Variable for storing the value of "FeatureUnInstalled3". The variable is
-     * identified by: "1.3.6.1.3.1.1.3.3".
-     *
-     * "To be done"
-     *
+     * Variable for storing the value of "FeatureUnInstalled3".
+     * The variable is identified by: "1.3.6.1.3.1.1.3.3".
      */
-    protected String FeatureUnInstalled3 = new String("Opendaylight Node Information");
+    protected String FeatureUnInstalled3 = new String("JDMK 5.1");
 
     /**
-     * Variable for storing the value of "FeatureUnInstalled2". The variable is
-     * identified by: "1.3.6.1.3.1.1.3.2".
-     *
-     * "To be done"
-     *
+     * Variable for storing the value of "FeatureUnInstalled2".
+     * The variable is identified by: "1.3.6.1.3.1.1.3.2".
      */
-    protected String FeatureUnInstalled2 = new String("Opendaylight Node Information");
+    protected String FeatureUnInstalled2 = new String("JDMK 5.1");
 
     /**
-     * Variable for storing the value of "FeatureUnInstalled1". The variable is
-     * identified by: "1.3.6.1.3.1.1.3.1".
-     *
-     * "To be done"
-     *
+     * Variable for storing the value of "FeatureUnInstalled1".
+     * The variable is identified by: "1.3.6.1.3.1.1.3.1".
      */
-    protected String FeatureUnInstalled1 = new String("Opendaylight Node Information");
+    protected String FeatureUnInstalled1 = new String("JDMK 5.1");
 
     /**
-     * Variable for storing the value of "FeatureUnInstalled10". The variable is
-     * identified by: "1.3.6.1.3.1.1.3.10".
-     *
-     * "To be done"
-     *
+     * Variable for storing the value of "FeatureUnInstalled10".
+     * The variable is identified by: "1.3.6.1.3.1.1.3.10".
      */
-    protected String FeatureUnInstalled10 = new String("Opendaylight Node Information");
+    protected String FeatureUnInstalled10 = new String("JDMK 5.1");
 
     /**
-     * Variable for storing the value of "OdlKarafFeatureListUnInstalled". The
-     * variable is identified by: "1.3.6.1.3.1.1.3.0".
-     *
-     * "To be done"
-     *
+     * Variable for storing the value of "OdlKarafFeatureListUnInstalled".
+     * The variable is identified by: "1.3.6.1.3.1.1.3.0".
      */
-    protected String OdlKarafFeatureListUnInstalled = new String("Opendaylight Node Information");
+    protected String OdlKarafFeatureListUnInstalled = new String("JDMK 5.1");
+
 
     /**
-     * Constructor for the "OdlCardinalFeatureUnInstalModule" group. If the
-     * group contains a table, the entries created through an SNMP SET will not
-     * be registered in Java DMK.
+     * Constructor for the "OdlCardinalFeatureUnInstalModule" group.
+     * If the group contains a table, the entries created through an SNMP SET will not be registered in Java DMK.
      */
     public OdlCardinalFeatureUnInstalModule(SnmpMib myMib) {
     }
 
+
     /**
-     * Constructor for the "OdlCardinalFeatureUnInstalModule" group. If the
-     * group contains a table, the entries created through an SNMP SET will be
-     * AUTOMATICALLY REGISTERED in Java DMK.
+     * Constructor for the "OdlCardinalFeatureUnInstalModule" group.
+     * If the group contains a table, the entries created through an SNMP SET will be AUTOMATICALLY REGISTERED in Java DMK.
      */
     public OdlCardinalFeatureUnInstalModule(SnmpMib myMib, MBeanServer server) {
     }

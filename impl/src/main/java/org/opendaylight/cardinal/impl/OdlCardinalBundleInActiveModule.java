@@ -1,5 +1,5 @@
 /*
- * Copyright © 2015 TCS and others.  All rights reserved.
+ * Copyright © 2016 TCS and others.  All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v1.0 which accompanies this distribution,
@@ -7,8 +7,6 @@
  */
 package org.opendaylight.cardinal.impl;
 
-// java imports
-//
 import java.io.Serializable;
 
 // jmx imports
@@ -30,56 +28,38 @@ public class OdlCardinalBundleInActiveModule implements OdlCardinalBundleInActiv
     /**
      * Variable for storing the value of "InstalledBundle5". The variable is
      * identified by: "1.3.6.1.3.1.1.5.5".
-     *
-     * "To be done"
-     *
      */
-    protected String InstalledBundle5 = new String("Opendaylight Node Information");
+    protected String InstalledBundle5 = new String("JDMK 5.1");
 
     /**
      * Variable for storing the value of "InstalledBundle4". The variable is
      * identified by: "1.3.6.1.3.1.1.5.4".
-     *
-     * "To be done"
-     *
      */
-    protected String InstalledBundle4 = new String("Opendaylight Node Information");
+    protected String InstalledBundle4 = new String("JDMK 5.1");
 
     /**
      * Variable for storing the value of "InstalledBundle3". The variable is
      * identified by: "1.3.6.1.3.1.1.5.3".
-     *
-     * "To be done"
-     *
      */
-    protected String InstalledBundle3 = new String("Opendaylight Node Information");
+    protected String InstalledBundle3 = new String("JDMK 5.1");
 
     /**
      * Variable for storing the value of "InstalledBundle2". The variable is
      * identified by: "1.3.6.1.3.1.1.5.2".
-     *
-     * "To be done"
-     *
      */
-    protected String InstalledBundle2 = new String("Opendaylight Node Information");
+    protected String InstalledBundle2 = new String("JDMK 5.1");
 
     /**
      * Variable for storing the value of "InstalledBundle1". The variable is
      * identified by: "1.3.6.1.3.1.1.5.1".
-     *
-     * "To be done"
-     *
      */
-    protected String InstalledBundle1 = new String("Opendaylight Node Information");
+    protected String InstalledBundle1 = new String("JDMK 5.1");
 
     /**
      * Variable for storing the value of "OdlKarafBundleListInstalled". The
      * variable is identified by: "1.3.6.1.3.1.1.5.0".
-     *
-     * "To be done"
-     *
      */
-    protected String OdlKarafBundleListInstalled = new String("Opendaylight Node Information");
+    protected String OdlKarafBundleListInstalled = new String("JDMK 5.1");
 
     /**
      * Constructor for the "OdlCardinalBundleInActiveModule" group. If the group
