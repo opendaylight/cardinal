@@ -56,14 +56,13 @@ public class OpenflowDeviceManager implements DataChangeListener, AutoCloseable 
     private final RpcProviderRegistry rpcProviderRegistry;
     private ListenerRegistration<DataChangeListener> dataChangeListenerRegistration;
     SnmpSet set = new SnmpSet();
-    // OdlCardinalOpenflowInfoApi odlOpenflowApi = new
-    // OdlCardinalOpenflowInfoApi();
+    OdlCardinalOpenflowInfoApi odlOpenflowApi = new OdlCardinalOpenflowInfoApi();
     String status = "NotConnected";
     String openFlowNode = null;
 
     public OpenflowDeviceManager(DataBroker dataBroker, RpcProviderRegistry rpcProviderRegistry) {
         this.dataBroker = Preconditions.checkNotNull(dataBroker);
-        // odlOpenflowApi.setDataProvider(dataBroker);
+        odlOpenflowApi.setDataProvider(dataBroker);
         this.rpcProviderRegistry = Preconditions.checkNotNull(rpcProviderRegistry);
         dataChangeListenerRegistration = dataBroker.registerDataChangeListener(LogicalDatastoreType.OPERATIONAL,
                 NODE_IID, this, AsyncDataBroker.DataChangeScope.BASE);
@@ -109,7 +108,7 @@ public class OpenflowDeviceManager implements DataChangeListener, AutoCloseable 
                 // e.printStackTrace();
             }
 
-            // odlOpenflowApi.setValues();
+            odlOpenflowApi.setValues();
             LOG.info("{} Node(s) removed", removedPaths.size());
         }
 
@@ -191,7 +190,7 @@ public class OpenflowDeviceManager implements DataChangeListener, AutoCloseable 
                 set.setVariableString(".1.3.6.1.3.1.1.11.5.0", status);
                 set.setVariableString(".1.3.6.1.3.1.1.11.6.0", " ");
                 set.setVariableString(".1.3.6.1.3.1.1.11.7.0", " ");
-                // odlOpenflowApi.setValues();
+                odlOpenflowApi.setValues();
             } catch (Exception e) {
                 // TODO Auto-generated catch block
                 LOG.info("Start snmp daemon from root");
