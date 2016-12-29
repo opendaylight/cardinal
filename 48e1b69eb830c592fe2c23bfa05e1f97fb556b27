@@ -2,6 +2,75 @@
   "comments": [
     {
       "key": {
+        "uuid": "1a622d24_171aeb7c",
+        "filename": "features/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 3635
+      },
+      "writtenOn": "2016-12-29T03:33:10Z",
+      "side": 1,
+      "message": "Spacing here is not consistent with the rest of the file.  Please choose either spaces or tabs, preferably spaces...",
+      "range": {
+        "startLine": 132,
+        "startChar": 5,
+        "endLine": 138,
+        "endChar": 17
+      },
+      "revId": "48e1b69eb830c592fe2c23bfa05e1f97fb556b27",
+      "serverId": "7fc14799-209e-464c-9743-7a06c2c21a81",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a622d24_f71c8f79",
+        "filename": "features/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 3635
+      },
+      "writtenOn": "2016-12-29T03:33:10Z",
+      "side": 1,
+      "message": "This is not spaced correctly...",
+      "range": {
+        "startLine": 140,
+        "startChar": 0,
+        "endLine": 164,
+        "endChar": 13
+      },
+      "revId": "48e1b69eb830c592fe2c23bfa05e1f97fb556b27",
+      "serverId": "7fc14799-209e-464c-9743-7a06c2c21a81",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a622d24_5714634d",
+        "filename": "impl/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 3635
+      },
+      "writtenOn": "2016-12-29T03:33:10Z",
+      "side": 1,
+      "message": "Remove this dead space.",
+      "range": {
+        "startLine": 22,
+        "startChar": 0,
+        "endLine": 22,
+        "endChar": 1
+      },
+      "revId": "48e1b69eb830c592fe2c23bfa05e1f97fb556b27",
+      "serverId": "7fc14799-209e-464c-9743-7a06c2c21a81",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1a622d24_76f7fcf5",
         "filename": "impl/pom.xml",
         "patchSetId": 1
@@ -13,6 +82,24 @@
       "writtenOn": "2016-12-19T14:26:00Z",
       "side": 1,
       "message": "Why are so many properties are being introduced that are not used in this file?",
+      "revId": "48e1b69eb830c592fe2c23bfa05e1f97fb556b27",
+      "serverId": "7fc14799-209e-464c-9743-7a06c2c21a81",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a622d24_37172753",
+        "filename": "impl/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 3635
+      },
+      "writtenOn": "2016-12-29T03:33:10Z",
+      "side": 1,
+      "message": "Why are these separate patches?  Can they be combined into one?  If not, generally we recommend to introduce the necessary properties in the patch that utilizes the properties.  Furthermore, the community has taken the stance where inlining versions (or depending on the appropriate parent) is preferred over defining new properties.  This is due to the fact that a property is essentially a \"protected variable\" and overwritten in deriving poms.  Thus, if a project defines a property with the same name as a property in the parent hierarchy, then the child value will take precedence. This makes things very difficult when we are trying to bump a version across projects that specify a specific version do not get the update for free...",
+      "parentUuid": "1a622d24_dcfeefad",
       "revId": "48e1b69eb830c592fe2c23bfa05e1f97fb556b27",
       "serverId": "7fc14799-209e-464c-9743-7a06c2c21a81",
       "unresolved": false
