@@ -1,0 +1,82 @@
+module cardinal-openflow {
+    yang-version 1;
+    namespace "urn:opendaylight:params:xml:ns:yang:cardinal-openflow";
+    prefix "cardinal";
+    contact
+      "Preeti Pandey <pandey.preeti1@tcs.com>";
+
+    revision "2016-11-28" {
+        description "Initial revision of cardinal model";
+    }
+    typedef snmp-cardinal-get-type {
+        type enumeration {
+            enum SystemInfo {
+                value "1";
+            }
+            enum KarafInfo {
+                value "2";
+            }
+            enum OdlInfo {
+                value "3";
+            }
+            enum OpenflowInfo {
+                value "4";
+            }
+        }
+    }
+
+    grouping CardinalOpenflowInfogrouping {
+        list openflow {
+                leaf nodeName {
+                    type string;
+                    mandatory true;
+                }
+                leaf interface {
+                    type string;
+                    mandatory true;
+                }
+                leaf macAddress {
+                    type string;
+                    mandatory true;
+                }
+
+                leaf manufacturer {
+                    type string;
+                    mandatory true;
+                }
+
+                leaf status {
+                    type string;
+                    mandatory true;
+                }
+
+                leaf meterStats {
+                    type string;
+                    mandatory true;
+                }
+
+                leaf flowStats {
+                    type string;
+                    mandatory true;
+                }
+                config true;
+            }
+        }
+
+    container Devices {
+        uses CardinalOpenflowInfogrouping;
+        config true;
+    }
+
+    rpc CardinalOpenflowInfoRpc {
+        description "Cardinal openflow info api";
+        input {
+            leaf snmp-get-type {
+                type snmp-cardinal-get-type;
+            }
+        }
+        output {
+            uses CardinalOpenflowInfogrouping;
+        }
+    }
+}
