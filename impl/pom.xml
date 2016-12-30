@@ -24,7 +24,7 @@
         <yangtools.version>1.1.0-SNAPSHOT</yangtools.version>
         <dlux.version>0.5.0-SNAPSHOT</dlux.version>
         <configfile.directory>etc/opendaylight/karaf</configfile.directory>
-        <openflowplugin.version>0.3.3-SNAPSHOT</openflowplugin.version>
+        <openflowplugin.version>0.4.0-SNAPSHOT</openflowplugin.version>
         <feature.test.version>1.8.0-SNAPSHOT</feature.test.version>
     </properties>
     <dependencyManagement>
