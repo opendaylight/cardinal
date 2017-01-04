@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a622d24_096f62fe",
+        "filename": "impl/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 2046
+      },
+      "writtenOn": "2017-01-04T18:33:14Z",
+      "side": 1,
+      "message": "Single space would look better. (Same for lines 76 and 97.)",
+      "range": {
+        "startLine": 60,
+        "startChar": 23,
+        "endLine": 60,
+        "endChar": 27
+      },
+      "revId": "3362a26efeadade96fe01a80065027e49d8ba92a",
+      "serverId": "7fc14799-209e-464c-9743-7a06c2c21a81",
+      "unresolved": false
+    }
+  ]
+}
