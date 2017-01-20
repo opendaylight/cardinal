@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.opendaylight.yangtools.yang.binding.DataObject;
 import org.opendaylight.yangtools.yang.binding.InstanceIdentifier;
 
-public class OpenflowDeviceManagerTest {
+/*public class OpenflowDeviceManagerTest {
     private static final Logger LOG = LoggerFactory.getLogger(OpenflowDeviceManagerTest.class);
     @SuppressWarnings("unchecked")
     AsyncDataChangeEvent<InstanceIdentifier<?>, DataObject> change = mock(AsyncDataChangeEvent.class);
@@ -40,4 +40,4 @@ public class OpenflowDeviceManagerTest {
     public void closeTest() throws Exception {
         manager.close();
     }
-}
+}*/
