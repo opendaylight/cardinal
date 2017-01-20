@@ -22,6 +22,13 @@ import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.cardinal
 import org.opendaylight.yangtools.yang.binding.DataObject;
 import org.opendaylight.yangtools.yang.binding.InstanceIdentifier;
 import org.slf4j.LoggerFactory;
+import org.snmp4j.smi.OID;
+
+/**
+ *
+ * @author Subodh Roy
+ *
+ */
 
 public class OdlCardinalOpenflowInfoApi implements AutoCloseable {
 
@@ -30,6 +37,9 @@ public class OdlCardinalOpenflowInfoApi implements AutoCloseable {
     private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(OdlCardinalOpenflowInfoApi.class);
     public static final InstanceIdentifier<Devices> Cardinal_IID_OPENFLOW = InstanceIdentifier.builder(Devices.class)
             .build();
+    final OID sysDescr = new OID(".1.3.6.1.2.1.1.1.0");
+    final OID interfacesTable = new OID(".1.3.6.1.3.1.1.11.1");
+    List<Openflow> openflowlist = new ArrayList<Openflow>();
 
     public OdlCardinalOpenflowInfoApi() {
         // TODO Auto-generated constructor stub
@@ -69,6 +79,49 @@ public class OdlCardinalOpenflowInfoApi implements AutoCloseable {
             LOG.info("create - RPC data added to Operational datastore");
             txn.merge(LogicalDatastoreType.OPERATIONAL, Cardinal_IID_OPENFLOW, builder.build());
             txn.merge(LogicalDatastoreType.CONFIGURATION, Cardinal_IID_OPENFLOW, builder.build());
+            txn.submit();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public Devices getOvsValues() {
+        OpenflowBuilder flow = new OpenflowBuilder();
+        final OID interfacesTable = new OID(".1.3.6.1.3.1.1.11.1");
+        SimpleSnmpClient client = new SimpleSnmpClient("udp:127.0.0.1/2003");
+        List<List<String>> tableContents = client
+                .getTableAsStrings(new OID[] { new OID(interfacesTable.toString() + ".1"),
+                        new OID(interfacesTable.toString() + ".2"), new OID(interfacesTable.toString() + ".3"),
+                        new OID(interfacesTable.toString() + ".4"), new OID(interfacesTable.toString() + ".5") });
+        for (int i = 0; i < tableContents.size(); i++) {
+            String openFlowNode = tableContents.get(i).get(0);
+            String interfaceName = tableContents.get(i).get(1);
+            String macaddress = tableContents.get(i).get(2);
+            String manufacturer = tableContents.get(i).get(3);
+            String status = tableContents.get(i).get(4);
+            String openFlowStats = "";
+            String openFlowMeterstats = "";
+            flow.setNodeName(openFlowNode).setInterface(interfaceName).setMacAddress(macaddress)
+                    .setManufacturer(manufacturer).setStatus(status).setFlowStats(openFlowStats)
+                    .setMeterStats(openFlowMeterstats).build();
+            openflowlist.add(flow.build());
+        }
+        LOG.info("openflowlist {}:", openflowlist);
+        builder.setOpenflow(openflowlist);
+        return builder.build();
+    }
+
+    public boolean setOvsValues(Devices devices) {
+        LOG.info("devices {}:", devices);
+        WriteTransaction txn = dataProvider.newWriteOnlyTransaction();
+        if (txn != null) {
+            txn.put(LogicalDatastoreType.CONFIGURATION, Cardinal_IID_OPENFLOW, devices);
+            LOG.info("create - RPC data added to Configuration datastore");
+            txn.put(LogicalDatastoreType.OPERATIONAL, Cardinal_IID_OPENFLOW, devices);
+            LOG.info("create - RPC data added to Operational datastore");
+            txn.merge(LogicalDatastoreType.OPERATIONAL, Cardinal_IID_OPENFLOW, devices);
+            txn.merge(LogicalDatastoreType.CONFIGURATION, Cardinal_IID_OPENFLOW, devices);
             txn.submit();
             return true;
         } else {

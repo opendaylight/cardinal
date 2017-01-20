@@ -20,6 +20,7 @@ import org.opendaylight.cardinal.impl.OdlCardinalPolling;
 import org.opendaylight.cardinal.impl.OdlCardinalSendTrap;
 import org.opendaylight.cardinal.impl.OdlCardinalSetTrapReceiver;
 import org.opendaylight.cardinal.impl.SetCardinalMibValues;
+import org.opendaylight.cardinal.impl.SnmpAgent;
 import org.opendaylight.cardinal.impl.odlCardinalProjectManager;
 import org.slf4j.LoggerFactory;
 import com.sun.management.snmp.SnmpStatusException;
@@ -37,6 +38,8 @@ public class CardinalModule extends
     final OdlCardinalSetTrapReceiver cardinal = new OdlCardinalSetTrapReceiver();
     final OdlCardinalSendTrap sendTrap = new OdlCardinalSendTrap();
     final odlCardinalProjectManager pmanager = new odlCardinalProjectManager();
+    SnmpAgent agent;
+
     public CardinalModule(org.opendaylight.controller.config.api.ModuleIdentifier identifier,
             org.opendaylight.controller.config.api.DependencyResolver dependencyResolver) {
         super(identifier, dependencyResolver);
@@ -73,24 +76,25 @@ public class CardinalModule extends
         try {
 
             boolean settingFirstTimePassed = setSnmpValues.setMibValues();
-            if(settingFirstTimePassed){
-            cardinalApi.setValues();
-            manager.odlDaemonThreads();
-            manager.odlKarafBundleListActive();
-            manager.odlKarafBundleListInActive();
-            manager.odlKarafBundleListResolved();
-            manager.odlKarafCurrentHeapSize();
-            manager.odlKarafFeatureInstalled();
-            manager.odlKarafFeatureUnInstalled();
-            manager.odlKarafMaxHeapSize();
-            manager.odlLiveThreads();
-            manager.odlPeakThreads();
-            pmanager.odlMDSALIotDMListofcse();
-            cardinalKarafApi.setValues();
-            new OpenflowDeviceManager(getDataBrokerDependency(), getRpcRegistryDependency());
-			//Thread.sleep(5000);
-            }
-            else{
+            if (settingFirstTimePassed) {
+                cardinalApi.setValues();
+                manager.odlDaemonThreads();
+                manager.odlKarafBundleListActive();
+                manager.odlKarafBundleListInActive();
+                manager.odlKarafBundleListResolved();
+                manager.odlKarafCurrentHeapSize();
+                manager.odlKarafFeatureInstalled();
+                manager.odlKarafFeatureUnInstalled();
+                manager.odlKarafMaxHeapSize();
+                manager.odlLiveThreads();
+                manager.odlPeakThreads();
+                pmanager.odlMDSALIotDMListofcse();
+                cardinalKarafApi.setValues();
+                agent = new SnmpAgent("0.0.0.0/2003");
+                agent.start();
+                new OpenflowDeviceManager(getDataBrokerDependency(), getRpcRegistryDependency(), agent);
+                // Thread.sleep(5000);
+            } else {
                 LOG.info("You may be not logged in as root!!!");
             }
         } catch (Exception e) {
@@ -100,6 +104,5 @@ public class CardinalModule extends
         return provider;
 
     }
-
 
 }

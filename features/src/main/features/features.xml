@@ -25,6 +25,7 @@
         <feature version='${project.version}'>odl-cardinal-api</feature>
         <feature version='${openflowplugin.version}'>odl-openflowplugin-flow-services</feature>
         <bundle>wrap:mvn:org.snmp4j/snmp4j/{{VERSION}}</bundle>
+        <bundle>wrap:mvn:org.snmp4j/snmp4j-agent/{{VERSION}}</bundle>
         <bundle>wrap:mvn:com.jcraft/jsch/{{VERSION}}</bundle>
         <bundle>wrap:mvn:org.opendaylight.cardinal/jdmk/{{VERSION}}</bundle>
         <bundle>mvn:org.opendaylight.cardinal/cardinal-impl/{{VERSION}}
