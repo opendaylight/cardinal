@@ -14,6 +14,8 @@ import org.opendaylight.cardinal.impl.CardinalProvider;
 import org.opendaylight.cardinal.impl.KarafInfo;
 import org.opendaylight.cardinal.impl.OdlCardinalKarafInfoApi;
 import org.opendaylight.cardinal.impl.OdlCardinalSysInfoApis;
+import org.opendaylight.cardinal.impl.NetconfDeviceManager;
+import org.opendaylight.cardinal.impl.OdlCardinalNetconfInfoApi;
 import org.opendaylight.cardinal.impl.OpenflowDeviceManager;
 import org.opendaylight.cardinal.impl.OdlCardinalKarafManager;
 import org.opendaylight.cardinal.impl.OdlCardinalPolling;
@@ -38,6 +40,7 @@ public class CardinalModule extends
     final OdlCardinalSetTrapReceiver cardinal = new OdlCardinalSetTrapReceiver();
     final OdlCardinalSendTrap sendTrap = new OdlCardinalSendTrap();
     final odlCardinalProjectManager pmanager = new odlCardinalProjectManager();
+    final OdlCardinalNetconfInfoApi odlNetconfApi = new OdlCardinalNetconfInfoApi();
     SnmpAgent agent;
 
     public CardinalModule(org.opendaylight.controller.config.api.ModuleIdentifier identifier,
@@ -59,7 +62,6 @@ public class CardinalModule extends
 
     @Override
     public java.lang.AutoCloseable createInstance() {
-
         CardinalProvider provider = new CardinalProvider();
         getBrokerDependency().registerProvider(provider);
         cardinalApi.setDataProvider(getDataBrokerDependency());
@@ -74,7 +76,6 @@ public class CardinalModule extends
         LOG.info("Fetching system information");
         // Fetching the system values and setting those values to our mib
         try {
-
             boolean settingFirstTimePassed = setSnmpValues.setMibValues();
             if (settingFirstTimePassed) {
                 cardinalApi.setValues();
@@ -93,6 +94,7 @@ public class CardinalModule extends
                 agent = new SnmpAgent("0.0.0.0/2003");
                 agent.start();
                 new OpenflowDeviceManager(getDataBrokerDependency(), getRpcRegistryDependency(), agent);
+                new NetconfDeviceManager(getDataBrokerDependency(), getRpcRegistryDependency());
                 // Thread.sleep(5000);
             } else {
                 LOG.info("You may be not logged in as root!!!");
@@ -102,7 +104,6 @@ public class CardinalModule extends
             e.printStackTrace();
         }
         return provider;
-
     }
-
 }
+

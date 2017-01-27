@@ -25,6 +25,7 @@
     <mdsal.version>1.5.0-SNAPSHOT</mdsal.version>
     <yangtools.version>1.1.0-SNAPSHOT</yangtools.version>
     <restconf.version>1.5.0-SNAPSHOT</restconf.version>
+    <netconf.version>1.2.0-SNAPSHOT</netconf.version>
     <yangtools.version>1.1.0-SNAPSHOT</yangtools.version>
     <dlux.version>0.5.0-SNAPSHOT</dlux.version>
     <configfile.directory>etc/opendaylight/karaf</configfile.directory>
@@ -63,6 +64,13 @@
             <scope>import</scope>
         </dependency>
         <dependency>
+            <groupId>org.opendaylight.netconf</groupId>
+            <artifactId>netconf-artifacts</artifactId>
+            <version>${netconf.version}</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+        <dependency>
             <groupId>org.opendaylight.yangtools</groupId>
             <artifactId>yangtools-artifacts</artifactId>
             <version>${yangtools.version}</version>
@@ -96,6 +104,21 @@
         <dependency>
             <groupId>org.opendaylight.netconf</groupId>
             <artifactId>features-restconf</artifactId>
+            <classifier>features</classifier>
+            <type>xml</type>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.opendaylight.netconf</groupId>
+            <artifactId>features-netconf</artifactId>
+            <classifier>features</classifier>
+            <type>xml</type>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.opendaylight.netconf</groupId>
+            <artifactId>features-netconf-connector</artifactId>
+            <version>1.2.0-SNAPSHOT</version>
             <classifier>features</classifier>
             <type>xml</type>
             <scope>runtime</scope>
@@ -141,6 +164,13 @@
             <classifier>features</classifier>
             <type>xml</type>
         </dependency>
+        <dependency>
+            <groupId>org.opendaylight.netconf</groupId>
+            <artifactId>features-netconf-connector</artifactId>
+            <version>${netconf.version}</version>
+            <classifier>features</classifier>
+            <type>xml</type>
+        </dependency>
         <!--    External    Dependencies    -->
         <dependency>
             <groupId>com.google.guava</groupId>
@@ -148,3 +178,4 @@
         </dependency>
     </dependencies>
 </project>
+

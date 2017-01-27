@@ -110,6 +110,18 @@ public class OdlCardinalOpenflowInfoApiTest {
         }
         if (response != null) {
             responsePDU = response.getResponse();
+            try {
+                set.setVariableString(".1.3.6.1.3.1.1.11.1.0", "openFlowNode");
+                set.setVariableString(".1.3.6.1.3.1.1.11.2.0", "interfaceName");
+                set.setVariableString(".1.3.6.1.3.1.1.11.3.0", "macaddress");
+                set.setVariableString(".1.3.6.1.3.1.1.11.4.0", "manufacturer");
+                set.setVariableString(".1.3.6.1.3.1.1.11.5.0", "status");
+                set.setVariableString(".1.3.6.1.3.1.1.11.6.0", " ");
+                set.setVariableString(".1.3.6.1.3.1.1.11.7.0", " ");
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
         }
     }
 
@@ -149,7 +161,7 @@ public class OdlCardinalOpenflowInfoApiTest {
         if (responsePDU != null) {
             Devices devicesInfo = odlCardinalOpenflowInfoApi.getValues();
             if (devicesInfo != null) {
-                assertTrue(devicesInfo.getOpenflow().get(0).toString().contains("OpenflowFlowstats"));
+                assertTrue(devicesInfo.getOpenflow().get(0).toString().contains("openFlowNode"));
             }
         } else {
             assertNull(responsePDU);
@@ -157,3 +169,4 @@ public class OdlCardinalOpenflowInfoApiTest {
         }
     }
 }
+

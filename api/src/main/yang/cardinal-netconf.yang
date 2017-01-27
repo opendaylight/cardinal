@@ -1,0 +1,73 @@
+module cardinal-netconf {
+    yang-version 1;
+    namespace "urn:opendaylight:params:xml:ns:yang:cardinal-netconf";
+    prefix "cardinal";
+    contact
+      "Preeti Pandey <pandey.preeti1@tcs.com>";
+
+    revision "2016-12-27" {
+        description "Initial revision of cardinal model";
+    }
+    typedef snmp-cardinal-get-type {
+        type enumeration {
+            enum SystemInfo {
+                value "1";
+            }
+            enum KarafInfo {
+                value "2";
+            }
+            enum OdlInfo {
+                value "3";
+            }
+            enum OpenflowInfo {
+                value "4";
+            }
+            enum NetconfInfo {
+                value "5";
+            }
+
+        }
+    }
+
+    grouping CardinalNetconfInfogrouping {
+        list netconf {
+                leaf nodeId {
+                    type string;
+                    mandatory true;
+                }
+                leaf host {
+                    type string;
+                    mandatory true;
+                }
+                leaf port {
+                    type string;
+                    mandatory true;
+                }
+                leaf status {
+                    type string;
+                    mandatory true;
+                }
+                config true;
+            }
+        }
+
+    container Devices {
+        uses CardinalNetconfInfogrouping;
+        config true;
+    }
+
+    rpc CardinalNetconfInfoRpc {
+        description "Cardinal netconf info api";
+        input {
+            leaf snmp-get-type {
+                type snmp-cardinal-get-type;
+            }
+        }
+        output {
+            uses CardinalNetconfInfogrouping;
+        }
+    }
+}
+
+
+
