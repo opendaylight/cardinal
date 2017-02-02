@@ -9,6 +9,8 @@ package org.opendaylight.cardinal.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
 import org.opendaylight.controller.md.sal.binding.api.DataBroker;
 import org.opendaylight.controller.md.sal.binding.api.DataChangeListener;
 import org.opendaylight.controller.md.sal.binding.api.ReadWriteTransaction;
@@ -50,27 +52,31 @@ public class OdlCardinalOpenflowInfoApi implements AutoCloseable {
         LOG.info("set data broker");
     }
 
-    public Devices getValues() {
+    public Devices getValues(Map<String, List<String>> openFlowListOid) {
         OpenflowBuilder flow = new OpenflowBuilder();
         OdlCardinalGet get = new OdlCardinalGet();
-        String openFlowNode = get.snmpGet("localhost", "public", "1.3.6.1.3.1.1.11.1.0");
-        String interfaceName = get.snmpGet("localhost", "public", "1.3.6.1.3.1.1.11.2.0");
-        String macaddress = get.snmpGet("localhost", "public", "1.3.6.1.3.1.1.11.3.0");
-        String manufacturer = get.snmpGet("localhost", "public", "1.3.6.1.3.1.1.11.4.0");
-        String status = get.snmpGet("localhost", "public", "1.3.6.1.3.1.1.11.5.0");
-        String openFlowStats = get.snmpGet("localhost", "public", "1.3.6.1.3.1.1.11.6.0");
-        String openFlowMeterstats = get.snmpGet("localhost", "public", "1.3.6.1.3.1.1.11.7.0");
-        flow.setNodeName(openFlowNode).setInterface(interfaceName).setMacAddress(macaddress)
-                .setManufacturer(manufacturer).setStatus(status).setFlowStats(openFlowStats)
-                .setMeterStats(openFlowMeterstats).build();
         List<Openflow> openflowlist = new ArrayList<Openflow>();
-        openflowlist.add(flow.build());
+        int j = 11;
+        for (int i = 0; i < openFlowListOid.size(); i++) {
+            String openFlowNode = get.snmpGet("localhost", "public", "1.3.6.1.3.1.1." + j + ".1.0");
+            String interfaceName = get.snmpGet("localhost", "public", "1.3.6.1.3.1.1." + j + ".2.0");
+            String macaddress = get.snmpGet("localhost", "public", "1.3.6.1.3.1.1." + j + ".3.0");
+            String manufacturer = get.snmpGet("localhost", "public", "1.3.6.1.3.1.1." + j + ".4.0");
+            String status = get.snmpGet("localhost", "public", "1.3.6.1.3.1.1." + j + ".5.0");
+            String openFlowStats = get.snmpGet("localhost", "public", "1.3.6.1.3.1.1." + j + ".6.0");
+            String openFlowMeterstats = get.snmpGet("localhost", "public", "1.3.6.1.3.1.1." + j + ".7.0");
+            flow.setNodeName(openFlowNode).setInterface(interfaceName).setMacAddress(macaddress)
+                    .setManufacturer(manufacturer).setStatus(status).setFlowStats(openFlowStats)
+                    .setMeterStats(openFlowMeterstats).build();
+            openflowlist.add(flow.build());
+            j++;
+        }
         builder.setOpenflow(openflowlist);
         return builder.build();
     }
 
-    public boolean setValues() {
-        getValues();
+    public boolean setValues(Map<String, List<String>> openFlowListOid) {
+        getValues(openFlowListOid);
         WriteTransaction txn = dataProvider.newWriteOnlyTransaction();
         if (txn != null) {
             txn.put(LogicalDatastoreType.CONFIGURATION, Cardinal_IID_OPENFLOW, builder.build());

@@ -31,6 +31,11 @@ import org.snmp4j.transport.DefaultUdpTransportMapping;
 import com.sun.management.snmp.SnmpStatusException;
 import static org.mockito.Mockito.mock;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.doReturn;
 import org.mockito.Mock;
@@ -49,6 +54,7 @@ public class OdlCardinalOpenflowInfoApiTest {
     OdlCardinalOpenflowInfoApi odlCardinalOpenflowInfoApi = new OdlCardinalOpenflowInfoApi();
     DevicesBuilder builder = new DevicesBuilder();
     private static Logger log = LoggerFactory.getLogger(OdlCardinalOpenflowInfoApiTest.class);
+    Map<String, List<String>> featureListOid = new HashMap<String, List<String>>();
 
     @Mock
     private DataBroker mockDataBroker;
@@ -110,6 +116,15 @@ public class OdlCardinalOpenflowInfoApiTest {
         }
         if (response != null) {
             responsePDU = response.getResponse();
+            String nodeName = "nodeName";
+            List<String> nodeValues = new ArrayList<String>();
+            nodeValues.add("interfaceName");
+            nodeValues.add("macaddress");
+            nodeValues.add("manufacturer");
+            nodeValues.add("status");
+            nodeValues.add(" ");
+            nodeValues.add(" ");
+            featureListOid.put(nodeName, nodeValues);
             try {
                 set.setVariableString(".1.3.6.1.3.1.1.11.1.0", "openFlowNode");
                 set.setVariableString(".1.3.6.1.3.1.1.11.2.0", "interfaceName");
@@ -144,7 +159,7 @@ public class OdlCardinalOpenflowInfoApiTest {
     @Test
     public void setValuesTest() {
         if (responsePDU != null) {
-            Devices devicesInfo = odlCardinalOpenflowInfoApi.getValues();
+            Devices devicesInfo = odlCardinalOpenflowInfoApi.getValues(featureListOid);
             ReadWriteTransaction txn = mock(ReadWriteTransaction.class);
             doReturn(txn).when(mockDataBroker).newReadWriteTransaction();
             txn.put(LogicalDatastoreType.OPERATIONAL, Cardinal_IID_OPENFLOW, devicesInfo);
@@ -159,7 +174,7 @@ public class OdlCardinalOpenflowInfoApiTest {
     @Test
     public void getValuesTest() {
         if (responsePDU != null) {
-            Devices devicesInfo = odlCardinalOpenflowInfoApi.getValues();
+            Devices devicesInfo = odlCardinalOpenflowInfoApi.getValues(featureListOid);
             if (devicesInfo != null) {
                 assertTrue(devicesInfo.getOpenflow().get(0).toString().contains("openFlowNode"));
             }

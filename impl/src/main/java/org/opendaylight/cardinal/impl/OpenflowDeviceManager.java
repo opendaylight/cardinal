@@ -145,7 +145,7 @@ public class OpenflowDeviceManager implements DataChangeListener, AutoCloseable 
             String node = getNode(removedPaths);
             if (removedPathssize == featureList.size()) {
                 final OID sysDescr = new OID(".1.3.6.1.2.1.1.1.0");
-                final OID interfacesTable = new OID(".1.3.6.1.3.1.1.11.1");
+                final OID interfacesTable = new OID(".1.3.6.1.3.1.1.13.1");
                 agent.stop();
                 try {
                     agent = new SnmpAgent("0.0.0.0/2003");
@@ -166,12 +166,8 @@ public class OpenflowDeviceManager implements DataChangeListener, AutoCloseable 
                         .addColumnType(SMIConstants.SYNTAX_OCTET_STRING, MOAccessImpl.ACCESS_READ_ONLY);
                 for (String ovsNode : featureList) {
                     featureListOid.remove(ovsNode);
-                    builder.addRowValue(new OctetString(ovsNode)).addRowValue(new OctetString(" "))
-                            .addRowValue(new OctetString(" ")).addRowValue(new OctetString(" "))
-                            .addRowValue(new OctetString("Not Connected")).addRowValue(new OctetString(" "))
-                            .addRowValue(new OctetString(" "));
                 }
-                if (featureListOid.size() != 0) {
+                if (featureListOid.size() > 2) {
                     for (String ovsNode : featureListOid.keySet()) {
                         List<String> value = featureListOid.get(ovsNode);
                         builder.addRowValue(new OctetString(ovsNode)).addRowValue(new OctetString(value.get(0)))
@@ -179,14 +175,56 @@ public class OpenflowDeviceManager implements DataChangeListener, AutoCloseable 
                                 .addRowValue(new OctetString(value.get(3))).addRowValue(new OctetString(value.get(4)))
                                 .addRowValue(new OctetString(value.get(5)));
                     }
-
+                    agent.registerManagedObject(builder.build());
+                    featureListUpdated = featureListOid;
+                    nodeSize = featureListOid.size();
+                    updatedSize = featureListOid.size();
+                    gettingTableOid();
+                    LOG.info("{} Node(s) removed", removedPaths.size());
+                } else if (featureListOid.size() == 0) {
+                    int j = 11;
+                    for (int i = 0; i < 2; i++) {
+                        try {
+                            set.setVariableString(".1.3.6.1.3.1.1." + j + ".1.0", " ");
+                            set.setVariableString(".1.3.6.1.3.1.1." + j + ".2.0", " ");
+                            set.setVariableString(".1.3.6.1.3.1.1." + j + ".3.0", " ");
+                            set.setVariableString(".1.3.6.1.3.1.1." + j + ".4.0", " ");
+                            set.setVariableString(".1.3.6.1.3.1.1." + j + ".5.0", " ");
+                            set.setVariableString(".1.3.6.1.3.1.1." + j + ".6.0", " ");
+                            set.setVariableString(".1.3.6.1.3.1.1." + j + ".7.0", " ");
+                        } catch (Exception e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
+                        j++;
+                    }
+                    odlOpenflowApi.setValues(featureListOid);
+                    featureListUpdated = featureListOid;
+                    nodeSize = featureListOid.size();
+                    updatedSize = featureListOid.size();
+                } else {
+                    int j = 11;
+                    for (String ovsNode : featureListOid.keySet()) {
+                        List<String> value = featureListOid.get(ovsNode);
+                        try {
+                            set.setVariableString(".1.3.6.1.3.1.1." + j + ".1.0", ovsNode);
+                            set.setVariableString(".1.3.6.1.3.1.1." + j + ".2.0", value.get(0));
+                            set.setVariableString(".1.3.6.1.3.1.1." + j + ".3.0", value.get(1));
+                            set.setVariableString(".1.3.6.1.3.1.1." + j + ".4.0", value.get(2));
+                            set.setVariableString(".1.3.6.1.3.1.1." + j + ".5.0", value.get(3));
+                            set.setVariableString(".1.3.6.1.3.1.1." + j + ".6.0", " ");
+                            set.setVariableString(".1.3.6.1.3.1.1." + j + ".7.0", " ");
+                        } catch (Exception e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
+                        j++;
+                    }
+                    odlOpenflowApi.setValues(featureListOid);
+                    featureListUpdated = featureListOid;
+                    nodeSize = featureListOid.size();
+                    updatedSize = featureListOid.size();
                 }
-                agent.registerManagedObject(builder.build());
-                featureListUpdated = featureListOid;
-                nodeSize = featureListOid.size();
-                updatedSize = featureListOid.size();
-                gettingTableOid();
-                LOG.info("{} Node(s) removed", removedPaths.size());
             }
         }
     }
@@ -264,14 +302,6 @@ public class OpenflowDeviceManager implements DataChangeListener, AutoCloseable 
             manufacturer = flowCapableNode.getManufacturer();
             status = "Connected";
             try {
-                set.setVariableString(".1.3.6.1.3.1.1.11.1.0", openFlowNode);
-                set.setVariableString(".1.3.6.1.3.1.1.11.2.0", interfaceName);
-                set.setVariableString(".1.3.6.1.3.1.1.11.3.0", macaddress);
-                set.setVariableString(".1.3.6.1.3.1.1.11.4.0", manufacturer);
-                set.setVariableString(".1.3.6.1.3.1.1.11.5.0", status);
-                set.setVariableString(".1.3.6.1.3.1.1.11.6.0", " ");
-                set.setVariableString(".1.3.6.1.3.1.1.11.7.0", " ");
-                // odlOpenflowApi.setValues();
                 nodeValues.add(interfaceName);
                 nodeValues.add(macaddress);
                 nodeValues.add(manufacturer);
@@ -284,24 +314,47 @@ public class OpenflowDeviceManager implements DataChangeListener, AutoCloseable 
                     updatedSize = updatedSize + 1;
                     nodeprevious = openFlowNode;
                 }
-                if (nodeSize == updatedSize) {
+                if (featureListOid.size() > 2) {
                     removedPathssize = 0;
                     featureList.clear();
                     featureListUpdated = featureListOid;
                     setOvsSwitchOid(featureListOid);
+                    int j = 11;
+                    for (int i = 0; i < 2; i++) {
+                        set.setVariableString(".1.3.6.1.3.1.1." + j + ".1.0", "");
+                        set.setVariableString(".1.3.6.1.3.1.1." + j + ".2.0", "");
+                        set.setVariableString(".1.3.6.1.3.1.1." + j + ".3.0", "");
+                        set.setVariableString(".1.3.6.1.3.1.1." + j + ".4.0", "");
+                        set.setVariableString(".1.3.6.1.3.1.1." + j + ".5.0", "");
+                        set.setVariableString(".1.3.6.1.3.1.1." + j + ".6.0", "");
+                        set.setVariableString(".1.3.6.1.3.1.1." + j + ".7.0", "");
+                        j++;
+                    }
+
+                } else {
+                    int j = 11;
+                    for (String ovsNode : featureListOid.keySet()) {
+                        List<String> value = featureListOid.get(ovsNode);
+                        set.setVariableString(".1.3.6.1.3.1.1." + j + ".1.0", ovsNode);
+                        set.setVariableString(".1.3.6.1.3.1.1." + j + ".2.0", value.get(0));
+                        set.setVariableString(".1.3.6.1.3.1.1." + j + ".3.0", value.get(1));
+                        set.setVariableString(".1.3.6.1.3.1.1." + j + ".4.0", value.get(2));
+                        set.setVariableString(".1.3.6.1.3.1.1." + j + ".5.0", value.get(3));
+                        set.setVariableString(".1.3.6.1.3.1.1." + j + ".6.0", " ");
+                        set.setVariableString(".1.3.6.1.3.1.1." + j + ".7.0", " ");
+                        j++;
+                    }
+                    odlOpenflowApi.setValues(featureListOid);
+                    removedPathssize = 0;
+                    featureList.clear();
+                    featureListUpdated = featureListOid;
+
                 }
             } catch (Exception e) {
-                LOG.info("exception in fetching table {} ", e);
+                // TODO Auto-generated catch block
+                LOG.info("Exception  {}", e);
             }
-            if (flowCapableNode.getIpAddress() != null) {
-                IpAddress ip;
-                ip = flowCapableNode.getIpAddress();
-                String ipStr = ip.getIpv4Address().getValue();
-            }
-        } else {
-            // else of flowCapableNodeconn
         }
-
     }
 
     public boolean setOvsSwitchOid(Map<String, List<String>> ovsList) throws IOException {
