@@ -12,19 +12,16 @@ import org.opendaylight.cardinal.impl.Agent;
 
 public class AgentTest {
 
-    MBeanServer mockserver;
+    final int htmlPort = 8082;
+    final int snmpPort = 161;
+    String mockdomain = new String("MockTest");
     ObjectName mockhtmlObjName;
     ObjectName mocksnmpObjName;
-    ObjectName mockmibObjName;
     Agent mockagent = new Agent();
-    int htmlPort = 8082;
-    int snmpPort = 161;
 
     @Before
     public void setUp() throws Exception {
         mockagent.startSnmpDaemon();
-        mockserver = MBeanServerFactory.createMBeanServer();
-        String mockdomain = mockserver.getDefaultDomain();
         mockhtmlObjName = new ObjectName(mockdomain + ":class=HtmlAdaptorServer,protocol=html,port=" + htmlPort);
         mocksnmpObjName = new ObjectName(mockdomain + ":class=SnmpAdaptorServer,protocol=snmp,port=" + snmpPort);
     }
@@ -36,7 +33,7 @@ public class AgentTest {
 
     @Test
     public void teststartingHtmlAdaptor() throws MalformedObjectNameException {
-        boolean mockstarted = mockagent.startingHtmlAdaptor(htmlPort, mockhtmlObjName, mockserver);
+        boolean mockstarted = mockagent.startingHtmlAdaptor(htmlPort, mockhtmlObjName);
         if (mockstarted == true) {
             assertEquals(true, mockstarted);
         } else {
@@ -46,7 +43,7 @@ public class AgentTest {
 
     @Test
     public void teststartingSnmpAdaptor() throws MalformedObjectNameException {
-        boolean mockstarted = mockagent.startingSnmpAdaptor(snmpPort, mocksnmpObjName, mockserver);
+        boolean mockstarted = mockagent.startingSnmpAdaptor(snmpPort, mocksnmpObjName);
         if (mockstarted == true) {
             assertEquals(true, mockstarted);
         } else {
