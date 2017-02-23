@@ -18,6 +18,7 @@
     <feature name='odl-cardinal-api' version='${project.version}'
         description='OpenDaylight :: cardinal :: api'>
         <feature version='${mdsal.model.version}'>odl-mdsal-models</feature>
+        <bundle>wrap:mvn:org.opendaylight.cardinal/jdmk/{{VERSION}}</bundle>
         <bundle>mvn:org.opendaylight.cardinal/cardinal-api/{{VERSION}}
         </bundle>
     </feature>
