@@ -17,6 +17,8 @@
 			<groupId>org.glassfish.extras</groupId>
 			<artifactId>bean-validator</artifactId>
 			<version>4.0.0.Alpha3</version>
+			<!-- The resulting jdmk provides the classes we're interested in -->
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 	<build>
