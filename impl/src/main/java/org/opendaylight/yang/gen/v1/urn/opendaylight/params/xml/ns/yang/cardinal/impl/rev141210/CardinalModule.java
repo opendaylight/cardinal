@@ -26,6 +26,7 @@ import org.opendaylight.cardinal.impl.SnmpAgent;
 import org.opendaylight.cardinal.impl.odlCardinalProjectManager;
 import org.slf4j.LoggerFactory;
 import com.sun.management.snmp.SnmpStatusException;
+import org.opendaylight.cardinal.impl.CallTimer;
 
 /*import com.sun.management.snmp.SnmpStatusException;*/
 
@@ -41,6 +42,7 @@ public class CardinalModule extends
     final OdlCardinalSendTrap sendTrap = new OdlCardinalSendTrap();
     final odlCardinalProjectManager pmanager = new odlCardinalProjectManager();
     final OdlCardinalNetconfInfoApi odlNetconfApi = new OdlCardinalNetconfInfoApi();
+    CallTimer callTimer = new CallTimer();
     SnmpAgent agent;
 
     public CardinalModule(org.opendaylight.controller.config.api.ModuleIdentifier identifier,
@@ -91,6 +93,7 @@ public class CardinalModule extends
                 manager.odlPeakThreads();
                 pmanager.odlMDSALIotDMListofcse();
                 cardinalKarafApi.setValues();
+                callTimer.CallTimerMain();
                 agent = new SnmpAgent("0.0.0.0/2003");
                 agent.start();
                 new OpenflowDeviceManager(getDataBrokerDependency(), getRpcRegistryDependency(), agent);

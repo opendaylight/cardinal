@@ -128,7 +128,8 @@ public class OpenflowDeviceManager implements DataChangeListener, AutoCloseable 
         String node1 = Paths.toString().substring(index1, index2);
         String[] nodevalues = node1.split("value=");
         String node = nodevalues[1];
-        for (String ovsNode : featureListUpdated.keySet()) {
+        //for (String ovsNode : featureListUpdated.keySet()) {featureListOid
+        for (String ovsNode : featureListOid.keySet()) {
             if (ovsNode.contains(node)) {
                 node = ovsNode;
                 featureList.add(node);
@@ -142,8 +143,10 @@ public class OpenflowDeviceManager implements DataChangeListener, AutoCloseable 
         Preconditions.checkNotNull(removedPaths);
         if (!removedPaths.isEmpty()) {
             removedPathssize++;
+            LOG.info("Removed path is {}", removedPathssize);
+            LOG.info("featureList size is {}", featureList.size());
             String node = getNode(removedPaths);
-            if (removedPathssize == featureList.size()) {
+           // if (removedPathssize == featureList.size()) {
                 final OID sysDescr = new OID(".1.3.6.1.2.1.1.1.0");
                 final OID interfacesTable = new OID(".1.3.6.1.3.1.1.13.1");
                 agent.stop();
@@ -165,7 +168,10 @@ public class OpenflowDeviceManager implements DataChangeListener, AutoCloseable 
                         .addColumnType(SMIConstants.SYNTAX_OCTET_STRING, MOAccessImpl.ACCESS_READ_ONLY)
                         .addColumnType(SMIConstants.SYNTAX_OCTET_STRING, MOAccessImpl.ACCESS_READ_ONLY);
                 for (String ovsNode : featureList) {
+                	if(featureList.contains(ovsNode)){
                     featureListOid.remove(ovsNode);
+                    LOG.info("featureListOid size is {}", featureListOid.size());
+                	}
                 }
                 if (featureListOid.size() > 2) {
                     for (String ovsNode : featureListOid.keySet()) {
@@ -177,21 +183,22 @@ public class OpenflowDeviceManager implements DataChangeListener, AutoCloseable 
                     }
                     agent.registerManagedObject(builder.build());
                     featureListUpdated = featureListOid;
-                    nodeSize = featureListOid.size();
+                    //nodeSize = featureListOid.size();
                     updatedSize = featureListOid.size();
+                    nodeSize=0;
                     gettingTableOid();
                     LOG.info("{} Node(s) removed", removedPaths.size());
                 } else if (featureListOid.size() == 0) {
                     int j = 11;
                     for (int i = 0; i < 2; i++) {
                         try {
-                            set.setVariableString(".1.3.6.1.3.1.1." + j + ".1.0", " ");
-                            set.setVariableString(".1.3.6.1.3.1.1." + j + ".2.0", " ");
-                            set.setVariableString(".1.3.6.1.3.1.1." + j + ".3.0", " ");
-                            set.setVariableString(".1.3.6.1.3.1.1." + j + ".4.0", " ");
-                            set.setVariableString(".1.3.6.1.3.1.1." + j + ".5.0", " ");
-                            set.setVariableString(".1.3.6.1.3.1.1." + j + ".6.0", " ");
-                            set.setVariableString(".1.3.6.1.3.1.1." + j + ".7.0", " ");
+                            set.setVariableString(".1.3.6.1.3.1.1." + j + ".1.0", "");
+                            set.setVariableString(".1.3.6.1.3.1.1." + j + ".2.0", "");
+                            set.setVariableString(".1.3.6.1.3.1.1." + j + ".3.0", "");
+                            set.setVariableString(".1.3.6.1.3.1.1." + j + ".4.0", "");
+                            set.setVariableString(".1.3.6.1.3.1.1." + j + ".5.0", "");
+                            set.setVariableString(".1.3.6.1.3.1.1." + j + ".6.0", "");
+                            set.setVariableString(".1.3.6.1.3.1.1." + j + ".7.0", "");
                         } catch (Exception e) {
                             // TODO Auto-generated catch block
                             e.printStackTrace();
@@ -200,8 +207,9 @@ public class OpenflowDeviceManager implements DataChangeListener, AutoCloseable 
                     }
                     odlOpenflowApi.setValues(featureListOid);
                     featureListUpdated = featureListOid;
-                    nodeSize = featureListOid.size();
+                    //nodeSize = featureListOid.size();
                     updatedSize = featureListOid.size();
+                    nodeSize=0;
                 } else {
                     int j = 11;
                     for (String ovsNode : featureListOid.keySet()) {
@@ -222,10 +230,11 @@ public class OpenflowDeviceManager implements DataChangeListener, AutoCloseable 
                     }
                     odlOpenflowApi.setValues(featureListOid);
                     featureListUpdated = featureListOid;
-                    nodeSize = featureListOid.size();
+                    //nodeSize = featureListOid.size();
                     updatedSize = featureListOid.size();
+                    nodeSize=0;
                 }
-            }
+            //}
         }
     }
 
@@ -242,6 +251,7 @@ public class OpenflowDeviceManager implements DataChangeListener, AutoCloseable 
         if (!createdData.isEmpty()) {
             for (Map.Entry<InstanceIdentifier<?>, DataObject> dataObjectEntry : createdData.entrySet()) {
                 nodeSize = nodeSize + 1;
+                LOG.info("Created nodeSize {}", nodeSize);
                 @SuppressWarnings("unchecked")
                 final InstanceIdentifier<Node> path = (InstanceIdentifier<Node>) dataObjectEntry.getKey();
                 LOG.info("Created node {}", path.toString());
@@ -270,7 +280,7 @@ public class OpenflowDeviceManager implements DataChangeListener, AutoCloseable 
                         });
                         return null;
                     }
-                }, 25, TimeUnit.MILLISECONDS);
+                }, 5000, TimeUnit.MILLISECONDS);
             }
         }
     }
@@ -319,6 +329,7 @@ public class OpenflowDeviceManager implements DataChangeListener, AutoCloseable 
                     featureList.clear();
                     featureListUpdated = featureListOid;
                     setOvsSwitchOid(featureListOid);
+                    LOG.info("featureListOid size {}", featureListOid.size());
                     int j = 11;
                     for (int i = 0; i < 2; i++) {
                         set.setVariableString(".1.3.6.1.3.1.1." + j + ".1.0", "");
