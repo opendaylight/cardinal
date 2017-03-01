@@ -270,8 +270,8 @@ public class NetconfDeviceManager implements AutoCloseable, DataChangeListener {
             nodeValues.add(host);
             nodeValues.add(port);
             nodeValues.add(status);
-            nodeValues.add(status);
-            nodeValues.add(status);
+            nodeValues.add(" ");
+            nodeValues.add(" ");
             if (nodeName != nodeprevious) {
                 featureListOid.put(nodeName, nodeValues);
                 updatedSize = updatedSize + 1;
