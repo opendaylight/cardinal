@@ -17,6 +17,9 @@
     <artifactId>cardinal-impl</artifactId>
     <version>0.2.0-SNAPSHOT</version>
     <packaging>bundle</packaging>
+    <!-- <name> formatting is used by autorelease to parse and notify projects on
+         build failure. Please do not modify this unless you have a good reason. -->
+    <name>ODL :: cardinal :: ${project.artifactId}</name>
     <properties>
         <mdsal.model.version>0.10.0-SNAPSHOT</mdsal.model.version>
         <mdsal.version>1.5.0-SNAPSHOT</mdsal.version>
@@ -113,4 +116,3 @@
         </dependency>
     </dependencies>
 </project>
-
