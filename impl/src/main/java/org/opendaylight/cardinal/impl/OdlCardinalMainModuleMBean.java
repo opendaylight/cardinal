@@ -42,6 +42,16 @@ public interface OdlCardinalMainModuleMBean {
     public String getOdlSystemOdlUptime() throws SnmpStatusException;
 
     /**
+     * Setter for the "OdlSystemOdlUptime" variable.
+     */
+    public void setOdlSystemOdlUptime(String x) throws SnmpStatusException;
+
+    /**
+     * Checker for the "OdlSystemOdlUptime" variable.
+     */
+    public void checkOdlSystemOdlUptime(String x) throws SnmpStatusException;
+
+    /**
      * Getter for the "OdlSystemSysInfo" variable.
      */
     public String getOdlSystemSysInfo() throws SnmpStatusException;

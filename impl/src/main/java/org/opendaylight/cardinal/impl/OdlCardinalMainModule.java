@@ -41,7 +41,7 @@ public class OdlCardinalMainModule implements OdlCardinalMainModuleMBean, Serial
      * Variable for storing the value of "OdlSystemOdlUptime". The variable is
      * identified by: "1.3.6.1.3.1.1.1.5".
      */
-    protected String OdlSystemOdlUptime = new String("JDMK 5.1");
+    protected String OdlSystemOdlUptime = new String("Uptime of the Odl");
 
     /**
      * Variable for storing the value of "OdlSystemSysInfo". The variable is
@@ -53,7 +53,7 @@ public class OdlCardinalMainModule implements OdlCardinalMainModuleMBean, Serial
      * Variable for storing the value of "OdlSystemHostAddress". The variable is
      * identified by: "1.3.6.1.3.1.1.1.3".
      */
-    protected String OdlSystemHostAddress = new String("JDMK 5.1");
+    protected String OdlSystemHostAddress = new String("172.21.88.140");
 
     /**
      * Variable for storing the value of "OdlSystemMemUsage". The variable is
@@ -111,6 +111,20 @@ public class OdlCardinalMainModule implements OdlCardinalMainModuleMBean, Serial
      */
     public String getOdlSystemOdlUptime() throws SnmpStatusException {
         return OdlSystemOdlUptime;
+    }
+
+    /**
+     * Setter for the "OdlSystemOdlUptime" variable.
+     */
+    public void setOdlSystemOdlUptime(String x) throws SnmpStatusException {
+        OdlSystemOdlUptime = x;
+    }
+
+    /**
+     * Checker for the "OdlSystemOdlUptime" variable.
+     */
+    public void checkOdlSystemOdlUptime(String x) throws SnmpStatusException {
+        //
     }
 
     /**

@@ -130,14 +130,13 @@ public class SetCardinalMibValuesTest {
     @Test
     public void setCpuMemUsageTest() throws IOException, InterruptedException {
         boolean setCpuMemUsage = false;
-        setCardinalMibValues.setSystemName();
-        setCardinalMibValues.setSystemIpAddress();
-        if (responsePDU != null) {
+        //String pid=setCardinalMibValues.getKarafPid();
+        //setCardinalMibValues.setSystemIpAddress();
             setCpuMemUsage = setCardinalMibValues.setCpuMemUsage(setCardinalMibValues);
             if (setCpuMemUsage) {
                 assertEquals(true, setCpuMemUsage);
             }
-        } else {
+         else {
             assertEquals(false, setCpuMemUsage);
         }
     }

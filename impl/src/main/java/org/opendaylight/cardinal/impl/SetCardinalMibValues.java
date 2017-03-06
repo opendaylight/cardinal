@@ -46,13 +46,12 @@ public class SetCardinalMibValues implements AutoCloseable {
     public boolean setMibValues() throws Exception {
         SetCardinalMibValues setter = new SetCardinalMibValues();
         boolean firstPDUTESTPassed = setter.setSystemName();
-        if (firstPDUTESTPassed){
-        setter.setSystemIpAddress();
-        setter.setCpuMemUsage(setter);
-        setter.setOdlNodeName();
-        return true;
-        }
-        else{
+        if (firstPDUTESTPassed) {
+            setter.setSystemIpAddress();
+            setter.setCpuMemUsage(setter);
+            setter.setOdlNodeName();
+            return true;
+        } else {
             return false;
         }
 
@@ -70,7 +69,7 @@ public class SetCardinalMibValues implements AutoCloseable {
         } catch (UnknownHostException e1) {
             throw new RuntimeException(e1);
         }
-        String hostName = "Machine Name:"+ipAddress.getHostName();
+        String hostName = "Machine Name:" + ipAddress.getHostName();
 
         // setting system name to mib variable
 
@@ -104,28 +103,31 @@ public class SetCardinalMibValues implements AutoCloseable {
     public boolean setSystemIpAddress() throws SocketException {
         // getting system ip address
         Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
+
         while (interfaces.hasMoreElements()) {
             NetworkInterface iface = interfaces.nextElement();
             if (iface.isLoopback() || !iface.isUp() || iface.isVirtual() || iface.isPointToPoint()) {
                 continue;
             }
+            // boolean bool=iface.getName().toString().contains("eth0");
+            while (iface.getName().toString().contains("eth0") | iface.getName().toString().contains("wlan")) {
+                Enumeration<InetAddress> addresses = iface.getInetAddresses();
+                while (addresses.hasMoreElements()) {
+                    InetAddress addr = addresses.nextElement();
+                    final String ip = addr.getHostAddress();
+                    if (Inet4Address.class == addr.getClass()) {
 
-            Enumeration<InetAddress> addresses = iface.getInetAddresses();
-            while (addresses.hasMoreElements()) {
-                InetAddress addr = addresses.nextElement();
-                final String ip = addr.getHostAddress();
-                if (Inet4Address.class == addr.getClass()) {
+                        // setting system ip address to mib varible
 
-                    // setting system ip address to mib varible
-
-                    try {
-                        set.setVariableString(".1.3.6.1.3.1.1.1.3.0", ip);
-                        return true;
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
+                        try {
+                            set.setVariableString(".1.3.6.1.3.1.1.1.3.0", ip);
+                            return true;
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
                     }
-                }
 
+                }
             }
         }
         return true;
@@ -140,9 +142,14 @@ public class SetCardinalMibValues implements AutoCloseable {
      */
     public boolean setCpuMemUsage(SetCardinalMibValues setter) throws IOException, InterruptedException {
         // fetching the process id of karaf
+        StringBuffer output = new StringBuffer();
+        boolean flag = true;
         int flag1 = 0;
         int flag2 = 0;
+        String temp = null;
+        String[] s2 = null;
         Process process = Runtime.getRuntime().exec("sudo netstat -lpn ");
+        process.waitFor();
         BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()));
         BufferedReader stdError = new BufferedReader(new InputStreamReader(process.getErrorStream()));
         String[] words;
@@ -150,7 +157,6 @@ public class SetCardinalMibValues implements AutoCloseable {
         // read the output from the command
 
         while ((temp = stdInput.readLine()) != null && flag) {
-            try{
             if (temp.contains(":8101")) {
                 words = temp.split(" ");
                 for (String each : words) {
@@ -159,6 +165,7 @@ public class SetCardinalMibValues implements AutoCloseable {
                     }
                 }
                 s2 = arr.get(6).split("/");
+
                 // getting cpu and memory usage of karaf
 
                 Process systemProcess = Runtime.getRuntime().exec(" ps -p " + s2[0] + " -o %cpu,%mem");
@@ -167,14 +174,21 @@ public class SetCardinalMibValues implements AutoCloseable {
                 String topS = "";
                 int cpu = 0;
                 int mem = 0;
-                stdInput1.readLine();
+                ArrayList<String> list = new ArrayList<String>();
+                String s = stdInput1.readLine();
                 while ((topS = stdInput1.readLine()) != null) {
                     topS = topS.replaceAll("  ", " ");
                     topS = topS.replaceAll("  ", " ");
                     topS = topS.replaceAll("  ", " ");
                     String[] tokens1 = topS.split(" ");
-                    float temp1 = Float.parseFloat(tokens1[1]);
-                    float temp2 = Float.parseFloat(tokens1[2]);
+                    for (String data : tokens1) {
+                        if (!data.equals(""))
+                            list.add(data);
+                    }
+                    float temp1 = Float.parseFloat(list.get(0));
+                    float temp2 = Float.parseFloat(list.get(1));
+                    // float temp1 = Float.parseFloat(tokens1[1]);
+                    // float temp2 = Float.parseFloat(tokens1[2]);
                     cpu = Math.round(temp1);
                     flag1 = cpu;
                     mem = Math.round(temp2);
@@ -187,26 +201,20 @@ public class SetCardinalMibValues implements AutoCloseable {
                         // setting the mem usage value to mib variable
 
                         set.setVariableInt(".1.3.6.1.3.1.1.1.2.0", mem);
-                        return true;
+                        // return true;
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
 
                 }
-                setter.setKarafUptime();
-            }else{
-                //TO DO LATER
-                flag = false;
-                LOG.info("karaf ssh process not running...");
-            }
-            }
-            catch(ArrayIndexOutOfBoundsException e){
-                e.printStackTrace();
-            }
-            catch(Exception e){
-                   e.printStackTrace();
             }
         }
+
+        // try close}
+        /*
+         * catch(ArrayIndexOutOfBoundsException e){ e.printStackTrace(); }
+         * catch(Exception e){ e.printStackTrace(); }
+         */
 
         // read any errors from the attempted command
         LOG.info("error of the command (if any):");
@@ -215,6 +223,7 @@ public class SetCardinalMibValues implements AutoCloseable {
             LOG.info(s1);
         }
         if ((flag1 != 0) && (flag2 != 0)) {
+            setter.setKarafUptime(s2[0]);
             return true;
         } else {
             return false;
@@ -230,38 +239,42 @@ public class SetCardinalMibValues implements AutoCloseable {
      *             when Interrupt occur. method to set the uptime of the karaf
      *             process.
      */
-    public boolean setKarafUptime() throws IOException, InterruptedException {
+    public boolean setKarafUptime(String processid) throws IOException, InterruptedException {
 
-        // getting karaf Uptime
+        // getting karaf uptime
 
         Process systemProcess = Runtime.getRuntime().exec("ps -eo pid,etime");
         systemProcess.waitFor();
-        BufferedReader stdInput = new BufferedReader(new InputStreamReader(systemProcess.getInputStream()));
+        BufferedReader stdInput1 = new BufferedReader(new InputStreamReader(systemProcess.getInputStream()));
         String topS = "";
+        ArrayList<String> list = new ArrayList<String>();
 
-        while ((topS = stdInput.readLine()) != null) {
+        while ((topS = stdInput1.readLine()) != null) {
             if (!topS.equals("")) {
-                if(topS.contains(s2[0])) {
-                topS = topS.replaceAll("  ", " ");
-                topS = topS.replaceAll("  ", " ");
-                topS = topS.replaceAll("  ", " ");
-                String[] tokens1 = topS.split(" ");
-                pid = tokens1[0];
-                uptime = tokens1[1];
+                if (topS.contains(processid)) {
+                    topS = topS.replaceAll("  ", " ");
+                    topS = topS.replaceAll("  ", " ");
+                    topS = topS.replaceAll("  ", " ");
+                    String[] tokens1 = topS.split(" ");
+                    for (String data : tokens1) {
+                        if (!data.equals(""))
+                            list.add(data);
+                    }
+                    pid = list.get(0);
+                    uptime = list.get(1);
 
-                // setting the karaf uptime value to mib
-                // variable
+                    // setting the karaf uptime value to mib
+                    // variable
 
-                try {
-                    set.setVariableString(".1.3.6.1.3.1.1.1.5.0", uptime);
-                    return true;
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
+                    try {
+                        set.setVariableString(".1.3.6.1.3.1.1.1.5.0", uptime);
+                        return true;
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+
                 }
-
-            }
-            }
-            else{
+            } else {
                 LOG.info("Issue in getting uptime...");
             }
         }
@@ -278,4 +291,3 @@ public class SetCardinalMibValues implements AutoCloseable {
 
     }
 }
-

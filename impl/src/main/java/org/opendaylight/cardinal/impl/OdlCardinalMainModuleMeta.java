@@ -112,7 +112,12 @@ public class OdlCardinalMainModuleMeta extends SnmpMibGroup implements Serializa
             }
 
         case 5:
-            throw new SnmpStatusException(SnmpStatusException.snmpRspNotWritable);
+            if (x instanceof SnmpString) {
+                node.setOdlSystemOdlUptime(((SnmpString) x).toString());
+                return new SnmpString(node.getOdlSystemSysInfo());
+            } else {
+                throw new SnmpStatusException(SnmpStatusException.snmpRspWrongType);
+            }
 
         case 4:
             if (x instanceof SnmpString) {
@@ -166,7 +171,12 @@ public class OdlCardinalMainModuleMeta extends SnmpMibGroup implements Serializa
             break;
 
         case 5:
-            throw new SnmpStatusException(SnmpStatusException.snmpRspNotWritable);
+            if (x instanceof SnmpString) {
+                node.checkOdlSystemOdlUptime(((SnmpString) x).toString());
+            } else {
+                throw new SnmpStatusException(SnmpStatusException.snmpRspWrongType);
+            }
+            break;
 
         case 4:
             if (x instanceof SnmpString) {
