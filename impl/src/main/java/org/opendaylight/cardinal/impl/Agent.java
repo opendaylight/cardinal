@@ -251,7 +251,7 @@ public class Agent implements AutoCloseable {
             LOG.info("setTrapAddress called " + trapReceiver.toString());
         }
 
-        public void sendSnmpTrap(SnmpOid ntOid, Enumeration<SnmpOid> payloadOid, Enumeration<SnmpString> payloadData) {
+        public void sendSnmpTrap(SnmpOid ntOid, Enumeration<SnmpOid> payloadOid, Enumeration<SnmpValue> payloadData) {
             LOG.info("sendSnmpTrap called");
             try {
                 SnmpVarBindList varBindList = new SnmpVarBindList();
@@ -263,7 +263,7 @@ public class Agent implements AutoCloseable {
                     SnmpOid tempOid = payloadOid.nextElement();
                     SnmpVarBind ntBindPayload = new SnmpVarBind(ntOid, tempOid);
                     varBindList.addVarBind(ntBindPayload);
-                    SnmpVarBind payloadOidBindData = new SnmpVarBind(tempOid, (SnmpValue)(payloadData.nextElement()));
+                    SnmpVarBind payloadOidBindData = new SnmpVarBind(tempOid, payloadData.nextElement());
                     varBindList.addVarBind(payloadOidBindData);
                 }
                 snmpAdaptor.snmpV2Trap(ntOid, varBindList);
