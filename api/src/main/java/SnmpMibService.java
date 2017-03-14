@@ -11,7 +11,7 @@ import java.net.InetAddress;
 import java.util.Enumeration;
 
 import com.sun.management.snmp.SnmpOid;
-import com.sun.management.snmp.SnmpString;
+import com.sun.management.snmp.SnmpValue;
 import com.sun.management.snmp.agent.SnmpMibAgent;
 
 public interface SnmpMibService {
@@ -33,5 +33,5 @@ public interface SnmpMibService {
     /*
      * Send a TRAP
      */
-    void sendSnmpTrap(SnmpOid ntOid, Enumeration<SnmpOid> payloadOid, Enumeration<SnmpString> payloadData);
+    void sendSnmpTrap(SnmpOid ntOid, Enumeration<SnmpOid> payloadOid, Enumeration<SnmpValue> payloadData);
 }
