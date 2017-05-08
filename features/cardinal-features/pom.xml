@@ -30,6 +30,7 @@
         <dluxapps.version>0.5.0-SNAPSHOT</dluxapps.version>
         <configfile.directory>etc/opendaylight/karaf</configfile.directory>
         <openflowplugin.version>0.4.0-SNAPSHOT</openflowplugin.version>
+        <l2switch.version>0.5.0-SNAPSHOT</l2switch.version>
         <feature.test.version>1.8.0-SNAPSHOT</feature.test.version>
         <feature.tsdr.version>1.3.0-SNAPSHOT</feature.tsdr.version>
     </properties>
@@ -150,13 +151,28 @@
             <type>xml</type>
             <classifier>config</classifier>
         </dependency>
+         <dependency>
+            <groupId>org.opendaylight.l2switch</groupId>
+            <artifactId>features-l2switch</artifactId>
+            <version>${l2switch.version}</version>
+            <classifier>features</classifier>
+            <type>xml</type>
+            <scope>runtime</scope>
+        </dependency>
         <dependency>
+            <groupId>org.opendaylight.openflowplugin</groupId>
+            <artifactId>features-openflowplugin</artifactId>
+            <version>${openflowplugin.version}</version>
+            <classifier>features</classifier>
+            <type>xml</type>
+        </dependency>
+        <!--<dependency>
             <groupId>org.opendaylight.tsdr</groupId>
             <artifactId>features-tsdr</artifactId>
             <version>${feature.tsdr.version}</version>
             <classifier>features</classifier>
             <type>xml</type>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>org.opendaylight.netconf</groupId>
             <artifactId>features-netconf-connector</artifactId>
