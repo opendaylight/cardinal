@@ -26,7 +26,6 @@
         <dlux.version>0.6.0-SNAPSHOT</dlux.version>
         <configfile.directory>etc/opendaylight/karaf</configfile.directory>
         <openflowplugin.version>0.5.0-SNAPSHOT</openflowplugin.version>
-        <feature.test.version>1.9.0-SNAPSHOT</feature.test.version>
     </properties>
     <dependencyManagement>
         <dependencies>
