@@ -9,7 +9,7 @@
     <parent>
         <groupId>org.opendaylight.odlparent</groupId>
         <artifactId>odlparent-lite</artifactId>
-        <version>1.9.0</version>
+        <version>2.0.2</version>
         <relativePath/>
     </parent>
     <groupId>org.opendaylight.cardinal</groupId>
@@ -19,12 +19,19 @@
     <packaging>pom</packaging>
 
     <modules>
-      <module>cardinal-features</module>
+<!--      <module>cardinal-features</module>-->
       <module>cardinal-features4</module>
       <module>odl-cardinal-api</module>
       <module>odl-cardinal-ui</module>
       <module>odl-cardinal-rest</module>
       <module>odl-cardinal</module>
    </modules>
+   <url>${odl.site.url}/${project.groupId}/${stream}/${project.artifactId}/</url>
+  <distributionManagement>
+    <site>
+      <id>opendaylight-site</id>
+      <url>${nexus.site.url}/${project.artifactId}/</url>
+    </site>
+  </distributionManagement>
 </project>
 
