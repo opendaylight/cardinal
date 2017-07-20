@@ -45,7 +45,7 @@
     <feature name='odl-cardinal-ui' version='${project.version}'
         description='OpenDaylight :: cardinal :: UI'>
         <feature version="${restconf.version}">odl-mdsal-apidocs</feature>
-        <feature version="${dluxapps.version}">odl-dluxapps-yangman</feature>
+        <feature version="${dluxapps.version}">odl-dluxapps-yangui</feature>
     </feature>
 </features>
 
