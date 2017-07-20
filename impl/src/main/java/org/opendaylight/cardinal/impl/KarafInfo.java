@@ -235,7 +235,9 @@ public class KarafInfo {
                     }
                 }
                 for (int i = 1; i <= 10; i++) {
+                  if(i<installFeatures.size()){
                     set.setVariableString(".1.3.6.1.3.1.1.2." + i + ".0", installFeatures.get(i));
+                    }
                 }
 
                 LOG.info("Value set for installed features");

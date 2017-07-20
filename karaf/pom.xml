@@ -10,8 +10,8 @@ and is available at http://www.eclipse.org/legal/epl-v10.html INTERNAL
 
   <parent>
     <groupId>org.opendaylight.odlparent</groupId>
-    <artifactId>karaf-parent</artifactId>
-    <version>1.9.0</version>
+    <artifactId>karaf4-parent</artifactId>
+    <version>2.0.2</version>
     <relativePath/>
   </parent>
 
@@ -25,7 +25,7 @@ and is available at http://www.eclipse.org/legal/epl-v10.html INTERNAL
   </prerequisites>
 
   <properties>
-    <karaf.localFeature>odl-cardinal-ui</karaf.localFeature>
+    <karaf.localFeature>odl-cardinal</karaf.localFeature>
   </properties>
 
   <dependencyManagement>
@@ -51,7 +51,7 @@ and is available at http://www.eclipse.org/legal/epl-v10.html INTERNAL
 
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>cardinal-features</artifactId>
+      <artifactId>cardinal-features4</artifactId>
       <classifier>features</classifier>
       <type>xml</type>
       <scope>runtime</scope>
@@ -60,6 +60,13 @@ and is available at http://www.eclipse.org/legal/epl-v10.html INTERNAL
 
   <build>
     <plugins>
+    <plugin>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-install-plugin</artifactId>
+      <configuration>
+      <skip>true</skip>
+      </configuration>
+    </plugin>
       <!-- DO NOT deploy the karaf artifact -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -70,4 +77,11 @@ and is available at http://www.eclipse.org/legal/epl-v10.html INTERNAL
       </plugin>
     </plugins>
   </build>
+  <url>${odl.site.url}/${project.groupId}/${stream}/${project.artifactId}/</url>
+  <distributionManagement>
+    <site>
+      <id>opendaylight-site</id>
+      <url>${nexus.site.url}/${project.artifactId}/</url>
+    </site>
+  </distributionManagement>
 </project>

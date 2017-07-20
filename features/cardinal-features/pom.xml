@@ -8,8 +8,8 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.opendaylight.odlparent</groupId>
-        <artifactId>features-parent</artifactId>
-        <version>1.9.0</version>
+        <artifactId>feature-repo-parent</artifactId>
+        <version>2.0.2</version>
         <relativePath/>
     </parent>
     <groupId>org.opendaylight.cardinal</groupId>
@@ -31,7 +31,7 @@
         <configfile.directory>etc/opendaylight/karaf</configfile.directory>
         <openflowplugin.version>0.5.0-SNAPSHOT</openflowplugin.version>
         <l2switch.version>0.6.0-SNAPSHOT</l2switch.version>
-        <feature.test.version>1.9.0</feature.test.version>
+        <feature.test.version>2.0.2</feature.test.version>
         <feature.tsdr.version>1.4.0-SNAPSHOT</feature.tsdr.version>
     </properties>
     <dependencyManagement>
@@ -127,7 +127,7 @@
         </dependency>
         <dependency>
             <groupId>org.opendaylight.dluxapps</groupId>
-            <artifactId>features-dluxapps</artifactId>
+            <artifactId>odl-dluxapps-yangui</artifactId>
             <version>${dluxapps.version}</version>
             <classifier>features</classifier>
             <type>xml</type>
@@ -153,7 +153,7 @@
         </dependency>
         <dependency>
             <groupId>org.opendaylight.l2switch</groupId>
-            <artifactId>features-l2switch</artifactId>
+            <artifactId>odl-l2switch-switch</artifactId>
             <version>${l2switch.version}</version>
             <classifier>features</classifier>
             <type>xml</type>
@@ -186,5 +186,12 @@
             <artifactId>guava</artifactId>
         </dependency>
     </dependencies>
+  <url>${odl.site.url}/${project.groupId}/${stream}/${project.artifactId}/</url>
+  <distributionManagement>
+    <site>
+      <id>opendaylight-site</id>
+      <url>${nexus.site.url}/${project.artifactId}/</url>
+    </site>
+  </distributionManagement>
 </project>
 
