@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da2a55be_dc3a56cc",
+        "filename": "features/odl-cardinal-ui/pom.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 4540
+      },
+      "writtenOn": "2017-07-21T08:15:53Z",
+      "side": 1,
+      "message": "You need to depend on a feature here, not a feature repository. odl-dluxapps-applications should still work.",
+      "revId": "325e53365d6099ef273018cd8ab362be6a99ac43",
+      "serverId": "7fc14799-209e-464c-9743-7a06c2c21a81",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da2a55be_1c350eda",
+        "filename": "features/odl-cardinal/pom.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 4540
+      },
+      "writtenOn": "2017-07-21T08:15:53Z",
+      "side": 1,
+      "message": "You need to depend on a specific feature, not a feature repository.",
+      "revId": "325e53365d6099ef273018cd8ab362be6a99ac43",
+      "serverId": "7fc14799-209e-464c-9743-7a06c2c21a81",
+      "unresolved": false
+    }
+  ]
+}
