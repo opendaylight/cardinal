@@ -15,7 +15,7 @@ import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.cardinal
 import org.opendaylight.yangtools.yang.binding.InstanceIdentifier;
 import org.slf4j.LoggerFactory;
 
-public class OdlCardinalSysInfoApis implements AutoCloseable {
+public class OdlCardinalSysInfoApis {
     private DataBroker dataProvider;
     private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(OdlCardinalSysInfoApis.class);
     public static final InstanceIdentifier<CardinalSystemInfo> Cardinal_IID = InstanceIdentifier
@@ -54,9 +54,5 @@ public class OdlCardinalSysInfoApis implements AutoCloseable {
         builder.setOdlSystemOdlUptime(sysUptime);
         CardinalSystemInfo cardinalSystemInfo = builder.build();
         return cardinalSystemInfo;
-    }
-
-    @Override
-    public void close() throws Exception {
     }
 }

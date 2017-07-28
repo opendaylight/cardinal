@@ -17,7 +17,6 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Enumeration;
-
 import org.slf4j.LoggerFactory;
 
 /**
@@ -28,7 +27,7 @@ import org.slf4j.LoggerFactory;
  * @author gaurav pande.
  *
  */
-public class SetCardinalMibValues implements AutoCloseable {
+public class SetCardinalMibValues {
     private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(SetCardinalMibValues.class);
     SnmpSet set = new SnmpSet();
     String temp = null;
@@ -153,7 +152,7 @@ public class SetCardinalMibValues implements AutoCloseable {
         BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()));
         BufferedReader stdError = new BufferedReader(new InputStreamReader(process.getErrorStream()));
         String[] words;
-        ArrayList<String> arr = new ArrayList<String>();
+        ArrayList<String> arr = new ArrayList<>();
         // read the output from the command
 
         while ((temp = stdInput.readLine()) != null && flag) {
@@ -174,7 +173,7 @@ public class SetCardinalMibValues implements AutoCloseable {
                 String topS = "";
                 int cpu = 0;
                 int mem = 0;
-                ArrayList<String> list = new ArrayList<String>();
+                ArrayList<String> list = new ArrayList<>();
                 String s = stdInput1.readLine();
                 while ((topS = stdInput1.readLine()) != null) {
                     topS = topS.replaceAll("  ", " ");
@@ -182,8 +181,9 @@ public class SetCardinalMibValues implements AutoCloseable {
                     topS = topS.replaceAll("  ", " ");
                     String[] tokens1 = topS.split(" ");
                     for (String data : tokens1) {
-                        if (!data.equals(""))
+                        if (!data.equals("")) {
                             list.add(data);
+                        }
                     }
                     float temp1 = Float.parseFloat(list.get(0));
                     float temp2 = Float.parseFloat(list.get(1));
@@ -222,7 +222,7 @@ public class SetCardinalMibValues implements AutoCloseable {
         while ((s1 = stdError.readLine()) != null) {
             LOG.info(s1);
         }
-        if ((flag1 != 0) && (flag2 != 0)) {
+        if (flag1 != 0 && flag2 != 0) {
             setter.setKarafUptime(s2[0]);
             return true;
         } else {
@@ -247,7 +247,7 @@ public class SetCardinalMibValues implements AutoCloseable {
         systemProcess.waitFor();
         BufferedReader stdInput1 = new BufferedReader(new InputStreamReader(systemProcess.getInputStream()));
         String topS = "";
-        ArrayList<String> list = new ArrayList<String>();
+        ArrayList<String> list = new ArrayList<>();
 
         while ((topS = stdInput1.readLine()) != null) {
             if (!topS.equals("")) {
@@ -257,8 +257,9 @@ public class SetCardinalMibValues implements AutoCloseable {
                     topS = topS.replaceAll("  ", " ");
                     String[] tokens1 = topS.split(" ");
                     for (String data : tokens1) {
-                        if (!data.equals(""))
+                        if (!data.equals("")) {
                             list.add(data);
+                        }
                     }
                     pid = list.get(0);
                     uptime = list.get(1);
@@ -283,11 +284,6 @@ public class SetCardinalMibValues implements AutoCloseable {
         } else {
             return false;
         }
-
-    }
-
-    @Override
-    public void close() throws Exception {
 
     }
 }
