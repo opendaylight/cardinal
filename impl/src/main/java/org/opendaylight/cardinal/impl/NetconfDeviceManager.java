@@ -100,7 +100,8 @@ public class NetconfDeviceManager implements AutoCloseable, DataChangeListener {
             agent.start();
         } catch (IOException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            // e.printStackTrace();
+            LOG.info("Exception instarting snmp Daemon for Netconf");
         }
         this.rpcProviderRegistry = Preconditions.checkNotNull(rpcProviderRegistry);
         dataChangeListenerRegistration = dataBroker.registerDataChangeListener(LogicalDatastoreType.OPERATIONAL, NODE,
@@ -159,7 +160,7 @@ public class NetconfDeviceManager implements AutoCloseable, DataChangeListener {
                     agent.start();
                 } catch (IOException e) {
                     // TODO Auto-generated catch block
-                    e.printStackTrace();
+                    // e.printStackTrace();
                 }
                 agent.unregisterManagedObject(agent.getSnmpv2MIB());
                 agent.registerManagedObject(MOScalarFactory.createReadOnly(sysDescr, "MySystemDescr"));
@@ -197,7 +198,8 @@ public class NetconfDeviceManager implements AutoCloseable, DataChangeListener {
                             set.setVariableString(".1.3.6.1.3.1.1." + j + ".4.0", value.get(2));
                         } catch (Exception e) {
                             // TODO Auto-generated catch block
-                            e.printStackTrace();
+                            LOG.info("Exception due to removed path");
+                            // e.printStackTrace();
                         }
                         j++;
                     }
@@ -274,14 +276,15 @@ public class NetconfDeviceManager implements AutoCloseable, DataChangeListener {
             nodeValues.add(" ");
             if (nodeName != nodeprevious) {
                 featureListOid.put(nodeName, nodeValues);
+                LOG.info("  featureListOid  {}", featureListOid);
                 updatedSize = updatedSize + 1;
                 nodeprevious = nodeName;
             }
-            if (nodeSize == updatedSize && featureListOid.size() > 2) {
+            if (featureListOid.size() > 2) {
                 removedPathssize = 0;
                 featureList.clear();
                 featureListUpdated = featureListOid;
-                LOG.info("  featureListOid {}", featureListOid);
+                LOG.info("  featureListOid size {}", featureListOid.size());
                 setNetconfOid(featureListOid);
                 int j = 14;
                 for (int i = 0; i < 2; i++) {
@@ -310,7 +313,7 @@ public class NetconfDeviceManager implements AutoCloseable, DataChangeListener {
 
         } catch (Exception e) {
             // TODO Auto-generated catch block
-            LOG.info("Exception  {}", e);
+            LOG.info("............ Exception in Netconf {}", e);
         }
     }
 

@@ -25,7 +25,7 @@ and is available at http://www.eclipse.org/legal/epl-v10.html INTERNAL
   </prerequisites>
 
   <properties>
-    <karaf.localFeature>odl-cardinal</karaf.localFeature>
+    <karaf.localFeature>odl-cardinal-ui</karaf.localFeature>
   </properties>
 
   <dependencyManagement>

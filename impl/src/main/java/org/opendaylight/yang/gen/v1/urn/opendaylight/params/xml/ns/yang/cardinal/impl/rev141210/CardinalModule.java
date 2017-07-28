@@ -93,12 +93,12 @@ public class CardinalModule extends
                 manager.odlPeakThreads();
                 pmanager.odlMDSALIotDMListofcse();
                 cardinalKarafApi.setValues();
-                callTimer.CallTimerMain();
+                //callTimer.CallTimerMain();
                 agent = new SnmpAgent("0.0.0.0/2003");
                 agent.start();
                 new OpenflowDeviceManager(getDataBrokerDependency(), getRpcRegistryDependency(), agent);
-                new NetconfDeviceManager(getDataBrokerDependency(), getRpcRegistryDependency());
-                // Thread.sleep(5000);
+                //new NetconfDeviceManager(getDataBrokerDependency(), getRpcRegistryDependency());
+                 Thread.sleep(5000);
             } else {
                 LOG.info("You may be not logged in as root!!!");
             }

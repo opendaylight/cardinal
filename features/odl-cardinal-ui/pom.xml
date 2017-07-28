@@ -24,7 +24,13 @@
     <packaging>feature</packaging>
 
     <name>OpenDaylight :: cardinal :: UI</name>
-
+    <properties>
+        <mdsal.version>1.6.0-SNAPSHOT</mdsal.version>
+        <restconf.version>1.6.0-SNAPSHOT</restconf.version>
+        <netconf.version>1.3.0-SNAPSHOT</netconf.version>
+        <dluxapps.version>0.6.0-SNAPSHOT</dluxapps.version>
+        <configfile.directory>etc/opendaylight/karaf</configfile.directory>
+    </properties>
     <dependencies>
         <dependency>
             <groupId>org.opendaylight.cardinal</groupId>
@@ -36,28 +42,21 @@
         <dependency>
             <groupId>org.opendaylight.netconf</groupId>
             <artifactId>odl-mdsal-apidocs</artifactId>
-            <version>1.6.0-SNAPSHOT</version>
-            <type>xml</type>
-            <classifier>features</classifier>
-        </dependency>
-        <dependency>
-            <groupId>org.opendaylight.netconf</groupId>
-            <artifactId>odl-restconf</artifactId>
-            <version>1.6.0-SNAPSHOT</version>
+            <version>${mdsal.version}</version>
             <type>xml</type>
             <classifier>features</classifier>
         </dependency>
         <dependency>
             <groupId>org.opendaylight.dlux</groupId>
             <artifactId>odl-dlux-core</artifactId>
-            <version>0.6.0-SNAPSHOT</version>
+            <version>${dluxapps.version}</version>
             <classifier>features</classifier>
             <type>xml</type>
         </dependency>
         <dependency>
             <groupId>org.opendaylight.dluxapps</groupId>
             <artifactId>odl-dluxapps-yangui</artifactId>
-            <version>0.6.0-SNAPSHOT</version>
+            <version>${dluxapps.version}</version>
             <classifier>features</classifier>
             <type>xml</type>
         </dependency>
