@@ -73,7 +73,6 @@ public class OpenflowDeviceManager implements DataChangeListener, AutoCloseable 
     private static final ScheduledExecutorService executorService = MoreExecutors
             .listeningDecorator(Executors.newScheduledThreadPool(1));
     private final DataBroker dataBroker;
-    private final RpcProviderRegistry rpcProviderRegistry;
     SnmpAgent agent;
     private ListenerRegistration<DataChangeListener> dataChangeListenerRegistration;
     SnmpSet set = new SnmpSet();
@@ -91,11 +90,10 @@ public class OpenflowDeviceManager implements DataChangeListener, AutoCloseable 
     Map<String, List<String>> featureListUpdated = new HashMap<String, List<String>>();
     List<String> featureList = new ArrayList<String>();
 
-    public OpenflowDeviceManager(DataBroker dataBroker, RpcProviderRegistry rpcProviderRegistry, SnmpAgent sagent) {
+    public OpenflowDeviceManager(DataBroker dataBroker, SnmpAgent sagent) {
         this.dataBroker = Preconditions.checkNotNull(dataBroker);
         odlOpenflowApi.setDataProvider(dataBroker);
         agent = sagent;
-        this.rpcProviderRegistry = Preconditions.checkNotNull(rpcProviderRegistry);
         dataChangeListenerRegistration = dataBroker.registerDataChangeListener(LogicalDatastoreType.OPERATIONAL,
                 NODE_IID, this, AsyncDataBroker.DataChangeScope.BASE);
         if (dataChangeListenerRegistration != null) {
@@ -106,7 +104,7 @@ public class OpenflowDeviceManager implements DataChangeListener, AutoCloseable 
     }
 
     @Override
-    public void close() throws Exception {
+    public void close() {
         if (dataChangeListenerRegistration != null) {
             LOG.info("closing onDataChanged listener registration");
             dataChangeListenerRegistration.close();

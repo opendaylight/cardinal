@@ -7,30 +7,32 @@
  */
 package org.opendaylight.cardinal.impl;
 
+import com.sun.jdmk.comm.HtmlAdaptorServer;
+import com.sun.management.comm.SnmpAdaptorServer;
+import com.sun.management.snmp.InetAddressAcl;
+import com.sun.management.snmp.SnmpOid;
+import com.sun.management.snmp.SnmpStatusException;
+import com.sun.management.snmp.SnmpTimeticks;
+import com.sun.management.snmp.SnmpValue;
+import com.sun.management.snmp.SnmpVarBind;
+import com.sun.management.snmp.SnmpVarBindList;
+import com.sun.management.snmp.IPAcl.JdmkAcl;
+import com.sun.management.snmp.agent.SnmpMibAgent;
 import java.net.InetAddress;
 import java.util.Enumeration;
-
 import javax.management.InstanceAlreadyExistsException;
 import javax.management.MBeanRegistrationException;
 import javax.management.MBeanServer;
 import javax.management.MBeanServerFactory;
 import javax.management.NotCompliantMBeanException;
 import javax.management.ObjectName;
-
-import com.sun.jdmk.comm.HtmlAdaptorServer;
-import com.sun.management.comm.SnmpAdaptorServer;
-import com.sun.management.snmp.*;
-import com.sun.management.snmp.IPAcl.JdmkAcl;
-import com.sun.management.snmp.agent.SnmpMibAgent;
-
-import org.osgi.framework.FrameworkUtil;
+import org.opendaylight.cardinal.api.SnmpMibService;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
-
+import org.osgi.framework.FrameworkUtil;
+import org.osgi.framework.ServiceRegistration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import org.opendaylight.cardinal.api.SnmpMibService;
 
 @SuppressWarnings("all")
 public class Agent implements AutoCloseable {
@@ -46,9 +48,8 @@ public class Agent implements AutoCloseable {
 
     private boolean snmpAdaptorStarted = false;
     private MBeanServer server = null;
-    private static SnmpAdaptorServer snmpAdaptor = null;
-
-    private BundleContext context = null;
+    private SnmpAdaptorServer snmpAdaptor = null;
+    private ServiceRegistration<?> snmpMibServiceReg;
 
     /**
      * @throws SnmpStatusException
@@ -94,8 +95,8 @@ public class Agent implements AutoCloseable {
                  * No Bundles or bundle context during build tests.
                  */
                 if (bundle != null) {
-                    context = bundle.getBundleContext();
-                    context.registerService(SnmpMibService.class.getName(),
+                    BundleContext context = bundle.getBundleContext();
+                    snmpMibServiceReg = context.registerService(SnmpMibService.class.getName(),
                             new SnmpMibSecviceImpl(this), null);
                 } else {
                     LOG.info("Failed to get the bundle");
@@ -208,7 +209,7 @@ public class Agent implements AutoCloseable {
     }
 
     // Needed to get a reference on the SNMP adaptor object
-    public static SnmpAdaptorServer getSnmpAdaptor() {
+    public SnmpAdaptorServer getSnmpAdaptor() {
         return snmpAdaptor;
     }
 
@@ -218,9 +219,17 @@ public class Agent implements AutoCloseable {
     }
 
     @Override
-    public void close() throws Exception {
-        // TODO Auto-generated method stub
-        snmpAdaptor.stop();
+    public void close() {
+        if (snmpAdaptor != null) {
+            snmpAdaptor.stop();
+            snmpAdaptor = null;
+        }
+
+        if (snmpMibServiceReg != null) {
+            snmpMibServiceReg.unregister();
+            snmpMibServiceReg = null;
+        }
+
         snmpAdaptorStarted = false;
         LOG.info("All Daemons are killed successfully");
     }
@@ -237,20 +246,24 @@ public class Agent implements AutoCloseable {
             this.agent = agent;
         }
 
+        @Override
         public void loadMib(SnmpMibAgent mib){
             LOG.info("Loading Mib " + mib.getMibName());
             agent.registerMib(mib);
         }
 
+        @Override
         public void unloadMib(SnmpMibAgent mib){
             LOG.info("Unloading Mib " + mib.getMibName());
             agent.unregisterMib(mib);
         }
 
+        @Override
         public void setTrapAddress(InetAddress trapReceiver) {
             LOG.info("setTrapAddress called " + trapReceiver.toString());
         }
 
+        @Override
         public void sendSnmpTrap(SnmpOid ntOid, Enumeration<SnmpOid> payloadOid, Enumeration<SnmpValue> payloadData) {
             LOG.info("sendSnmpTrap called");
             try {

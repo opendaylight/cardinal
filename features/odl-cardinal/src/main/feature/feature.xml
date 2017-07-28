@@ -8,9 +8,6 @@
 -->
 <features name="odl-cardinal-${project.version}" xmlns="http://karaf.apache.org/xmlns/features/v1.2.0">
     <feature name="odl-cardinal" version="${project.version}">
-        <configfile finalname="${configfile.directory}/cardinal.xml">
-            mvn:org.opendaylight.cardinal/cardinal-impl/${project.version}/xml/config
-        </configfile>
     </feature>
 </features>
 
