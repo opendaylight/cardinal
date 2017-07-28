@@ -7,17 +7,10 @@
  */
 package org.opendaylight.cardinal.impl;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Timer;
-
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.cardinal.impl.rev141210.CardinalModule;
 import org.slf4j.LoggerFactory;
 
-import com.sun.management.snmp.SnmpStatusException;
-
 public class OdlCardinalPolling implements Runnable {
-    private final static org.slf4j.Logger LOG = LoggerFactory.getLogger(CardinalModule.class);
+    private final static org.slf4j.Logger LOG = LoggerFactory.getLogger(OdlCardinalPolling.class);
     final SetCardinalMibValues setSnmpValues = new SetCardinalMibValues();
     final Agent snmpDaemonStart = new Agent();
     final OdlCardinalSysInfoApis cardinalApi = new OdlCardinalSysInfoApis();
@@ -31,7 +24,7 @@ public class OdlCardinalPolling implements Runnable {
     public void run() {
         // TODO Auto-generated method stub
         boolean flag = true;
-        long threadSleepTime  = (long) 60000;
+        long threadSleepTime  = 60000;
         while(flag){
             System.out.println("running thread");
             LOG.info("Fetching system information");

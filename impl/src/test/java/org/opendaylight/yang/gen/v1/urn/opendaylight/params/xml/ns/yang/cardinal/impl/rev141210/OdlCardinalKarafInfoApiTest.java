@@ -1,8 +1,17 @@
 package org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.cardinal.impl.rev141210;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
+
+import com.sun.management.snmp.SnmpStatusException;
+import java.io.IOException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.opendaylight.cardinal.impl.Agent;
 import org.opendaylight.cardinal.impl.OdlCardinalKarafInfoApi;
 import org.opendaylight.controller.md.sal.binding.api.DataBroker;
@@ -24,14 +33,6 @@ import org.snmp4j.smi.UdpAddress;
 import org.snmp4j.smi.Variable;
 import org.snmp4j.smi.VariableBinding;
 import org.snmp4j.transport.DefaultUdpTransportMapping;
-import com.sun.management.snmp.SnmpStatusException;
-import static org.mockito.Mockito.mock;
-import java.io.IOException;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.mockito.Mockito.doReturn;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 public class OdlCardinalKarafInfoApiTest {
     PDU responsePDU = null;
@@ -42,7 +43,7 @@ public class OdlCardinalKarafInfoApiTest {
 
     @Mock
     private DataBroker mockDataBroker;
-    private MockOdlCardinalKarafInfoApi myMock = new MockOdlCardinalKarafInfoApi();
+    private final MockOdlCardinalKarafInfoApi myMock = new MockOdlCardinalKarafInfoApi();
     public static final InstanceIdentifier<CardinalKarafInfo> Cardinal_IID_KARAF = InstanceIdentifier
             .builder(CardinalKarafInfo.class).build();
 
@@ -104,12 +105,6 @@ public class OdlCardinalKarafInfoApiTest {
 
     @After
     public void setDown() {
-        try {
-            myMock.close();
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
     }
 
     @Test

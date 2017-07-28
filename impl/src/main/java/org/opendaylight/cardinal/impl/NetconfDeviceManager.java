@@ -7,28 +7,22 @@
  */
 package org.opendaylight.cardinal.impl;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.netconf.node.topology.rev150114.NetconfNode;
-import java.util.concurrent.TimeUnit;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.netconf.node.topology.rev150114.network.topology.topology.topology.types.TopologyNetconf;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.cardinal.netconf.rev161227.DevicesBuilder;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.cardinal.netconf.rev161227.cardinalnetconfinfogrouping.Netconf;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.cardinal.netconf.rev161227.cardinalnetconfinfogrouping.NetconfBuilder;
-import org.opendaylight.yang.gen.v1.urn.tbd.params.xml.ns.yang.network.topology.rev131021.NetworkTopology;
-import org.opendaylight.yang.gen.v1.urn.tbd.params.xml.ns.yang.network.topology.rev131021.NodeId;
-import org.opendaylight.yang.gen.v1.urn.tbd.params.xml.ns.yang.network.topology.rev131021.TopologyId;
-import org.opendaylight.yang.gen.v1.urn.tbd.params.xml.ns.yang.network.topology.rev131021.network.topology.Topology;
-import org.opendaylight.yang.gen.v1.urn.tbd.params.xml.ns.yang.network.topology.rev131021.network.topology.TopologyKey;
-import org.opendaylight.yang.gen.v1.urn.tbd.params.xml.ns.yang.network.topology.rev131021.network.topology.topology.Node;
-import org.opendaylight.yang.gen.v1.urn.tbd.params.xml.ns.yang.network.topology.rev131021.network.topology.topology.NodeKey;
-import org.opendaylight.yangtools.yang.binding.Augmentation;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.util.concurrent.CheckedFuture;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.MoreExecutors;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import org.opendaylight.controller.md.sal.binding.api.DataBroker;
 import org.opendaylight.controller.md.sal.binding.api.DataChangeListener;
 import org.opendaylight.controller.md.sal.binding.api.ReadOnlyTransaction;
@@ -36,7 +30,16 @@ import org.opendaylight.controller.md.sal.common.api.data.AsyncDataBroker;
 import org.opendaylight.controller.md.sal.common.api.data.AsyncDataChangeEvent;
 import org.opendaylight.controller.md.sal.common.api.data.LogicalDatastoreType;
 import org.opendaylight.controller.md.sal.common.api.data.ReadFailedException;
-import org.opendaylight.controller.sal.binding.api.RpcProviderRegistry;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.netconf.node.topology.rev150114.NetconfNode;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.netconf.node.topology.rev150114.network.topology.topology.topology.types.TopologyNetconf;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.cardinal.netconf.rev161227.DevicesBuilder;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.cardinal.netconf.rev161227.cardinalnetconfinfogrouping.Netconf;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.cardinal.netconf.rev161227.cardinalnetconfinfogrouping.NetconfBuilder;
+import org.opendaylight.yang.gen.v1.urn.tbd.params.xml.ns.yang.network.topology.rev131021.NetworkTopology;
+import org.opendaylight.yang.gen.v1.urn.tbd.params.xml.ns.yang.network.topology.rev131021.TopologyId;
+import org.opendaylight.yang.gen.v1.urn.tbd.params.xml.ns.yang.network.topology.rev131021.network.topology.Topology;
+import org.opendaylight.yang.gen.v1.urn.tbd.params.xml.ns.yang.network.topology.rev131021.network.topology.TopologyKey;
+import org.opendaylight.yang.gen.v1.urn.tbd.params.xml.ns.yang.network.topology.rev131021.network.topology.topology.Node;
 import org.opendaylight.yangtools.concepts.ListenerRegistration;
 import org.opendaylight.yangtools.yang.binding.DataObject;
 import org.opendaylight.yangtools.yang.binding.InstanceIdentifier;
@@ -57,14 +60,6 @@ import org.snmp4j.transport.DefaultUdpTransportMapping;
 import org.snmp4j.util.DefaultPDUFactory;
 import org.snmp4j.util.TableEvent;
 import org.snmp4j.util.TableUtils;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.Callable;
-import java.util.concurrent.Future;
 
 @SuppressWarnings({ "deprecation", "unused" })
 public class NetconfDeviceManager implements AutoCloseable, DataChangeListener {
@@ -76,23 +71,22 @@ public class NetconfDeviceManager implements AutoCloseable, DataChangeListener {
     private static final ScheduledExecutorService executorService = MoreExecutors
             .listeningDecorator(Executors.newScheduledThreadPool(1));
     private final DataBroker dataBroker;
-    private final RpcProviderRegistry rpcProviderRegistry;
     private ListenerRegistration<DataChangeListener> dataChangeListenerRegistration;
     final OID interfacesTable = new OID(".1.3.6.1.3.1.1.16.1");
     SnmpSet set = new SnmpSet();
     DevicesBuilder builder = new DevicesBuilder();
     OdlCardinalNetconfInfoApi odlNetconfApi = new OdlCardinalNetconfInfoApi();
     String netconfNode = null;
-    List<String> featureList = new ArrayList<String>();
+    List<String> featureList = new ArrayList<>();
     Integer nodeSize = 0;
     Integer updatedSize = 0;
     Integer removedPathssize = 0;
-    Map<String, List<String>> featureListOid = new HashMap<String, List<String>>();
-    Map<String, List<String>> featureListUpdated = new HashMap<String, List<String>>();
+    Map<String, List<String>> featureListOid = new HashMap<>();
+    Map<String, List<String>> featureListUpdated = new HashMap<>();
     SnmpAgent agent;
     String nodeprevious = "netconf";
 
-    public NetconfDeviceManager(DataBroker dataBroker, RpcProviderRegistry rpcProviderRegistry) {
+    public NetconfDeviceManager(DataBroker dataBroker) {
         this.dataBroker = Preconditions.checkNotNull(dataBroker);
         odlNetconfApi.setDataProvider(dataBroker);
         try {
@@ -102,7 +96,6 @@ public class NetconfDeviceManager implements AutoCloseable, DataChangeListener {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        this.rpcProviderRegistry = Preconditions.checkNotNull(rpcProviderRegistry);
         dataChangeListenerRegistration = dataBroker.registerDataChangeListener(LogicalDatastoreType.OPERATIONAL, NODE,
                 this, AsyncDataBroker.DataChangeScope.BASE);
         if (dataChangeListenerRegistration != null) {
@@ -113,7 +106,7 @@ public class NetconfDeviceManager implements AutoCloseable, DataChangeListener {
     }
 
     @Override
-    public void close() throws Exception {
+    public void close() {
         if (dataChangeListenerRegistration != null) {
             LOG.info("Closing onDataChanged listener registration");
             dataChangeListenerRegistration.close();
@@ -225,29 +218,26 @@ public class NetconfDeviceManager implements AutoCloseable, DataChangeListener {
                 @SuppressWarnings("unchecked")
                 final InstanceIdentifier<Node> path = (InstanceIdentifier<Node>) dataObjectEntry.getKey();
                 LOG.info("Created node {}", path.toString());
-                Future<Void> submit = executorService.schedule(new Callable<Void>() {
-                    @Override
-                    public Void call() throws Exception {
-                        ReadOnlyTransaction readOnlyTransaction = dataBroker.newReadOnlyTransaction();
-                        final CheckedFuture<Optional<Node>, ReadFailedException> readFuture = readOnlyTransaction
-                                .read(LogicalDatastoreType.OPERATIONAL, path);
-                        Futures.addCallback(readFuture, new FutureCallback<Optional<Node>>() {
-                            @Override
-                            public void onSuccess(Optional<Node> result) {
-                                if (result.isPresent()) {
-                                    identifyDevice(path, result.get());
-                                } else {
-                                    LOG.error("Read succeeded, node doesn't exist: {}", path);
-                                }
+                Future<Void> submit = executorService.schedule(() -> {
+                    ReadOnlyTransaction readOnlyTransaction = dataBroker.newReadOnlyTransaction();
+                    final CheckedFuture<Optional<Node>, ReadFailedException> readFuture = readOnlyTransaction
+                            .read(LogicalDatastoreType.OPERATIONAL, path);
+                    Futures.addCallback(readFuture, new FutureCallback<Optional<Node>>() {
+                        @Override
+                        public void onSuccess(Optional<Node> result) {
+                            if (result.isPresent()) {
+                                identifyDevice(path, result.get());
+                            } else {
+                                LOG.error("Read succeeded, node doesn't exist: {}", path);
                             }
+                        }
 
-                            @Override
-                            public void onFailure(Throwable t) {
-                                LOG.error("Failed to read Node: {}", path, t);
-                            }
-                        });
-                        return null;
-                    }
+                        @Override
+                        public void onFailure(Throwable t) {
+                            LOG.error("Failed to read Node: {}", path, t);
+                        }
+                    });
+                    return null;
                 }, 25, TimeUnit.MILLISECONDS);
             }
         }
@@ -260,7 +250,7 @@ public class NetconfDeviceManager implements AutoCloseable, DataChangeListener {
         String port = null;
         String status = null;
         LOG.info("Read updated node");
-        List<String> nodeValues = new ArrayList<String>();
+        List<String> nodeValues = new ArrayList<>();
 
         nodeName = node.getKey().getNodeId().getValue().toString();
         host = node.getAugmentation(NetconfNode.class).getHost().getIpAddress().getIpv4Address().getValue().toString();
@@ -340,8 +330,8 @@ public class NetconfDeviceManager implements AutoCloseable, DataChangeListener {
 
     public void gettingTableOid() {
         NetconfBuilder flow = new NetconfBuilder();
-        List<Netconf> netconflist = new ArrayList<Netconf>();
-        List<List<String>> list = new ArrayList<List<String>>();
+        List<Netconf> netconflist = new ArrayList<>();
+        List<List<String>> list = new ArrayList<>();
 
         try {
             TransportMapping transport = new DefaultUdpTransportMapping();
@@ -361,7 +351,7 @@ public class NetconfDeviceManager implements AutoCloseable, DataChangeListener {
             List<TableEvent> events = tUtils.getTable(target, oid, null, null);
 
             for (TableEvent event : events) {
-                List<String> strList = new ArrayList<String>();
+                List<String> strList = new ArrayList<>();
                 list.add(strList);
                 for (VariableBinding vb : event.getColumns()) {
                     strList.add(vb.getVariable().toString());
