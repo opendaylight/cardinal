@@ -15,7 +15,7 @@ import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.cardinal
 import org.opendaylight.yangtools.yang.binding.InstanceIdentifier;
 import org.slf4j.LoggerFactory;
 
-public class OdlCardinalKarafInfoApi implements AutoCloseable {
+public class OdlCardinalKarafInfoApi {
     // public DataBroker dataProvider;
     private DataBroker dataProvider;
     CardinalKarafInfoBuilder builder = new CardinalKarafInfoBuilder();
@@ -24,8 +24,6 @@ public class OdlCardinalKarafInfoApi implements AutoCloseable {
             .builder(CardinalKarafInfo.class).build();
 
     public OdlCardinalKarafInfoApi() {
-        // TODO Auto-generated constructor stub
-
     }
 
     public void setDataProvider(final DataBroker salDataProvider) {
@@ -143,10 +141,5 @@ public class OdlCardinalKarafInfoApi implements AutoCloseable {
         } else {
             return false;
         }
-    }
-
-    @Override
-    public void close() throws Exception {
-        // TODO Auto-generated method stub
     }
 }

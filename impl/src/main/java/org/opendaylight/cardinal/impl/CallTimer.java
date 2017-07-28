@@ -7,23 +7,19 @@
  */
 package org.opendaylight.cardinal.impl;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.jcraft.jsch.JSchException;
 
-public class CallTimer {
+public class CallTimer implements AutoCloseable {
 
     private static final Logger LOG = LoggerFactory.getLogger(CallTimer.class);
+
+    private Timer timer;
 
     public static void main(String args[]) {
         CallTimer ct = new CallTimer();
@@ -35,22 +31,30 @@ public class CallTimer {
 
     public void CallTimerMain() {
         // Creating timer which executes once after ten seconds
-        Timer timer = new Timer();
+        timer = new Timer();
         timer.scheduleAtFixedRate(new TaskExampleRepeating(), 10000, 10000);
+    }
+
+    @Override
+    public void close() {
+        if (timer != null) {
+            timer.cancel();
+        }
     }
 }
 
 class TaskExampleRepeating extends TimerTask {
     private static final Logger LOG = LoggerFactory.getLogger(TaskExampleRepeating.class);
-    Map<String, String> odlKarafFeatureOid = new HashMap<String, String>();
-    Map<String, String> insfeatureprevious = new HashMap<String, String>();
-    Map<String, String> odlKarafFeatureList = new HashMap<String, String>();
+    Map<String, String> odlKarafFeatureOid = new HashMap<>();
+    Map<String, String> insfeatureprevious = new HashMap<>();
+    Map<String, String> odlKarafFeatureList = new HashMap<>();
     FeatureList featureList = new FeatureList();
     TrapSender trapSender = new TrapSender();
     SnmpSet set = new SnmpSet();
     public static int c = 0;
 
     // This task will repeat every five seconds
+    @Override
     public void run() {
         odlKarafFeatureList.clear();
         odlKarafFeatureList = featureList.odlKarafFeatureList();

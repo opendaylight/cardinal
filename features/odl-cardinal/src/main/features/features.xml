@@ -7,8 +7,5 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://karaf.apache.org/xmlns/features/v1.2.0 http://karaf.apache.org/xmlns/features/v1.2.0">
     <feature name="odl-cardinal" version="${project.version}">
-        <configfile finalname="${configfile.directory}/cardinal.xml">
-            mvn:org.opendaylight.cardinal/cardinal-impl/${project.version}/xml/config
-        </configfile>
     </feature>
 </features>
