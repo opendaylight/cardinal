@@ -32,7 +32,6 @@
         <openflowplugin.version>0.5.0-SNAPSHOT</openflowplugin.version>
         <l2switch.version>0.6.0-SNAPSHOT</l2switch.version>
         <feature.test.version>2.0.2</feature.test.version>
-        <feature.tsdr.version>1.4.0-SNAPSHOT</feature.tsdr.version>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -167,13 +166,6 @@
             <classifier>features</classifier>
             <type>xml</type>
         </dependency>
-        <!--<dependency>
-            <groupId>org.opendaylight.tsdr</groupId>
-            <artifactId>features-tsdr</artifactId>
-            <version>${feature.tsdr.version}</version>
-            <classifier>features</classifier>
-            <type>xml</type>
-        </dependency>-->
         <dependency>
             <groupId>org.opendaylight.netconf</groupId>
             <artifactId>features-netconf-connector</artifactId>
