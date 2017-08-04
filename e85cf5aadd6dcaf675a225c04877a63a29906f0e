@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ba1f61a0_6826636a",
+        "filename": "features/cardinal-features/pom.xml",
+        "patchSetId": 4
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 6200
+      },
+      "writtenOn": "2017-08-04T08:03:43Z",
+      "side": 1,
+      "message": "remove tsdr dependency.",
+      "revId": "e85cf5aadd6dcaf675a225c04877a63a29906f0e",
+      "serverId": "7fc14799-209e-464c-9743-7a06c2c21a81",
+      "unresolved": false
+    }
+  ]
+}
