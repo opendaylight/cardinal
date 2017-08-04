@@ -33,8 +33,6 @@
         <bundle>wrap:mvn:com.jcraft/jsch/{{VERSION}}</bundle>
         <bundle>wrap:mvn:org.opendaylight.cardinal/jdmk/{{VERSION}}</bundle>
         <bundle>mvn:org.opendaylight.cardinal/cardinal-impl/{{VERSION}}</bundle>
-        <configfile    finalname="${configfile.directory}/cardinal.xml">mvn:org.opendaylight.cardinal/cardinal-impl/{{VERSION}}/xml/config
-        </configfile>
     </feature>
     <feature name='odl-cardinal-rest' version='${project.version}'
         description='OpenDaylight :: cardinal :: REST'>

@@ -1,8 +1,18 @@
 package org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.cardinal.impl.rev141210;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
+
+import com.sun.management.snmp.SnmpStatusException;
+import java.io.IOException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.opendaylight.cardinal.impl.Agent;
 import org.opendaylight.cardinal.impl.OdlCardinalSysInfoApis;
 import org.opendaylight.cardinal.impl.SetCardinalMibValues;
@@ -27,13 +37,6 @@ import org.snmp4j.smi.UdpAddress;
 import org.snmp4j.smi.Variable;
 import org.snmp4j.smi.VariableBinding;
 import org.snmp4j.transport.DefaultUdpTransportMapping;
-import com.sun.management.snmp.SnmpStatusException;
-import static org.mockito.Mockito.mock;
-import java.io.IOException;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.doReturn;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 /**
  * @author Subodh Roy
@@ -49,7 +52,7 @@ public class OdlCardinalSysInfoApisTest {
 
     @Mock
     private DataBroker mockDataBroker;
-    private MockOdlCardinalSysInfoApis myMock = new MockOdlCardinalSysInfoApis();
+    private final MockOdlCardinalSysInfoApis myMock = new MockOdlCardinalSysInfoApis();
     public static final InstanceIdentifier<CardinalSystemInfo> Cardinal_IID_KARAF = InstanceIdentifier
             .builder(CardinalSystemInfo.class).build();
 
@@ -118,12 +121,6 @@ public class OdlCardinalSysInfoApisTest {
     public void setDown() {
         try {
             snmp.close();
-            try {
-                myMock.close();
-            } catch (Exception e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
