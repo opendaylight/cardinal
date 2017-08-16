@@ -30,7 +30,7 @@
         <dluxapps.version>0.6.0-SNAPSHOT</dluxapps.version>
         <openflowplugin.version>0.5.0-SNAPSHOT</openflowplugin.version>
         <l2switch.version>0.6.0-SNAPSHOT</l2switch.version>
-        <feature.test.version>2.0.2</feature.test.version>
+        <feature.test.version>2.0.4</feature.test.version>
     </properties>
     <dependencyManagement>
         <dependencies>
