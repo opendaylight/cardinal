@@ -1,0 +1,7 @@
+Verified+1: jenkins-releng <jenkins-releng@opendaylight.org>
+Code-Review+2: Subodh Roy <subodh.roy@tcs.com>
+Submitted-by: Subodh Roy <subodh.roy@tcs.com>
+Submitted-at: Thu, 17 Aug 2017 19:03:52 +0000
+Reviewed-on: https://git.opendaylight.org/gerrit/61857
+Project: cardinal
+Branch: refs/heads/stable/nitrogen
