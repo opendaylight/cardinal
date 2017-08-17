@@ -19,7 +19,6 @@
     <packaging>pom</packaging>
 
     <modules>
-     <!-- <module>cardinal-features</module>-->
       <module>cardinal-features4</module>
       <module>odl-cardinal-api</module>
       <module>odl-cardinal-ui</module>
