@@ -11,16 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import org.opendaylight.controller.md.sal.binding.api.DataBroker;
-import org.opendaylight.controller.md.sal.binding.api.DataChangeListener;
-import org.opendaylight.controller.md.sal.binding.api.ReadWriteTransaction;
 import org.opendaylight.controller.md.sal.binding.api.WriteTransaction;
-import org.opendaylight.controller.md.sal.common.api.data.AsyncDataChangeEvent;
 import org.opendaylight.controller.md.sal.common.api.data.LogicalDatastoreType;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.cardinal.netconf.rev161227.Devices;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.cardinal.netconf.rev161227.DevicesBuilder;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.cardinal.netconf.rev161227.cardinalnetconfinfogrouping.Netconf;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.cardinal.netconf.rev161227.cardinalnetconfinfogrouping.NetconfBuilder;
-import org.opendaylight.yangtools.yang.binding.DataObject;
 import org.opendaylight.yangtools.yang.binding.InstanceIdentifier;
 import org.slf4j.LoggerFactory;
 
@@ -45,7 +41,7 @@ public class OdlCardinalNetconfInfoApi implements AutoCloseable {
     public Devices getValues(Map<String, List<String>> netconfList) {
         NetconfBuilder flow = new NetconfBuilder();
         OdlCardinalGet get = new OdlCardinalGet();
-        List<Netconf> netconflist = new ArrayList<Netconf>();
+        List<Netconf> netconflist = new ArrayList<>();
         int j = 14;
         for (int i = 0; i < netconfList.size(); i++) {
             String nodeName = get.snmpGet("localhost", "public", ".1.3.6.1.3.1.1." + j + ".1.0");

@@ -15,7 +15,9 @@ import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.MoreExecutors;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -23,11 +25,13 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.opendaylight.controller.md.sal.binding.api.DataBroker;
-import org.opendaylight.controller.md.sal.binding.api.DataChangeListener;
+import org.opendaylight.controller.md.sal.binding.api.DataObjectModification;
+import org.opendaylight.controller.md.sal.binding.api.DataTreeChangeListener;
+import org.opendaylight.controller.md.sal.binding.api.DataTreeIdentifier;
+import org.opendaylight.controller.md.sal.binding.api.DataTreeModification;
 import org.opendaylight.controller.md.sal.binding.api.ReadOnlyTransaction;
-import org.opendaylight.controller.md.sal.common.api.data.AsyncDataBroker;
-import org.opendaylight.controller.md.sal.common.api.data.AsyncDataChangeEvent;
 import org.opendaylight.controller.md.sal.common.api.data.LogicalDatastoreType;
 import org.opendaylight.controller.md.sal.common.api.data.ReadFailedException;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.netconf.node.topology.rev150114.NetconfNode;
@@ -41,7 +45,6 @@ import org.opendaylight.yang.gen.v1.urn.tbd.params.xml.ns.yang.network.topology.
 import org.opendaylight.yang.gen.v1.urn.tbd.params.xml.ns.yang.network.topology.rev131021.network.topology.TopologyKey;
 import org.opendaylight.yang.gen.v1.urn.tbd.params.xml.ns.yang.network.topology.rev131021.network.topology.topology.Node;
 import org.opendaylight.yangtools.concepts.ListenerRegistration;
-import org.opendaylight.yangtools.yang.binding.DataObject;
 import org.opendaylight.yangtools.yang.binding.InstanceIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,7 +65,7 @@ import org.snmp4j.util.TableEvent;
 import org.snmp4j.util.TableUtils;
 
 @SuppressWarnings({ "deprecation", "unused" })
-public class NetconfDeviceManager implements AutoCloseable, DataChangeListener {
+public class NetconfDeviceManager implements AutoCloseable, DataTreeChangeListener<Node> {
 
     private static final Logger LOG = LoggerFactory.getLogger(NetconfDeviceManager.class);
     private static final InstanceIdentifier<Topology> NODE_IID = InstanceIdentifier.builder(NetworkTopology.class)
@@ -71,20 +74,20 @@ public class NetconfDeviceManager implements AutoCloseable, DataChangeListener {
     private static final ScheduledExecutorService executorService = MoreExecutors
             .listeningDecorator(Executors.newScheduledThreadPool(1));
     private final DataBroker dataBroker;
-    private ListenerRegistration<DataChangeListener> dataChangeListenerRegistration;
+    private ListenerRegistration<?> dataChangeListenerRegistration;
     final OID interfacesTable = new OID(".1.3.6.1.3.1.1.16.1");
-    SnmpSet set = new SnmpSet();
-    DevicesBuilder builder = new DevicesBuilder();
-    OdlCardinalNetconfInfoApi odlNetconfApi = new OdlCardinalNetconfInfoApi();
-    String netconfNode = null;
-    List<String> featureList = new ArrayList<>();
-    Integer nodeSize = 0;
-    Integer updatedSize = 0;
-    Integer removedPathssize = 0;
-    Map<String, List<String>> featureListOid = new HashMap<>();
-    Map<String, List<String>> featureListUpdated = new HashMap<>();
-    SnmpAgent agent;
-    String nodeprevious = "netconf";
+    private final SnmpSet set = new SnmpSet();
+    private final DevicesBuilder builder = new DevicesBuilder();
+    private final OdlCardinalNetconfInfoApi odlNetconfApi = new OdlCardinalNetconfInfoApi();
+    private final String netconfNode = null;
+    private final List<String> featureList = new ArrayList<>();
+    private final AtomicInteger nodeSize = new AtomicInteger(0);
+    private final AtomicInteger updatedSize = new AtomicInteger(0);
+    private final AtomicInteger removedPathssize = new AtomicInteger(0);
+    private final Map<String, List<String>> featureListOid = new HashMap<>();
+    private Map<String, List<String>> featureListUpdated = new HashMap<>();
+    private SnmpAgent agent;
+    private String nodeprevious = "netconf";
 
     public NetconfDeviceManager(DataBroker dataBroker) {
         this.dataBroker = Preconditions.checkNotNull(dataBroker);
@@ -97,8 +100,8 @@ public class NetconfDeviceManager implements AutoCloseable, DataChangeListener {
             // e.printStackTrace();
             LOG.info("Exception instarting snmp Daemon for Netconf");
         }
-        dataChangeListenerRegistration = dataBroker.registerDataChangeListener(LogicalDatastoreType.OPERATIONAL, NODE,
-                this, AsyncDataBroker.DataChangeScope.BASE);
+        dataChangeListenerRegistration = dataBroker.registerDataTreeChangeListener(new DataTreeIdentifier<>(
+                LogicalDatastoreType.OPERATIONAL, NODE), this);
         if (dataChangeListenerRegistration != null) {
             LOG.info("Listener registered");
         } else {
@@ -116,11 +119,27 @@ public class NetconfDeviceManager implements AutoCloseable, DataChangeListener {
     }
 
     @Override
-    public void onDataChanged(AsyncDataChangeEvent<InstanceIdentifier<?>, DataObject> change) {
-        LOG.info("Data change event");
-        handleDataCreated(change.getCreatedData());
-        handleDataUpdated(change.getUpdatedData());
-        handleDataRemoved(change.getRemovedPaths());
+    public void onDataTreeChanged(Collection<DataTreeModification<Node>> changes) {
+        LOG.info("data change event");
+        Set<InstanceIdentifier<?>> removedPaths = new HashSet<>();
+        for (DataTreeModification<Node> change: changes) {
+            DataObjectModification<Node> rootNode = change.getRootNode();
+            final InstanceIdentifier<Node> identifier = change.getRootPath().getRootIdentifier();
+            switch (rootNode.getModificationType()) {
+                case WRITE:
+                    if (rootNode.getDataBefore() == null) {
+                        handleDataCreated(identifier);
+                    }
+                    break;
+                case DELETE:
+                    removedPaths.add(identifier);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        handleDataRemoved(removedPaths);
     }
 
     public String getNode(Set<InstanceIdentifier<?>> Paths) {
@@ -139,110 +158,92 @@ public class NetconfDeviceManager implements AutoCloseable, DataChangeListener {
     }
 
     private void handleDataRemoved(Set<InstanceIdentifier<?>> removedPaths) {
-        // TODO Auto-generated method stub
-        Preconditions.checkNotNull(removedPaths);
-        if (!removedPaths.isEmpty()) {
-            removedPathssize++;
-            String node = getNode(removedPaths);
-            if (removedPathssize == featureList.size()) {
-                final OID sysDescr = new OID(".1.3.6.1.2.1.1.1.0");
-                final OID interfacesTable = new OID(".1.3.6.1.3.1.1.16.1");
-                agent.stop();
-                try {
-                    agent = new SnmpAgent("0.0.0.0/2001");
-                    agent.start();
-                } catch (IOException e) {
-                    // TODO Auto-generated catch block
-                    // e.printStackTrace();
+        removedPathssize.incrementAndGet();
+        String node = getNode(removedPaths);
+        if (removedPathssize.get() == featureList.size()) {
+            final OID sysDescr = new OID(".1.3.6.1.2.1.1.1.0");
+            final OID interfacesTable = new OID(".1.3.6.1.3.1.1.16.1");
+            agent.stop();
+            try {
+                agent = new SnmpAgent("0.0.0.0/2001");
+                agent.start();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                // e.printStackTrace();
+            }
+            agent.unregisterManagedObject(agent.getSnmpv2MIB());
+            agent.registerManagedObject(MOScalarFactory.createReadOnly(sysDescr, "MySystemDescr"));
+            MOTableBuilder builder = new MOTableBuilder(interfacesTable);
+            builder.addColumnType(SMIConstants.SYNTAX_OCTET_STRING, MOAccessImpl.ACCESS_READ_ONLY)
+            .addColumnType(SMIConstants.SYNTAX_OCTET_STRING, MOAccessImpl.ACCESS_READ_ONLY)
+            .addColumnType(SMIConstants.SYNTAX_OCTET_STRING, MOAccessImpl.ACCESS_READ_ONLY)
+            .addColumnType(SMIConstants.SYNTAX_OCTET_STRING, MOAccessImpl.ACCESS_READ_ONLY)
+            .addColumnType(SMIConstants.SYNTAX_OCTET_STRING, MOAccessImpl.ACCESS_READ_ONLY)
+            .addColumnType(SMIConstants.SYNTAX_OCTET_STRING, MOAccessImpl.ACCESS_READ_ONLY);
+            for (String netConfNode : featureList) {
+                featureListOid.remove(netConfNode);
+            }
+            if (featureListOid.size() > 2) {
+                for (String netConfNode : featureListOid.keySet()) {
+                    List<String> value = featureListOid.get(netConfNode);
+                    builder.addRowValue(new OctetString(netConfNode)).addRowValue(new OctetString(value.get(0)))
+                    .addRowValue(new OctetString(value.get(1))).addRowValue(new OctetString(value.get(2)))
+                    .addRowValue(new OctetString(value.get(3))).addRowValue(new OctetString(value.get(4)));
                 }
-                agent.unregisterManagedObject(agent.getSnmpv2MIB());
-                agent.registerManagedObject(MOScalarFactory.createReadOnly(sysDescr, "MySystemDescr"));
-                MOTableBuilder builder = new MOTableBuilder(interfacesTable);
-                builder.addColumnType(SMIConstants.SYNTAX_OCTET_STRING, MOAccessImpl.ACCESS_READ_ONLY)
-                        .addColumnType(SMIConstants.SYNTAX_OCTET_STRING, MOAccessImpl.ACCESS_READ_ONLY)
-                        .addColumnType(SMIConstants.SYNTAX_OCTET_STRING, MOAccessImpl.ACCESS_READ_ONLY)
-                        .addColumnType(SMIConstants.SYNTAX_OCTET_STRING, MOAccessImpl.ACCESS_READ_ONLY)
-                        .addColumnType(SMIConstants.SYNTAX_OCTET_STRING, MOAccessImpl.ACCESS_READ_ONLY)
-                        .addColumnType(SMIConstants.SYNTAX_OCTET_STRING, MOAccessImpl.ACCESS_READ_ONLY);
-                for (String netConfNode : featureList) {
-                    featureListOid.remove(netConfNode);
-                }
-                if (featureListOid.size() > 2) {
-                    for (String netConfNode : featureListOid.keySet()) {
-                        List<String> value = featureListOid.get(netConfNode);
-                        builder.addRowValue(new OctetString(netConfNode)).addRowValue(new OctetString(value.get(0)))
-                                .addRowValue(new OctetString(value.get(1))).addRowValue(new OctetString(value.get(2)))
-                                .addRowValue(new OctetString(value.get(3))).addRowValue(new OctetString(value.get(4)));
+                agent.registerManagedObject(builder.build());
+                featureListUpdated = featureListOid;
+                nodeSize.set(featureListOid.size());
+                updatedSize.set(featureListOid.size());
+                gettingTableOid();
+                LOG.info("{} Node(s) removed", removedPaths.size());
+            } else {
+                int j = 14;
+                for (String netConfNode : featureListOid.keySet()) {
+                    List<String> value = featureListOid.get(netConfNode);
+                    try {
+                        set.setVariableString(".1.3.6.1.3.1.1." + j + ".1.0", netConfNode);
+                        set.setVariableString(".1.3.6.1.3.1.1." + j + ".2.0", value.get(0));
+                        set.setVariableString(".1.3.6.1.3.1.1." + j + ".3.0", value.get(1));
+                        set.setVariableString(".1.3.6.1.3.1.1." + j + ".4.0", value.get(2));
+                    } catch (Exception e) {
+                        // TODO Auto-generated catch block
+                        LOG.info("Exception due to removed path");
+                        // e.printStackTrace();
                     }
-                    agent.registerManagedObject(builder.build());
-                    featureListUpdated = featureListOid;
-                    nodeSize = featureListOid.size();
-                    updatedSize = featureListOid.size();
-                    gettingTableOid();
-                    LOG.info("{} Node(s) removed", removedPaths.size());
-                } else {
-                    int j = 14;
-                    for (String netConfNode : featureListOid.keySet()) {
-                        List<String> value = featureListOid.get(netConfNode);
-                        try {
-                            set.setVariableString(".1.3.6.1.3.1.1." + j + ".1.0", netConfNode);
-                            set.setVariableString(".1.3.6.1.3.1.1." + j + ".2.0", value.get(0));
-                            set.setVariableString(".1.3.6.1.3.1.1." + j + ".3.0", value.get(1));
-                            set.setVariableString(".1.3.6.1.3.1.1." + j + ".4.0", value.get(2));
-                        } catch (Exception e) {
-                            // TODO Auto-generated catch block
-                            LOG.info("Exception due to removed path");
-                            // e.printStackTrace();
-                        }
-                        j++;
-                    }
-                    odlNetconfApi.setValues(featureListOid);
-                    featureListUpdated = featureListOid;
-                    nodeSize = featureListOid.size();
-                    updatedSize = featureListOid.size();
+                    j++;
                 }
+                odlNetconfApi.setValues(featureListOid);
+                featureListUpdated = featureListOid;
+                nodeSize.set(featureListOid.size());
+                updatedSize.set(featureListOid.size());
             }
         }
     }
 
-    private void handleDataUpdated(Map<InstanceIdentifier<?>, DataObject> updatedData) {
-        Preconditions.checkNotNull(updatedData);
-        if (!updatedData.isEmpty()) {
-            LOG.info("{} Node(s) updated", updatedData.size());
-        }
-    }
+    private void handleDataCreated(InstanceIdentifier<Node> path) {
+        nodeSize.incrementAndGet();
+        LOG.info("Created node {}", path.toString());
+        Future<Void> submit = executorService.schedule(() -> {
+            ReadOnlyTransaction readOnlyTransaction = dataBroker.newReadOnlyTransaction();
+            final CheckedFuture<Optional<Node>, ReadFailedException> readFuture = readOnlyTransaction
+                    .read(LogicalDatastoreType.OPERATIONAL, path);
+            Futures.addCallback(readFuture, new FutureCallback<Optional<Node>>() {
+                @Override
+                public void onSuccess(Optional<Node> result) {
+                    if (result.isPresent()) {
+                        identifyDevice(path, result.get());
+                    } else {
+                        LOG.error("Read succeeded, node doesn't exist: {}", path);
+                    }
+                }
 
-    private void handleDataCreated(Map<InstanceIdentifier<?>, DataObject> createdData) {
-        Preconditions.checkNotNull(createdData);
-        if (!createdData.isEmpty()) {
-            for (Map.Entry<InstanceIdentifier<?>, DataObject> dataObjectEntry : createdData.entrySet()) {
-                nodeSize = nodeSize + 1;
-                @SuppressWarnings("unchecked")
-                final InstanceIdentifier<Node> path = (InstanceIdentifier<Node>) dataObjectEntry.getKey();
-                LOG.info("Created node {}", path.toString());
-                Future<Void> submit = executorService.schedule(() -> {
-                    ReadOnlyTransaction readOnlyTransaction = dataBroker.newReadOnlyTransaction();
-                    final CheckedFuture<Optional<Node>, ReadFailedException> readFuture = readOnlyTransaction
-                            .read(LogicalDatastoreType.OPERATIONAL, path);
-                    Futures.addCallback(readFuture, new FutureCallback<Optional<Node>>() {
-                        @Override
-                        public void onSuccess(Optional<Node> result) {
-                            if (result.isPresent()) {
-                                identifyDevice(path, result.get());
-                            } else {
-                                LOG.error("Read succeeded, node doesn't exist: {}", path);
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Throwable t) {
-                            LOG.error("Failed to read Node: {}", path, t);
-                        }
-                    });
-                    return null;
-                }, 25, TimeUnit.MILLISECONDS);
-            }
-        }
+                @Override
+                public void onFailure(Throwable t) {
+                    LOG.error("Failed to read Node: {}", path, t);
+                }
+            });
+            return null;
+        }, 25, TimeUnit.MILLISECONDS);
     }
 
     private void identifyDevice(final InstanceIdentifier<Node> path, Node node) {
@@ -267,11 +268,11 @@ public class NetconfDeviceManager implements AutoCloseable, DataChangeListener {
             if (nodeName != nodeprevious) {
                 featureListOid.put(nodeName, nodeValues);
                 LOG.info("  featureListOid  {}", featureListOid);
-                updatedSize = updatedSize + 1;
+                updatedSize.incrementAndGet();
                 nodeprevious = nodeName;
             }
             if (featureListOid.size() > 2) {
-                removedPathssize = 0;
+                removedPathssize.set(0);;
                 featureList.clear();
                 featureListUpdated = featureListOid;
                 LOG.info("  featureListOid size {}", featureListOid.size());
@@ -296,7 +297,7 @@ public class NetconfDeviceManager implements AutoCloseable, DataChangeListener {
                     j++;
                 }
                 odlNetconfApi.setValues(featureListOid);
-                removedPathssize = 0;
+                removedPathssize.set(0);;
                 featureList.clear();
                 featureListUpdated = featureListOid;
             }

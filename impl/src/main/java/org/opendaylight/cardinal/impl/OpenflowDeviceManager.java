@@ -13,17 +13,27 @@ import com.google.common.util.concurrent.CheckedFuture;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.MoreExecutors;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.opendaylight.controller.md.sal.binding.api.DataBroker;
-import org.opendaylight.controller.md.sal.binding.api.DataChangeListener;
+import org.opendaylight.controller.md.sal.binding.api.DataObjectModification;
+import org.opendaylight.controller.md.sal.binding.api.DataTreeChangeListener;
+import org.opendaylight.controller.md.sal.binding.api.DataTreeIdentifier;
+import org.opendaylight.controller.md.sal.binding.api.DataTreeModification;
 import org.opendaylight.controller.md.sal.binding.api.ReadOnlyTransaction;
-import org.opendaylight.controller.md.sal.binding.api.WriteTransaction;
-import org.opendaylight.controller.md.sal.common.api.data.AsyncDataBroker;
-import org.opendaylight.controller.md.sal.common.api.data.AsyncDataChangeEvent;
 import org.opendaylight.controller.md.sal.common.api.data.LogicalDatastoreType;
 import org.opendaylight.controller.md.sal.common.api.data.ReadFailedException;
-import org.opendaylight.controller.sal.binding.api.RpcProviderRegistry;
-import org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev130715.IpAddress;
-import org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.yang.types.rev130715.MacAddress;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.flow.inventory.rev130819.FlowCapableNode;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.flow.inventory.rev130819.FlowCapableNodeConnector;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.inventory.rev130819.NodeConnectorId;
@@ -31,33 +41,17 @@ import org.opendaylight.yang.gen.v1.urn.opendaylight.inventory.rev130819.Nodes;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.inventory.rev130819.node.NodeConnector;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.inventory.rev130819.node.NodeConnectorKey;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.inventory.rev130819.nodes.Node;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.cardinal.openflow.rev161128.Devices;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.cardinal.openflow.rev161128.DevicesBuilder;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.cardinal.openflow.rev161128.cardinalopenflowinfogrouping.Openflow;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.cardinal.openflow.rev161128.cardinalopenflowinfogrouping.OpenflowBuilder;
 import org.opendaylight.yangtools.concepts.ListenerRegistration;
-import org.opendaylight.yangtools.yang.binding.DataObject;
 import org.opendaylight.yangtools.yang.binding.InstanceIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.snmp4j.Snmp;
 import org.snmp4j.agent.mo.MOAccessImpl;
-import org.snmp4j.smi.Integer32;
 import org.snmp4j.smi.OID;
 import org.snmp4j.smi.OctetString;
 import org.snmp4j.smi.SMIConstants;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.Callable;
-import java.util.concurrent.Future;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 /**
  *
@@ -66,36 +60,34 @@ import java.util.concurrent.TimeUnit;
  */
 // TODO: maintain closed state
 @SuppressWarnings({ "deprecation", "unused" })
-public class OpenflowDeviceManager implements DataChangeListener, AutoCloseable {
+public class OpenflowDeviceManager implements DataTreeChangeListener<Node>, AutoCloseable {
     private static final Logger LOG = LoggerFactory.getLogger(OpenflowDeviceManager.class);
     private static final InstanceIdentifier<Node> NODE_IID = InstanceIdentifier.builder(Nodes.class).child(Node.class)
             .build();
     private static final ScheduledExecutorService executorService = MoreExecutors
             .listeningDecorator(Executors.newScheduledThreadPool(1));
     private final DataBroker dataBroker;
-    SnmpAgent agent;
-    private ListenerRegistration<DataChangeListener> dataChangeListenerRegistration;
-    SnmpSet set = new SnmpSet();
-    DevicesBuilder builder = new DevicesBuilder();
-    OdlCardinalOpenflowInfoApi odlOpenflowApi = new OdlCardinalOpenflowInfoApi();
-    String status = "NotConnected";
-    String openFlowNode = null;
-    String nodeprevious = "ovs";
-    Integer nodeSize = 0;
-    Integer updatedSize = 0;
-    Integer removedPathssize = 0;
-    final OID sysDescr = new OID(".1.3.6.1.2.1.1.1.0");
-    final OID interfacesTable = new OID(".1.3.6.1.3.1.1.11.1");
-    Map<String, List<String>> featureListOid = new HashMap<String, List<String>>();
-    Map<String, List<String>> featureListUpdated = new HashMap<String, List<String>>();
-    List<String> featureList = new ArrayList<String>();
+    private SnmpAgent agent;
+    private ListenerRegistration<?> dataChangeListenerRegistration;
+    private final SnmpSet set = new SnmpSet();
+    private final DevicesBuilder builder = new DevicesBuilder();
+    private final OdlCardinalOpenflowInfoApi odlOpenflowApi = new OdlCardinalOpenflowInfoApi();
+    private String status = "NotConnected";
+    private String openFlowNode = null;
+    private String nodeprevious = "ovs";
+    private final AtomicInteger nodeSize = new AtomicInteger(0);
+    private final AtomicInteger updatedSize = new AtomicInteger(0);
+    private final AtomicInteger removedPathssize = new AtomicInteger(0);
+    private final Map<String, List<String>> featureListOid = new HashMap<>();
+    private Map<String, List<String>> featureListUpdated = new HashMap<>();
+    private final List<String> featureList = new ArrayList<>();
 
     public OpenflowDeviceManager(DataBroker dataBroker, SnmpAgent sagent) {
         this.dataBroker = Preconditions.checkNotNull(dataBroker);
         odlOpenflowApi.setDataProvider(dataBroker);
         agent = sagent;
-        dataChangeListenerRegistration = dataBroker.registerDataChangeListener(LogicalDatastoreType.OPERATIONAL,
-                NODE_IID, this, AsyncDataBroker.DataChangeScope.BASE);
+        dataChangeListenerRegistration = dataBroker.registerDataTreeChangeListener(new DataTreeIdentifier<>(
+                LogicalDatastoreType.OPERATIONAL, NODE_IID), this);
         if (dataChangeListenerRegistration != null) {
             LOG.info("Listener registered");
         } else {
@@ -113,11 +105,27 @@ public class OpenflowDeviceManager implements DataChangeListener, AutoCloseable 
     }
 
     @Override
-    public void onDataChanged(AsyncDataChangeEvent<InstanceIdentifier<?>, DataObject> change) {
+    public void onDataTreeChanged(Collection<DataTreeModification<Node>> changes) {
         LOG.info("data change event");
-        handleDataCreated(change.getCreatedData());
-        handleDataUpdated(change.getUpdatedData());
-        handleDataRemoved(change.getRemovedPaths());
+        Set<InstanceIdentifier<?>> removedPaths = new HashSet<>();
+        for (DataTreeModification<Node> change: changes) {
+            DataObjectModification<Node> rootNode = change.getRootNode();
+            final InstanceIdentifier<Node> identifier = change.getRootPath().getRootIdentifier();
+            switch (rootNode.getModificationType()) {
+                case WRITE:
+                    if (rootNode.getDataBefore() == null) {
+                        handleDataCreated(identifier);
+                    }
+                    break;
+                case DELETE:
+                    removedPaths.add(identifier);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        handleDataRemoved(removedPaths);
     }
 
     public String getNode(Set<InstanceIdentifier<?>> Paths) {
@@ -137,153 +145,134 @@ public class OpenflowDeviceManager implements DataChangeListener, AutoCloseable 
     }
 
     private void handleDataRemoved(Set<InstanceIdentifier<?>> removedPaths) {
-        // TODO Auto-generated method stub
-        Preconditions.checkNotNull(removedPaths);
-        if (!removedPaths.isEmpty()) {
-            removedPathssize++;
-            LOG.info("Removed path is {}", removedPathssize);
-            LOG.info("featureList size is {}", featureList.size());
-            String node = getNode(removedPaths);
-            // if (removedPathssize == featureList.size()) {
-            final OID sysDescr = new OID(".1.3.6.1.2.1.1.1.0");
-            final OID interfacesTable = new OID(".1.3.6.1.3.1.1.13.1");
-            agent.stop();
-            try {
-                Thread.sleep(100);
-                agent = new SnmpAgent("0.0.0.0/2003");
-                agent.start();
-            } catch (IOException | InterruptedException e) {
-                // TODO Auto-generated catch block
-                // e.printStackTrace();
-                LOG.info("Exception in removed path");
+        if (removedPaths.isEmpty()) {
+            return;
+        }
+
+        removedPathssize.incrementAndGet();
+        LOG.info("Removed path is {}", removedPathssize);
+        LOG.info("featureList size is {}", featureList.size());
+
+        // if (removedPathssize == featureList.size()) {
+        final OID sysDescr = new OID(".1.3.6.1.2.1.1.1.0");
+        final OID interfacesTable = new OID(".1.3.6.1.3.1.1.13.1");
+        agent.stop();
+        try {
+            Thread.sleep(100);
+            agent = new SnmpAgent("0.0.0.0/2003");
+            agent.start();
+        } catch (IOException | InterruptedException e) {
+            // TODO Auto-generated catch block
+            // e.printStackTrace();
+            LOG.info("Exception in removed path");
+        }
+        agent.unregisterManagedObject(agent.getSnmpv2MIB());
+        agent.registerManagedObject(MOScalarFactory.createReadOnly(sysDescr, "MySystemDescr"));
+        MOTableBuilder builder = new MOTableBuilder(interfacesTable)
+                .addColumnType(SMIConstants.SYNTAX_OCTET_STRING, MOAccessImpl.ACCESS_READ_ONLY)
+                .addColumnType(SMIConstants.SYNTAX_OCTET_STRING, MOAccessImpl.ACCESS_READ_ONLY)
+                .addColumnType(SMIConstants.SYNTAX_OCTET_STRING, MOAccessImpl.ACCESS_READ_ONLY)
+                .addColumnType(SMIConstants.SYNTAX_OCTET_STRING, MOAccessImpl.ACCESS_READ_ONLY)
+                .addColumnType(SMIConstants.SYNTAX_OCTET_STRING, MOAccessImpl.ACCESS_READ_ONLY)
+                .addColumnType(SMIConstants.SYNTAX_OCTET_STRING, MOAccessImpl.ACCESS_READ_ONLY)
+                .addColumnType(SMIConstants.SYNTAX_OCTET_STRING, MOAccessImpl.ACCESS_READ_ONLY);
+        for (String ovsNode : featureList) {
+            if (featureList.contains(ovsNode)) {
+                featureListOid.remove(ovsNode);
+                LOG.info("featureListOid size is {}", featureListOid.size());
             }
-            agent.unregisterManagedObject(agent.getSnmpv2MIB());
-            agent.registerManagedObject(MOScalarFactory.createReadOnly(sysDescr, "MySystemDescr"));
-            MOTableBuilder builder = new MOTableBuilder(interfacesTable)
-                    .addColumnType(SMIConstants.SYNTAX_OCTET_STRING, MOAccessImpl.ACCESS_READ_ONLY)
-                    .addColumnType(SMIConstants.SYNTAX_OCTET_STRING, MOAccessImpl.ACCESS_READ_ONLY)
-                    .addColumnType(SMIConstants.SYNTAX_OCTET_STRING, MOAccessImpl.ACCESS_READ_ONLY)
-                    .addColumnType(SMIConstants.SYNTAX_OCTET_STRING, MOAccessImpl.ACCESS_READ_ONLY)
-                    .addColumnType(SMIConstants.SYNTAX_OCTET_STRING, MOAccessImpl.ACCESS_READ_ONLY)
-                    .addColumnType(SMIConstants.SYNTAX_OCTET_STRING, MOAccessImpl.ACCESS_READ_ONLY)
-                    .addColumnType(SMIConstants.SYNTAX_OCTET_STRING, MOAccessImpl.ACCESS_READ_ONLY);
-            for (String ovsNode : featureList) {
-                if (featureList.contains(ovsNode)) {
-                    featureListOid.remove(ovsNode);
-                    LOG.info("featureListOid size is {}", featureListOid.size());
-                }
+        }
+        if (featureListOid.size() > 2) {
+            for (String ovsNode : featureListOid.keySet()) {
+                List<String> value = featureListOid.get(ovsNode);
+                builder.addRowValue(new OctetString(ovsNode)).addRowValue(new OctetString(value.get(0)))
+                .addRowValue(new OctetString(value.get(1))).addRowValue(new OctetString(value.get(2)))
+                .addRowValue(new OctetString(value.get(3))).addRowValue(new OctetString(value.get(4)))
+                .addRowValue(new OctetString(value.get(5)));
             }
-            if (featureListOid.size() > 2) {
-                for (String ovsNode : featureListOid.keySet()) {
-                    List<String> value = featureListOid.get(ovsNode);
-                    builder.addRowValue(new OctetString(ovsNode)).addRowValue(new OctetString(value.get(0)))
-                            .addRowValue(new OctetString(value.get(1))).addRowValue(new OctetString(value.get(2)))
-                            .addRowValue(new OctetString(value.get(3))).addRowValue(new OctetString(value.get(4)))
-                            .addRowValue(new OctetString(value.get(5)));
+            agent.registerManagedObject(builder.build());
+            featureListUpdated = featureListOid;
+            // nodeSize = featureListOid.size();
+            updatedSize.set(featureListOid.size());
+            nodeSize.set(0);
+            gettingTableOid();
+            LOG.info("{} Node(s) removed", removedPaths.size());
+        } else if (featureListOid.size() == 0) {
+            int j = 11;
+            for (int i = 0; i < 2; i++) {
+                try {
+                    set.setVariableString(".1.3.6.1.3.1.1." + j + ".1.0", "");
+                    set.setVariableString(".1.3.6.1.3.1.1." + j + ".2.0", "");
+                    set.setVariableString(".1.3.6.1.3.1.1." + j + ".3.0", "");
+                    set.setVariableString(".1.3.6.1.3.1.1." + j + ".4.0", "");
+                    set.setVariableString(".1.3.6.1.3.1.1." + j + ".5.0", "");
+                    set.setVariableString(".1.3.6.1.3.1.1." + j + ".6.0", "");
+                    set.setVariableString(".1.3.6.1.3.1.1." + j + ".7.0", "");
+                } catch (Exception e) {
+                    // TODO Auto-generated catch block
+                    // e.printStackTrace();
                 }
-                agent.registerManagedObject(builder.build());
-                featureListUpdated = featureListOid;
-                // nodeSize = featureListOid.size();
-                updatedSize = featureListOid.size();
-                nodeSize = 0;
-                gettingTableOid();
-                LOG.info("{} Node(s) removed", removedPaths.size());
-            } else if (featureListOid.size() == 0) {
-                int j = 11;
-                for (int i = 0; i < 2; i++) {
-                    try {
-                        set.setVariableString(".1.3.6.1.3.1.1." + j + ".1.0", "");
-                        set.setVariableString(".1.3.6.1.3.1.1." + j + ".2.0", "");
-                        set.setVariableString(".1.3.6.1.3.1.1." + j + ".3.0", "");
-                        set.setVariableString(".1.3.6.1.3.1.1." + j + ".4.0", "");
-                        set.setVariableString(".1.3.6.1.3.1.1." + j + ".5.0", "");
-                        set.setVariableString(".1.3.6.1.3.1.1." + j + ".6.0", "");
-                        set.setVariableString(".1.3.6.1.3.1.1." + j + ".7.0", "");
-                    } catch (Exception e) {
-                        // TODO Auto-generated catch block
-                        // e.printStackTrace();
-                    }
-                    j++;
-                }
-                odlOpenflowApi.setValues(featureListOid);
-                featureListUpdated = featureListOid;
-                // nodeSize = featureListOid.size();
-                updatedSize = featureListOid.size();
-                nodeSize = 0;
-            } else {
-                int j = 11;
-                for (String ovsNode : featureListOid.keySet()) {
-                    List<String> value = featureListOid.get(ovsNode);
-                    try {
-                        set.setVariableString(".1.3.6.1.3.1.1." + j + ".1.0", ovsNode);
-                        set.setVariableString(".1.3.6.1.3.1.1." + j + ".2.0", value.get(0));
-                        set.setVariableString(".1.3.6.1.3.1.1." + j + ".3.0", value.get(1));
-                        set.setVariableString(".1.3.6.1.3.1.1." + j + ".4.0", value.get(2));
-                        set.setVariableString(".1.3.6.1.3.1.1." + j + ".5.0", value.get(3));
-                        set.setVariableString(".1.3.6.1.3.1.1." + j + ".6.0", " ");
-                        set.setVariableString(".1.3.6.1.3.1.1." + j + ".7.0", " ");
-                    } catch (Exception e) {
-                        // TODO Auto-generated catch block
-                        // e.printStackTrace();
-                        LOG.info("Exception in deleting Openflow node");
-                    }
-                    j++;
-                }
-                odlOpenflowApi.setValues(featureListOid);
-                featureListUpdated = featureListOid;
-                // nodeSize = featureListOid.size();
-                updatedSize = featureListOid.size();
-                nodeSize = 0;
+                j++;
             }
-            // }
+            odlOpenflowApi.setValues(featureListOid);
+            featureListUpdated = featureListOid;
+            // nodeSize = featureListOid.size();
+            updatedSize.set(featureListOid.size());
+            nodeSize.set(0);
+        } else {
+            int j = 11;
+            for (String ovsNode : featureListOid.keySet()) {
+                List<String> value = featureListOid.get(ovsNode);
+                try {
+                    set.setVariableString(".1.3.6.1.3.1.1." + j + ".1.0", ovsNode);
+                    set.setVariableString(".1.3.6.1.3.1.1." + j + ".2.0", value.get(0));
+                    set.setVariableString(".1.3.6.1.3.1.1." + j + ".3.0", value.get(1));
+                    set.setVariableString(".1.3.6.1.3.1.1." + j + ".4.0", value.get(2));
+                    set.setVariableString(".1.3.6.1.3.1.1." + j + ".5.0", value.get(3));
+                    set.setVariableString(".1.3.6.1.3.1.1." + j + ".6.0", " ");
+                    set.setVariableString(".1.3.6.1.3.1.1." + j + ".7.0", " ");
+                } catch (Exception e) {
+                    // TODO Auto-generated catch block
+                    // e.printStackTrace();
+                    LOG.info("Exception in deleting Openflow node");
+                }
+                j++;
+            }
+            odlOpenflowApi.setValues(featureListOid);
+            featureListUpdated = featureListOid;
+            // nodeSize = featureListOid.size();
+            updatedSize.set(featureListOid.size());
+            nodeSize.set(0);
         }
     }
 
-    private void handleDataUpdated(Map<InstanceIdentifier<?>, DataObject> updatedData) {
-        Preconditions.checkNotNull(updatedData);
-        LOG.info("handle Node(s) updated {}", updatedData);
-        if (!updatedData.isEmpty()) {
-            LOG.info("{} Node(s) updated", updatedData.size());
-        }
-    }
-
-    private void handleDataCreated(Map<InstanceIdentifier<?>, DataObject> createdData) {
-        Preconditions.checkNotNull(createdData);
-        if (!createdData.isEmpty()) {
-            for (Map.Entry<InstanceIdentifier<?>, DataObject> dataObjectEntry : createdData.entrySet()) {
-                nodeSize = nodeSize + 1;
-                LOG.info("Created nodeSize {}", nodeSize);
-                @SuppressWarnings("unchecked")
-                final InstanceIdentifier<Node> path = (InstanceIdentifier<Node>) dataObjectEntry.getKey();
-                LOG.info("Created node {}", path.toString());
-                // sleep 25ms and then re-read the Node information to give OF
-                // a change to update with FlowCapable
-                Future<Void> submit = executorService.schedule(new Callable<Void>() {
-                    @Override
-                    public Void call() throws Exception {
-                        ReadOnlyTransaction readOnlyTransaction = dataBroker.newReadOnlyTransaction();
-                        final CheckedFuture<Optional<Node>, ReadFailedException> readFuture = readOnlyTransaction
-                                .read(LogicalDatastoreType.OPERATIONAL, path);
-                        Futures.addCallback(readFuture, new FutureCallback<Optional<Node>>() {
-                            @Override
-                            public void onSuccess(Optional<Node> result) {
-                                if (result.isPresent()) {
-                                    identifyDevice(path, result.get());
-                                } else {
-                                    LOG.error("Read succeeded, node doesn't exist: {}", path);
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(Throwable t) {
-                                LOG.error("Failed to read Node: {}", path, t);
-                            }
-                        });
-                        return null;
+    private void handleDataCreated(final InstanceIdentifier<Node> path) {
+        nodeSize.incrementAndGet();
+        LOG.info("Created nodeSize {}", nodeSize);
+        LOG.info("Created node {}", path);
+        // sleep 25ms and then re-read the Node information to give OF
+        // a change to update with FlowCapable
+        Future<Void> submit = executorService.schedule(() -> {
+            ReadOnlyTransaction readOnlyTransaction = dataBroker.newReadOnlyTransaction();
+            final CheckedFuture<Optional<Node>, ReadFailedException> readFuture = readOnlyTransaction
+                    .read(LogicalDatastoreType.OPERATIONAL, path);
+            Futures.addCallback(readFuture, new FutureCallback<Optional<Node>>() {
+                @Override
+                public void onSuccess(Optional<Node> result) {
+                    if (result.isPresent()) {
+                        identifyDevice(path, result.get());
+                    } else {
+                        LOG.error("Read succeeded, node doesn't exist: {}", path);
                     }
-                }, 1000, TimeUnit.MILLISECONDS);
-            }
-        }
+                }
+
+                @Override
+                public void onFailure(Throwable t) {
+                    LOG.error("Failed to read Node: {}", path, t);
+                }
+            });
+            return null;
+        }, 1000, TimeUnit.MILLISECONDS);
     }
 
     private void identifyDevice(final InstanceIdentifier<Node> path, Node node) {
@@ -294,7 +283,7 @@ public class OpenflowDeviceManager implements DataChangeListener, AutoCloseable 
         String manufacturer = null;
         String openFlowStats = " ";
         String openFlowMeterstats = " ";
-        List<String> nodeValues = new ArrayList<String>();
+        List<String> nodeValues = new ArrayList<>();
         LOG.info("Read created node");
         FlowCapableNode flowCapableNode = node.getAugmentation(FlowCapableNode.class);
         // TODO: this needs to register for data change on hardware or something
@@ -322,11 +311,11 @@ public class OpenflowDeviceManager implements DataChangeListener, AutoCloseable 
                 /* to create map for the ovsnode and its values */
                 if (openFlowNode != nodeprevious) {
                     featureListOid.put(openFlowNode, nodeValues);
-                    updatedSize = updatedSize + 1;
+                    updatedSize.incrementAndGet();
                     nodeprevious = openFlowNode;
                 }
                 if (featureListOid.size() > 2) {
-                    removedPathssize = 0;
+                    removedPathssize.set(0);;
                     featureList.clear();
                     featureListUpdated = featureListOid;
                     setOvsSwitchOid(featureListOid);
@@ -357,7 +346,7 @@ public class OpenflowDeviceManager implements DataChangeListener, AutoCloseable 
                         j++;
                     }
                     odlOpenflowApi.setValues(featureListOid);
-                    removedPathssize = 0;
+                    removedPathssize.set(0);
                     featureList.clear();
                     featureListUpdated = featureListOid;
 
@@ -402,7 +391,7 @@ public class OpenflowDeviceManager implements DataChangeListener, AutoCloseable 
 
     public void gettingTableOid() {
         OpenflowBuilder flow = new OpenflowBuilder();
-        List<Openflow> openflowlist = new ArrayList<Openflow>();
+        List<Openflow> openflowlist = new ArrayList<>();
         final OID interfacesTable = new OID(".1.3.6.1.3.1.1.11.1");
         SimpleSnmpClient client = new SimpleSnmpClient("udp:127.0.0.1/2003");
         List<List<String>> tableContents = client

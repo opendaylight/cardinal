@@ -10,18 +10,13 @@ package org.opendaylight.cardinal.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
 import org.opendaylight.controller.md.sal.binding.api.DataBroker;
-import org.opendaylight.controller.md.sal.binding.api.DataChangeListener;
-import org.opendaylight.controller.md.sal.binding.api.ReadWriteTransaction;
 import org.opendaylight.controller.md.sal.binding.api.WriteTransaction;
-import org.opendaylight.controller.md.sal.common.api.data.AsyncDataChangeEvent;
 import org.opendaylight.controller.md.sal.common.api.data.LogicalDatastoreType;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.cardinal.openflow.rev161128.Devices;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.cardinal.openflow.rev161128.DevicesBuilder;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.cardinal.openflow.rev161128.cardinalopenflowinfogrouping.Openflow;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.cardinal.openflow.rev161128.cardinalopenflowinfogrouping.OpenflowBuilder;
-import org.opendaylight.yangtools.yang.binding.DataObject;
 import org.opendaylight.yangtools.yang.binding.InstanceIdentifier;
 import org.slf4j.LoggerFactory;
 import org.snmp4j.smi.OID;
@@ -41,7 +36,7 @@ public class OdlCardinalOpenflowInfoApi implements AutoCloseable {
             .build();
     final OID sysDescr = new OID(".1.3.6.1.2.1.1.1.0");
     final OID interfacesTable = new OID(".1.3.6.1.3.1.1.11.1");
-    List<Openflow> openflowlist = new ArrayList<Openflow>();
+    List<Openflow> openflowlist = new ArrayList<>();
 
     public OdlCardinalOpenflowInfoApi() {
         // TODO Auto-generated constructor stub
@@ -55,7 +50,7 @@ public class OdlCardinalOpenflowInfoApi implements AutoCloseable {
     public Devices getValues(Map<String, List<String>> openFlowListOid) {
         OpenflowBuilder flow = new OpenflowBuilder();
         OdlCardinalGet get = new OdlCardinalGet();
-        List<Openflow> openflowlist = new ArrayList<Openflow>();
+        List<Openflow> openflowlist = new ArrayList<>();
         int j = 11;
         for (int i = 0; i < openFlowListOid.size(); i++) {
             String openFlowNode = get.snmpGet("localhost", "public", "1.3.6.1.3.1.1." + j + ".1.0");

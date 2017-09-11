@@ -1,18 +1,5 @@
 package org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.cardinal.impl.rev141210;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.opendaylight.cardinal.impl.OpenflowDeviceManager;
-import org.opendaylight.controller.sal.binding.api.RpcProviderRegistry;
-import static org.mockito.Mockito.mock;
-import org.opendaylight.controller.md.sal.common.api.data.AsyncDataChangeEvent;
-import org.opendaylight.controller.md.sal.binding.api.DataBroker;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.opendaylight.yangtools.yang.binding.DataObject;
-import org.opendaylight.yangtools.yang.binding.InstanceIdentifier;
-
 /*public class OpenflowDeviceManagerTest {
     private static final Logger LOG = LoggerFactory.getLogger(OpenflowDeviceManagerTest.class);
     @SuppressWarnings("unchecked")
