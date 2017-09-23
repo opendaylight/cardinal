@@ -25,7 +25,9 @@
         <yangtools.version>2.0.0-SNAPSHOT</yangtools.version>
         <dlux.version>0.7.0-SNAPSHOT</dlux.version>
         <openflowplugin.version>0.6.0-SNAPSHOT</openflowplugin.version>
+        <karaf.shell.version>3.0.3</karaf.shell.version>
     </properties>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -37,6 +39,7 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -103,6 +106,12 @@
             <artifactId>sal-netconf-connector</artifactId>
             <version>${restconf.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.karaf.shell</groupId>
+            <artifactId>org.apache.karaf.shell.console</artifactId>
+            <version>${karaf.shell.version}</version>
+            <scope>provided</scope>
+        </dependency>
 
         <!--    External    Dependencies    -->
         <dependency>
@@ -110,5 +119,23 @@
             <artifactId>guava</artifactId>
         </dependency>
     </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <Import-Package>
+                            org.apache.karaf.shell.commands;version="[3.0.0,4.1)",
+                            org.apache.karaf.shell.console;version="[3.0.0,4.1)",
+                            *
+                        </Import-Package>
+                    </instructions>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
 
