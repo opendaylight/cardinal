@@ -7,7 +7,7 @@
  */
 package org.opendaylight.cardinal.api;
 
-import java.net.InetAddress;
+
 import java.util.Enumeration;
 
 import com.sun.management.snmp.SnmpOid;
@@ -28,7 +28,7 @@ public interface SnmpMibService {
     /**
      * Set a trap address
      */
-    void setTrapAddress(final InetAddress trapReceiver);
+    void setTrapAddress(final String trapCommunity, final String trapReceiver);
 
     /*
      * Send a TRAP

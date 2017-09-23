@@ -1,0 +1,22 @@
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0">
+
+    <bean id="snmpDBonSAL" class="org.opendaylight.cardinal.impl.commands.SnmpManagerDatabaseOnSal"
+          scope="singleton">
+        <argument ref="dataBroker"/>
+    </bean>
+
+    <command-bundle xmlns="http://karaf.apache.org/xmlns/shell/v1.1.0">
+        <command>
+            <action class="org.opendaylight.cardinal.impl.commands.SnmpManagerConfig">
+                <argument ref="snmpDBonSAL"/>
+            </action>
+        </command>
+    </command-bundle>
+    <command-bundle xmlns="http://karaf.apache.org/xmlns/shell/v1.1.0">
+        <command>
+            <action class="org.opendaylight.cardinal.impl.commands.SnmpManagerShow">
+                <argument ref="snmpDBonSAL"/>
+            </action>
+        </command>
+    </command-bundle>
+</blueprint>

@@ -25,7 +25,6 @@ public class CardinalProvider implements AutoCloseable {
 
     private static final Logger LOG = LoggerFactory.getLogger(CardinalProvider.class);
     private final DataBroker dataService;
-    private final Agent snmpDaemon = new Agent();
     private final CallTimer callTimer = new CallTimer();
     private SnmpAgent snmpAgent;
     private OpenflowDeviceManager openflowDeviceManager;
@@ -37,13 +36,8 @@ public class CardinalProvider implements AutoCloseable {
 
     public void init() {
         LOG.info("CardinalProvider initializing...");
-
         initCardinalOperational();
-
-        startSnmpDaemon();
-
         setMIBValues();
-
         startSnmpAgent();
     }
 
@@ -51,8 +45,7 @@ public class CardinalProvider implements AutoCloseable {
         try {
             snmpAgent = new SnmpAgent("0.0.0.0/2003");
             snmpAgent.start();
-
-            openflowDeviceManager = new OpenflowDeviceManager(dataService, snmpAgent);
+            openflowDeviceManager = new OpenflowDeviceManager(dataService,snmpAgent);
             //netconfDeviceManager = new NetconfDeviceManager(dataService);
         } catch (IOException e) {
             LOG.error("Error starting snmp agent", e);
@@ -97,14 +90,6 @@ public class CardinalProvider implements AutoCloseable {
         }
     }
 
-    private void startSnmpDaemon() {
-        LOG.info("Starting Snmp Daemon");
-        try {
-            snmpDaemon.startSnmpDaemon();
-        } catch (SnmpStatusException e) {
-            LOG.error("Error starting snmp deamon", e);
-        }
-    }
 
     private void initCardinalOperational() {
         DevicesBuilder builder = new DevicesBuilder();
@@ -124,7 +109,6 @@ public class CardinalProvider implements AutoCloseable {
 
     @Override
     public void close() {
-        snmpDaemon.close();
         callTimer.close();
 
         if (snmpAgent != null) {
