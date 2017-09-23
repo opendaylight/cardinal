@@ -1,0 +1,41 @@
+module cardinal-setSNMPTrapAddr {
+    yang-version 1;
+    namespace "urn:opendaylight:params:xml:ns:yang:cardinal-setSnmpTrapAddr";
+    prefix "cardinal-setTrap";
+
+    revision "2017-05-09" {
+        description "Set a SNMP manager address who can receive Snmp Traps";
+    }
+
+    /* ipv4-address (shamelessly) copied from ietf-inet-types.yang */
+    typedef ipv4-address {
+      type string {
+        pattern
+          '(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(%[\p{N}\p{L}]+)?';
+      }
+      description
+        "The ipv4-address type represents an IPv4 address in
+       dotted-quad notation.  The IPv4 address may include a zone
+       index, separated by a % sign.
+
+       The zone index is used to disambiguate identical address
+       values.  For link-local addresses, the zone index will
+       typically be the interface index number or the name of an
+       interface.  If the zone index is not present, the default
+       zone of the device will be used.
+
+       The canonical format for the zone index is the numerical
+       format";
+    }
+
+    container trapAcl {
+        leaf trap_community {
+            type string;
+            mandatory true;
+        }
+        leaf trap_address {
+            type ipv4-address;
+            mandatory true;
+        }
+    }
+}
