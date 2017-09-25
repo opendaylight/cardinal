@@ -7,49 +7,55 @@
  */
 package org.opendaylight.cardinal.impl;
 
-import com.sun.jdmk.comm.HtmlAdaptorServer;
-import com.sun.management.comm.SnmpAdaptorServer;
-import com.sun.management.snmp.InetAddressAcl;
-import com.sun.management.snmp.SnmpOid;
-import com.sun.management.snmp.SnmpStatusException;
-import com.sun.management.snmp.SnmpTimeticks;
-import com.sun.management.snmp.SnmpValue;
-import com.sun.management.snmp.SnmpVarBind;
-import com.sun.management.snmp.SnmpVarBindList;
-import com.sun.management.snmp.IPAcl.JdmkAcl;
-import com.sun.management.snmp.agent.SnmpMibAgent;
+import java.io.RandomAccessFile;
 import java.net.InetAddress;
 import java.util.Enumeration;
+
 import javax.management.InstanceAlreadyExistsException;
 import javax.management.MBeanRegistrationException;
 import javax.management.MBeanServer;
 import javax.management.MBeanServerFactory;
 import javax.management.NotCompliantMBeanException;
 import javax.management.ObjectName;
-import org.opendaylight.cardinal.api.SnmpMibService;
-import org.osgi.framework.Bundle;
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.FrameworkUtil;
-import org.osgi.framework.ServiceRegistration;
+
+import com.sun.jdmk.comm.HtmlAdaptorServer;
+import com.sun.management.comm.SnmpAdaptorServer;
+import com.sun.management.snmp.*;
+import com.sun.management.snmp.IPAcl.JdmkAcl;
+import com.sun.management.snmp.agent.SnmpMibAgent;
+import com.sun.management.snmp.SnmpStatusException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @SuppressWarnings("all")
 public class Agent implements AutoCloseable {
+    private TrapAddressChangeHandler trapAddressChangeHandler;
     private static final Logger LOG = LoggerFactory.getLogger(Agent.class);
 
     private final int htmlPort = 8082;
     private final int snmpPort = 161;
     private final String domain = new String("Cardinal");
 
-    private InetAddressAcl odlAcl;
+    private final String aclFilePath = new String("etc/opendaylight/karaf/");
+    private final String aclFileName = new String("snmp.acl");
+    private JdmkAcl odlAcl;
+
     private ObjectName htmlAdaptorObjName = null;
     private ObjectName snmpAdaptorObjName = null;
 
     private boolean snmpAdaptorStarted = false;
     private MBeanServer server = null;
-    private SnmpAdaptorServer snmpAdaptor = null;
-    private ServiceRegistration<?> snmpMibServiceReg;
+    private static SnmpAdaptorServer snmpAdaptor = null;
+
+    public void init() {
+        LOG.info("Starting Cardinal Snmp Agent");
+        try {
+            startSnmpDaemon();
+        } catch (Exception e) {
+            LOG.error("Exception: " + e.toString());
+        }
+    }
 
     /**
      * @throws SnmpStatusException
@@ -80,7 +86,7 @@ public class Agent implements AutoCloseable {
 
             /**
              * Create the ODL-CARDINAL-MIB and add it to the MBean server.
-              */
+             */
             if (snmpAdaptorStarted) {
                 LOG.info("SNMP Service started");
                 /**
@@ -88,19 +94,6 @@ public class Agent implements AutoCloseable {
                  */
                 SnmpMibAgent mib = new ODL_CARDINAL_MIB();
                 registerMib(mib);
-
-                /* Register the SNMP API service */
-                Bundle bundle = FrameworkUtil.getBundle(Agent.class);
-                /*
-                 * No Bundles or bundle context during build tests.
-                 */
-                if (bundle != null) {
-                    BundleContext context = bundle.getBundleContext();
-                    snmpMibServiceReg = context.registerService(SnmpMibService.class.getName(),
-                            new SnmpMibSecviceImpl(this), null);
-                } else {
-                    LOG.info("Failed to get the bundle");
-                }
             } else {
                 LOG.info("SNMP Adaptor Server failed to start");
                 throw new RuntimeException("SNMP Adaptor failed");
@@ -108,7 +101,7 @@ public class Agent implements AutoCloseable {
 
             snmpAdaptor.setTrapPort(new Integer(snmpPort + 1));
         } catch (Exception e) {
-            LOG.info("Exception: " + e.toString());
+            LOG.error("Exception: " + e.toString());
             throw new RuntimeException(e);
         }
     }
@@ -120,7 +113,7 @@ public class Agent implements AutoCloseable {
      */
     public boolean startingSnmpAdaptor(int snmpPort, ObjectName snmpObjName) {
         try {
-            odlAcl = new JdmkAcl("root", "etc/opendaylight/karaf/snmp.acl");
+            odlAcl = new JdmkAcl("root", aclFilePath + aclFileName);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -177,7 +170,7 @@ public class Agent implements AutoCloseable {
         return false;
     }
 
-    private synchronized void registerMib(final SnmpMibAgent mib) throws RuntimeException {
+    public synchronized void registerMib(final SnmpMibAgent mib) throws RuntimeException {
         if (snmpAdaptorStarted) {
             try {
                 ObjectName mibObjName =
@@ -197,19 +190,58 @@ public class Agent implements AutoCloseable {
         }
     }
 
-    private synchronized void unregisterMib(final SnmpMibAgent mib) {
+    public synchronized void unregisterMib(final SnmpMibAgent mib) {
         snmpAdaptor.removeMib(mib);
         try {
             ObjectName mibObjName =
-                new ObjectName(domain + ":class=" + mib.getMibName());
+                    new ObjectName(domain + ":class=" + mib.getMibName());
             server.unregisterMBean(mibObjName);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    public synchronized void setTrapAddress(final String trap_community, final String trapIpv4Address) {
+        LOG.info("Setting new trap address : " + trapIpv4Address);
+        final char LINEFEED = '\n';
+        RandomAccessFile aclFile;
+
+        try {
+            aclFile = new RandomAccessFile(aclFilePath + aclFileName, "rw");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
+
+        try {
+            aclFile.setLength(0L);
+            aclFile.seek(0L);
+            aclFile.writeBytes("acl={{" + LINEFEED);
+            aclFile.writeBytes("    communities = " + trap_community + LINEFEED);
+            aclFile.writeBytes("    access = read-only" + LINEFEED);
+            aclFile.writeBytes("    managers = " + trapIpv4Address + LINEFEED);
+            aclFile.writeBytes("}}" + LINEFEED);
+            aclFile.writeBytes("trap={{" + LINEFEED);
+            aclFile.writeBytes("    trap-community = " + trap_community + LINEFEED);
+            aclFile.writeBytes("    hosts = " + trapIpv4Address + LINEFEED);
+            aclFile.writeBytes("}}" + LINEFEED);
+            aclFile.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
+
+        try {
+            odlAcl.setAuthorizedListFile(aclFilePath + aclFileName);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return;
+    }
+
     // Needed to get a reference on the SNMP adaptor object
-    public SnmpAdaptorServer getSnmpAdaptor() {
+    public static SnmpAdaptorServer getSnmpAdaptor() {
         return snmpAdaptor;
     }
 
@@ -219,72 +251,10 @@ public class Agent implements AutoCloseable {
     }
 
     @Override
-    public void close() {
-        if (snmpAdaptor != null) {
-            snmpAdaptor.stop();
-            snmpAdaptor = null;
-        }
-
-        if (snmpMibServiceReg != null) {
-            snmpMibServiceReg.unregister();
-            snmpMibServiceReg = null;
-        }
-
+    public void close() throws Exception {
+        // TODO Auto-generated method stub
+        snmpAdaptor.stop();
         snmpAdaptorStarted = false;
         LOG.info("All Daemons are killed successfully");
-    }
-
-
-    /**
-     * Created by anirban on 25/12/16.
-     */
-    private class SnmpMibSecviceImpl implements SnmpMibService {
-        private final Logger LOG = LoggerFactory.getLogger(SnmpMibSecviceImpl.class);
-
-        private Agent agent = null;
-        public SnmpMibSecviceImpl(Agent agent) {
-            this.agent = agent;
-        }
-
-        @Override
-        public void loadMib(SnmpMibAgent mib){
-            LOG.info("Loading Mib " + mib.getMibName());
-            agent.registerMib(mib);
-        }
-
-        @Override
-        public void unloadMib(SnmpMibAgent mib){
-            LOG.info("Unloading Mib " + mib.getMibName());
-            agent.unregisterMib(mib);
-        }
-
-        @Override
-        public void setTrapAddress(InetAddress trapReceiver) {
-            LOG.info("setTrapAddress called " + trapReceiver.toString());
-        }
-
-        @Override
-        public void sendSnmpTrap(SnmpOid ntOid, Enumeration<SnmpOid> payloadOid, Enumeration<SnmpValue> payloadData) {
-            LOG.info("sendSnmpTrap called");
-            try {
-                SnmpVarBindList varBindList = new SnmpVarBindList();
-                SnmpTimeticks sysTime = new SnmpTimeticks(5000);
-                SnmpVarBind sysTimeBind = new SnmpVarBind(new SnmpOid("1.3.6.1.2.1.1.3"), sysTime);
-                varBindList.addVarBind(sysTimeBind);
-                while(payloadOid.hasMoreElements())
-                {
-                    SnmpOid tempOid = payloadOid.nextElement();
-                    SnmpVarBind ntBindPayload = new SnmpVarBind(ntOid, tempOid);
-                    varBindList.addVarBind(ntBindPayload);
-                    SnmpVarBind payloadOidBindData = new SnmpVarBind(tempOid, payloadData.nextElement());
-                    varBindList.addVarBind(payloadOidBindData);
-                }
-                snmpAdaptor.snmpV2Trap(ntOid, varBindList);
-                LOG.info("SnmpV2Trap Alarm sent  " + payloadData);
-            }
-            catch(Exception e){
-                e.printStackTrace();
-            }
-        }
     }
 }
