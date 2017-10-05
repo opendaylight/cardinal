@@ -25,6 +25,7 @@
         <yangtools.version>1.2.1-SNAPSHOT</yangtools.version>
         <dlux.version>0.6.1-SNAPSHOT</dlux.version>
         <openflowplugin.version>0.5.1-SNAPSHOT</openflowplugin.version>
+        <karaf.shell.version>3.0.3</karaf.shell.version>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -77,6 +78,12 @@
             <artifactId>sshd-core</artifactId>
             <version>0.14.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.karaf.shell</groupId>
+            <artifactId>org.apache.karaf.shell.console</artifactId>
+            <version>${karaf.shell.version}</version>
+            <scope>provided</scope>
+        </dependency>
         <!--    bundle    dependencies    -->
         <dependency>
             <groupId>org.opendaylight.openflowplugin.model</groupId>
@@ -110,5 +117,23 @@
             <artifactId>guava</artifactId>
         </dependency>
     </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <Import-Package>
+                            org.apache.karaf.shell.commands;version="[3.0.0,4.1)",
+                            org.apache.karaf.shell.console;version="[3.0.0,4.1)",
+                            *
+                        </Import-Package>
+                    </instructions>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
 
