@@ -14,7 +14,7 @@
     </parent>
     <groupId>org.opendaylight.cardinal</groupId>
     <artifactId>features-aggregator</artifactId>
-    <version>0.3.1-SNAPSHOT</version>
+    <version>0.3.2-SNAPSHOT</version>
     <name>${project.artifactId}</name>
     <packaging>pom</packaging>
 
