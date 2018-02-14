@@ -20,12 +20,12 @@
 
     <groupId>org.opendaylight.cardinal</groupId>
     <artifactId>odl-cardinal-rest</artifactId>
-    <version>0.3.2-SNAPSHOT</version>
+    <version>0.3.2</version>
     <packaging>feature</packaging>
 
     <name>OpenDaylight :: cardinal :: REST</name>
     <properties>
-        <restconf.version>1.6.2-SNAPSHOT</restconf.version>
+        <restconf.version>1.6.2</restconf.version>
     </properties>
     <dependencies>
         <dependency>

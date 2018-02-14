@@ -20,7 +20,7 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
 
   <groupId>org.opendaylight.cardinal</groupId>
   <artifactId>cardinal-artifacts</artifactId>
-  <version>0.3.2-SNAPSHOT</version>
+  <version>0.3.2</version>
   <packaging>pom</packaging>
 
   <dependencyManagement>
