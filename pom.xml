@@ -38,7 +38,6 @@ and is available at http://www.eclipse.org/legal/epl-v10.html INTERNAL
     <module>impl</module>
     <module>it</module>
     <module>jdmk</module>
-    <module>karaf</module>
   </modules>
 
   <!-- DO NOT install or deploy the repo root pom as it's only needed to initiate a build -->
@@ -98,6 +97,18 @@ and is available at http://www.eclipse.org/legal/epl-v10.html INTERNAL
         </plugins>
       </build>
     </profile>
+
+    <profile>
+      <id>karaf</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+
+      <modules>
+        <module>karaf</module>
+      </modules>
+    </profile>
+
   </profiles>
 
   <!--
