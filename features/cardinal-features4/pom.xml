@@ -18,7 +18,7 @@
 
     <groupId>org.opendaylight.cardinal</groupId>
     <artifactId>cardinal-features4</artifactId>
-    <version>0.3.3-SNAPSHOT</version>
+    <version>0.3.4-SNAPSHOT</version>
     <packaging>feature</packaging>
 
     <dependencies>
