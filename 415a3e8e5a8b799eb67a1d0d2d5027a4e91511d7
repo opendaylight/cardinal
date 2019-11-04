@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "ba1f61a0_4370c371",
+        "filename": "impl/src/main/java/org/opendaylight/cardinal/impl/commands/SnmpManagerConfig.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 6869
+      },
+      "writtenOn": "2019-11-04T23:18:04Z",
+      "side": 1,
+      "message": "This is to support interaction with command in karaf container",
+      "parentUuid": "ba1f61a0_88df7ad5",
+      "revId": "415a3e8e5a8b799eb67a1d0d2d5027a4e91511d7",
+      "serverId": "7fc14799-209e-464c-9743-7a06c2c21a81",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ba1f61a0_e8f1d66b",
         "filename": "impl/src/main/java/org/opendaylight/cardinal/impl/commands/SnmpManagerShow.java",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2017-09-26T06:59:56Z",
       "side": 1,
       "message": "Do u need to use System.out.println?",
+      "revId": "415a3e8e5a8b799eb67a1d0d2d5027a4e91511d7",
+      "serverId": "7fc14799-209e-464c-9743-7a06c2c21a81",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba1f61a0_a36b7f83",
+        "filename": "impl/src/main/java/org/opendaylight/cardinal/impl/commands/SnmpManagerShow.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 6869
+      },
+      "writtenOn": "2019-11-04T23:18:04Z",
+      "side": 1,
+      "message": "This is to support user interaction with command execution while logging in karaf container",
+      "parentUuid": "ba1f61a0_e8f1d66b",
       "revId": "415a3e8e5a8b799eb67a1d0d2d5027a4e91511d7",
       "serverId": "7fc14799-209e-464c-9743-7a06c2c21a81",
       "unresolved": false
