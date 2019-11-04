@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ba1f61a0_88df7ad5",
+        "filename": "impl/src/main/java/org/opendaylight/cardinal/impl/commands/SnmpManagerConfig.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 6200
+      },
+      "writtenOn": "2017-09-26T06:59:56Z",
+      "side": 1,
+      "message": "Do you need to use sysout?",
+      "revId": "415a3e8e5a8b799eb67a1d0d2d5027a4e91511d7",
+      "serverId": "7fc14799-209e-464c-9743-7a06c2c21a81",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba1f61a0_e8f1d66b",
+        "filename": "impl/src/main/java/org/opendaylight/cardinal/impl/commands/SnmpManagerShow.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 6200
+      },
+      "writtenOn": "2017-09-26T06:59:56Z",
+      "side": 1,
+      "message": "Do u need to use System.out.println?",
+      "revId": "415a3e8e5a8b799eb67a1d0d2d5027a4e91511d7",
+      "serverId": "7fc14799-209e-464c-9743-7a06c2c21a81",
+      "unresolved": false
+    }
+  ]
+}
